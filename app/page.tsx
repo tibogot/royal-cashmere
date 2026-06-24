@@ -1,65 +1,144 @@
+import { createPageMetadata } from "@/lib/seo";
+import { routes } from "@/lib/routes";
+import CategoryShowcase from "@/components/CategoryShowcase";
+import FeaturedProducts from "@/components/FeaturedProducts";
+import Faq from "@/components/Faq";
+import ProductImageBanner from "@/components/ProductImageBanner";
+import ProductShowcase from "@/components/ProductShowcase";
+import { getFeaturedProducts } from "@/lib/shopify/products";
 import Image from "next/image";
+import Link from "next/link";
 
-export default function Home() {
+export const metadata = createPageMetadata({
+  description:
+    "Royal Cashmere, boutique de cachemire d'exception à Uccle. Découvrez nos nouveautés en pur cachemire de Mongolie — pulls, écharpes et accessoires.",
+});
+
+export default async function Home() {
+  const products = await getFeaturedProducts(8);
+  const bannerProduct = products[6] ?? products[0];
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
+    <main className="w-full">
+      <section id="home-hero" className="relative h-svh w-full">
+        <h1 className="sr-only">
+          Royal Cashmere — Boutique de cachemire d&apos;exception à Uccle,
+          Bruxelles
+        </h1>
         <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
+          src="/images/nick-karvounis.jpg"
+          alt="Boutique Royal Cashmere — cachemire d'exception à Bruxelles"
+          fill
           priority
+          className="object-cover"
+          sizes="100vw"
         />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+        <div
+          className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/50 via-black/20 to-transparent"
+          aria-hidden="true"
+        />
+      </section>
+
+      <section className="bg-white px-4 pt-6 pb-20 text-center text-black md:px-8 md:pt-10 md:pb-32">
+        <Link
+          href={routes.shop}
+          className="text-sm uppercase tracking-wide transition-opacity hover:opacity-60"
+        >
+          Voir les nouveautés
+        </Link>
+
+        <h2 className="mx-auto mt-8 max-w-5xl font-serif text-5xl uppercase leading-[1.12] md:mt-10 md:max-w-6xl md:text-8xl md:leading-[1.08]">
+          Le cachemire d&apos;exception venu de Mongolie
+        </h2>
+      </section>
+
+      <FeaturedProducts />
+
+      <section className="flex h-[80svh] w-full">
+        <div className="relative h-full w-1/2">
+          <Image
+            src="/images/unsplash_mjtLS0CDuIQ.png"
+            alt="Cachemire Royal Cashmere"
+            fill
+            className="object-cover"
+            sizes="50vw"
+          />
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/80 px-5 transition-colors hover:border-transparent hover:bg-black/4 dark:border-white/145 dark:hover:bg-black/1a md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+        <div className="relative h-full w-1/2">
+          <Image
+            src="/images/unsplash_mjtLS0CDuIQ-1.png"
+            alt="Cachemire Royal Cashmere"
+            fill
+            className="object-cover"
+            sizes="50vw"
+          />
         </div>
-      </main>
-    </div>
+      </section>
+
+      <section className="bg-white px-4 py-32 text-center text-black md:px-8">
+        <h2 className="mx-auto max-w-4xl font-serif text-2xl uppercase leading-snug md:max-w-3xl md:text-3xl">
+          Nous vous présentons Royal Cashmere, où le luxe rencontre la raison
+          d&apos;être, où la durabilité s&apos;entrelace avec le style, et où
+          chaque fibre raconte un voyage des hauts plateaux de Mongolie jusqu&apos;à
+          votre garde-robe.
+        </h2>
+
+        <p className="mx-auto mt-8 max-w-2xl text-sm text-black/70 md:mt-10 md:text-base">
+          Nous vous proposons des pièces exquises en cachemire et en soie
+          provenant des hauts plateaux de Mongolie, sélectionnées pour leur
+          pureté et leur douceur incomparable. Dans notre atelier d&apos;Uccle,
+          chaque création incarne un savoir-faire exigeant et un engagement
+          durable, pour un vestiaire intemporel pensé à Bruxelles.
+        </p>
+
+        <Link
+          href={routes.about}
+          className="mt-10 inline-block font-sans text-sm uppercase tracking-wide underline underline-offset-4 transition-opacity hover:opacity-60 md:mt-12"
+        >
+          Découvrir notre histoire
+        </Link>
+      </section>
+
+      <ProductShowcase />
+
+      <FeaturedProducts limit={4} offset={4} />
+
+      <section className="w-full">
+        {bannerProduct ? (
+          <ProductImageBanner
+            product={bannerProduct}
+            imageSrc="/images/Desktop - 20.jpg"
+            imageAlt="Atelier Royal Cashmere"
+          />
+        ) : null}
+      </section>
+
+      <CategoryShowcase />
+
+      <Faq />
+
+      <section className="bg-white px-4 py-32 text-center text-black md:px-8">
+        <h2 className="mx-auto max-w-4xl font-serif text-2xl uppercase leading-snug md:max-w-3xl md:text-3xl">
+          Une invitation à découvrir l&apos;art du cachemire, au cœur
+          d&apos;Uccle, dans un écrin où l&apos;élégance se vit, se touche et se
+          partage.
+        </h2>
+
+        <p className="mx-auto mt-8 max-w-2xl text-sm text-black/70 md:mt-10 md:text-base">
+          Notre boutique vous accueille pour une expérience personnalisée au
+          milieu de collections raffinées en cachemire et soie. Que vous
+          recherchiez une pièce intemporelle ou un conseil sur mesure, notre
+          équipe vous accompagne avec la même exigence de qualité et
+          d&apos;élégance discrète.
+        </p>
+
+        <Link
+          href={routes.contact}
+          className="mt-10 inline-block font-sans text-sm uppercase tracking-wide underline underline-offset-4 transition-opacity hover:opacity-60 md:mt-12"
+        >
+          Nous rendre visite
+        </Link>
+      </section>
+    </main>
   );
 }
