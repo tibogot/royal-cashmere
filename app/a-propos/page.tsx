@@ -6,7 +6,7 @@ import Link from "next/link";
 export const metadata = createPageMetadata({
   title: "À propos",
   description:
-    "Découvrez l'histoire de Royal Cashmere, maison de cachemire d'exception à Uccle, Bruxelles. Savoir-faire, durabilité et pièces en pur cachemire de Mongolie.",
+    "Royal Cashmere à Uccle, Bruxelles : histoire, savoir-faire et engagement durable. Cachemire et soie d'exception de la steppe mongole, boutique à la chaussée de Waterloo.",
   path: "/a-propos",
 });
 
@@ -32,24 +32,23 @@ export default function AboutPage() {
 
       <section className="bg-white px-4 py-16 text-left text-black md:px-8">
         <div className="max-w-2xl">
-          <p className="text-sm leading-relaxed text-black/80 md:text-base">
-            Fondée à Uccle, Royal Cashmere est née d&apos;une conviction simple :
-            proposer un cachemire d&apos;exception, sélectionné à la source sur
-            les hauts plateaux de Mongolie, et travaillé avec une exigence
-            artisanale jusqu&apos;à la dernière finition.
+          <h2 className="font-serif text-xl uppercase leading-snug md:text-2xl">
+            Une maison où le luxe rencontre la raison d&apos;être
+          </h2>
+          <p className="mt-6 text-sm leading-relaxed text-black/80 md:text-base">
+            Nous vous présentons Royal Cashmere, boutique de cachemire
+            d&apos;exception à Uccle, à Bruxelles, où la durabilité
+            s&apos;entrelace avec le style. Nous proposons des pièces
+            exquises en cachemire et en soie, issues des paysages intemporels
+            de la steppe mongole, et sélectionnées pour leur pureté et leur
+            douceur incomparable.
           </p>
           <p className="mt-6 text-sm leading-relaxed text-black/80 md:text-base">
-            Dans notre boutique de la chaussée de Waterloo, nous accueillons
-            chaque visite comme une rencontre. Nous prenons le temps de
-            conseiller, d&apos;écouter et de partager notre passion pour des
-            matières nobles — cachemire, soie — et pour des pièces conçues pour
-            durer, saison après saison.
-          </p>
-          <p className="mt-6 text-sm leading-relaxed text-black/80 md:text-base">
-            Chaque création reflète notre engagement envers la qualité, la
-            durabilité et une élégance discrète. C&apos;est cette vision qui
-            guide notre maison, entre savoir-faire mongol et art de vivre
-            bruxellois.
+            Installés chaussée de Waterloo, nous accueillons chaque visite
+            comme une rencontre. En choisissant Royal Cashmere, vous
+            participez à une histoire qui soutient les éleveurs nomades et
+            leurs terres ancestrales, tout en investissant dans un vestiaire
+            intemporel, pensé pour durer.
           </p>
         </div>
       </section>
@@ -66,25 +65,22 @@ export default function AboutPage() {
 
       <section className="bg-white px-4 py-16 text-left text-black md:px-8">
         <div className="max-w-2xl">
-          <p className="text-sm leading-relaxed text-black/80 md:text-base">
-            Sur les hauts plateaux de Mongolie, le cachemire naît d&apos;un
-            lien ancestral entre les éleveurs, les troupeaux de chèvres et des
-            paysages d&apos;une beauté austère. C&apos;est là, à plus de 4 000
-            mètres d&apos;altitude, que se tisse l&apos;histoire de la fibre la
-            plus précieuse au monde.
+          <h2 className="font-serif text-xl uppercase leading-snug md:text-2xl">
+            Cachemire mongol, héritage nomade
+          </h2>
+          <p className="mt-6 text-sm leading-relaxed text-black/80 md:text-base">
+            Sur les hauts plateaux de Mongolie, le cachemire naît d&apos;un lien
+            ancestral entre les éleveurs, leurs troupeaux et des steppes d&apos;une
+            beauté rare. Nous sélectionnons nos fibres à la source, en
+            privilégiant des filières respectueuses des nomades et de leur
+            environnement, pour un avenir durable des générations à venir.
           </p>
           <p className="mt-6 text-sm leading-relaxed text-black/80 md:text-base">
-            Nous sélectionnons nos matières au plus près de la source, en
-            privilégiant des filières respectueuses des éleveurs et de leur
-            environnement. Chaque lot de cachemire est choisi pour sa finesse, sa
-            longueur de fibre et sa douceur exceptionnelle — les critères qui
-            font toute la différence dans une pièce finie.
-          </p>
-          <p className="mt-6 text-sm leading-relaxed text-black/80 md:text-base">
-            De ces steppes immenses à notre atelier d&apos;Uccle, nous préservons
-            l&apos;intégrité de la matière première. C&apos;est ce voyage, entre
-            tradition nomade et exigence contemporaine, qui donne à Royal
-            Cashmere son caractère unique.
+            Nos créations sont conçues avec une attention méticuleuse aux
+            détails, garantissant une qualité inégalée, une grande douceur au
+            toucher et une durabilité réelle au quotidien. Chaque pièce
+            reflète notre engagement à préserver la beauté de la nature et à
+            honorer le riche héritage de la culture nomade mongole.
           </p>
         </div>
       </section>
@@ -101,15 +97,16 @@ export default function AboutPage() {
 
       <section className="bg-white px-4 py-32 text-center text-black md:px-8">
         <h2 className="mx-auto max-w-4xl font-serif text-2xl uppercase leading-snug md:max-w-3xl md:text-3xl">
-          Un savoir-faire transmis avec exigence, pour des pièces qui
-          traversent le temps.
+          Un style élégant et responsable, de la steppe mongole à Uccle
         </h2>
 
         <p className="mx-auto mt-8 max-w-2xl text-sm text-black/70 md:mt-10 md:text-base">
-          De la sélection des fibres mongoles à la finition dans notre atelier
-          d&apos;Uccle, nous cultivons une approche attentive à chaque étape.
-          Royal Cashmere, c&apos;est une vision du luxe sobre, durable et
-          profondément humaine.
+          De la sélection du cachemire mongol à la finition dans notre boutique
+          bruxelloise, nous cultivons une approche exigeante à chaque étape.
+          Rejoignez-nous et adoptez un style de vie raffiné, durable et
+          profondément ancré dans le savoir-faire. Chaque achat chez Royal
+          Cashmere est un pas vers un vestiaire plus beau, plus durable — pour
+          vous, pour les nomades et pour la planète.
         </p>
 
         <Link

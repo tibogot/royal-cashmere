@@ -19,8 +19,8 @@ const leftLinks = [
 ] as const;
 
 const rightLinks = [
-  { label: "Recherche", href: routes.search },
-  { label: "Connexion", href: routes.signIn },
+  { label: "Rechercher", href: routes.search },
+  { label: "Se connecter", href: routes.signIn },
   { label: "Panier (0)", href: routes.cart },
 ] as const;
 

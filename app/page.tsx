@@ -34,7 +34,7 @@ export default async function Home() {
           sizes="100vw"
         />
         <div
-          className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/50 via-black/20 to-transparent"
+          className="pointer-events-none absolute inset-0 bg-linear-to-b from-black/50 via-black/20 to-transparent"
           aria-hidden="true"
         />
       </section>
