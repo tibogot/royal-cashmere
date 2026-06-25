@@ -111,7 +111,7 @@ export default function AboutPage() {
 
         <Link
           href={routes.shop}
-          className="mt-10 inline-block font-sans text-sm uppercase tracking-wide underline underline-offset-4 transition-opacity hover:opacity-60 md:mt-12"
+          className="mt-10 inline-block select-none font-sans text-sm uppercase tracking-wide underline underline-offset-4 transition-opacity hover:opacity-60 md:mt-12"
         >
           Explorer la boutique
         </Link>

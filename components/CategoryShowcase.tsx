@@ -28,7 +28,7 @@ export default function CategoryShowcase() {
         <button
           type="button"
           onClick={() => setActiveIndex(prevIndex)}
-          className="hidden max-w-[8rem] shrink-0 font-serif text-3xl uppercase leading-none transition-opacity hover:opacity-60 sm:block md:max-w-none md:text-5xl lg:text-6xl"
+          className="hidden max-w-[8rem] shrink-0 select-none font-serif text-3xl uppercase leading-none transition-opacity hover:opacity-60 sm:block md:max-w-none md:text-5xl lg:text-6xl"
         >
           {prev.label}
         </button>
@@ -52,14 +52,14 @@ export default function CategoryShowcase() {
             <button
               type="button"
               onClick={() => setActiveIndex(prevIndex)}
-              className="font-serif text-2xl uppercase leading-none transition-opacity hover:opacity-60"
+              className="select-none font-serif text-2xl uppercase leading-none transition-opacity hover:opacity-60"
             >
               {prev.label}
             </button>
             <button
               type="button"
               onClick={() => setActiveIndex(nextIndex)}
-              className="font-serif text-2xl uppercase leading-none transition-opacity hover:opacity-60"
+              className="select-none font-serif text-2xl uppercase leading-none transition-opacity hover:opacity-60"
             >
               {next.label}
             </button>
@@ -67,7 +67,7 @@ export default function CategoryShowcase() {
 
           <Link
             href={current.href}
-            className="mt-8 text-sm uppercase tracking-wide underline underline-offset-4 transition-opacity hover:opacity-60 md:mt-10"
+            className="mt-8 select-none text-sm uppercase tracking-wide underline underline-offset-4 transition-opacity hover:opacity-60 md:mt-10"
           >
             Découvrir
           </Link>
@@ -76,7 +76,7 @@ export default function CategoryShowcase() {
         <button
           type="button"
           onClick={() => setActiveIndex(nextIndex)}
-          className="hidden max-w-[8rem] shrink-0 font-serif text-3xl uppercase leading-none transition-opacity hover:opacity-60 sm:block md:max-w-none md:text-5xl lg:text-6xl"
+          className="hidden max-w-[8rem] shrink-0 select-none font-serif text-3xl uppercase leading-none transition-opacity hover:opacity-60 sm:block md:max-w-none md:text-5xl lg:text-6xl"
         >
           {next.label}
         </button>

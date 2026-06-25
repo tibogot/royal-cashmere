@@ -4,9 +4,13 @@ import type { ShopifyProduct } from "@/lib/shopify/queries";
 
 type ProductCardProps = {
   product: ShopifyProduct;
+  layout?: "carousel" | "grid";
 };
 
-export default function ProductCard({ product }: ProductCardProps) {
+export default function ProductCard({
+  product,
+  layout = "carousel",
+}: ProductCardProps) {
   const colorLabel =
     product.colorCount > 0
       ? product.colorCount === 1
@@ -14,21 +18,31 @@ export default function ProductCard({ product }: ProductCardProps) {
         : `${product.colorCount} couleurs`
       : null;
 
+  const articleClassName =
+    layout === "grid"
+      ? "w-full"
+      : "w-[72vw] shrink-0 snap-start md:w-[calc(50%-12px)] lg:w-[calc(25%-18px)]";
+
+  const imageSizes =
+    layout === "grid"
+      ? "(max-width: 1024px) 50vw, 25vw"
+      : "(max-width: 768px) 72vw, (max-width: 1024px) 50vw, 25vw";
+
   return (
-    <article className="w-[72vw] shrink-0 snap-start md:w-[calc(50%-12px)] lg:w-[calc(25%-18px)]">
+    <article className={articleClassName}>
       <Link href={`/products/${product.handle}`} className="group block">
-        <div className="relative aspect-[4/5] bg-[#f3efe8]">
+        <div className="relative aspect-[4/5] overflow-hidden bg-[#f3efe8]">
           <Image
             src={product.imageUrl}
             alt={product.imageAlt}
             fill
-            className="object-contain p-6 transition-opacity group-hover:opacity-90 md:p-8"
-            sizes="(max-width: 768px) 72vw, (max-width: 1024px) 50vw, 25vw"
+            className="object-cover transition-opacity group-hover:opacity-90"
+            sizes={imageSizes}
           />
         </div>
 
         <div className="mt-4 space-y-1 text-left">
-          <h3 className="text-base font-medium">{product.title}</h3>
+          <h3 className="font-serif text-base font-medium">{product.title}</h3>
           <p className="text-sm text-black/70">{product.price}</p>
           {colorLabel ? (
             <p className="text-sm text-black/50">{colorLabel}</p>

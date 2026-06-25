@@ -1,4 +1,4 @@
-import type { ShopifyProduct } from "./queries";
+import type { ShopifyProduct, ShopifyProductDetail } from "./queries";
 
 const placeholderCatalog: Omit<ShopifyProduct, "id">[] = [
   {
@@ -8,6 +8,8 @@ const placeholderCatalog: Omit<ShopifyProduct, "id">[] = [
     imageAlt: "Pull ouvert en cachemire",
     price: "319,00 €",
     colorCount: 5,
+    productType: "Pulls",
+    tags: ["pull", "cachemire"],
   },
   {
     title: "Pantalon long",
@@ -16,6 +18,8 @@ const placeholderCatalog: Omit<ShopifyProduct, "id">[] = [
     imageAlt: "Pantalon long en cachemire",
     price: "369,00 €",
     colorCount: 3,
+    productType: "Pantalons",
+    tags: ["pantalon", "cachemire"],
   },
   {
     title: "Robe droite",
@@ -24,6 +28,8 @@ const placeholderCatalog: Omit<ShopifyProduct, "id">[] = [
     imageAlt: "Robe droite en cachemire",
     price: "459,00 €",
     colorCount: 3,
+    productType: "Robes",
+    tags: ["robe", "cachemire"],
   },
   {
     title: "Pull col V",
@@ -32,6 +38,8 @@ const placeholderCatalog: Omit<ShopifyProduct, "id">[] = [
     imageAlt: "Pull col V en cachemire",
     price: "359,00 €",
     colorCount: 6,
+    productType: "Pulls",
+    tags: ["pull", "cachemire"],
   },
   {
     title: "Pull torsadé",
@@ -40,6 +48,8 @@ const placeholderCatalog: Omit<ShopifyProduct, "id">[] = [
     imageAlt: "Pull torsadé en cachemire",
     price: "499,00 €",
     colorCount: 4,
+    productType: "Pulls",
+    tags: ["pull", "cachemire"],
   },
   {
     title: "Jupe longue",
@@ -48,6 +58,8 @@ const placeholderCatalog: Omit<ShopifyProduct, "id">[] = [
     imageAlt: "Jupe longue en cachemire",
     price: "519,00 €",
     colorCount: 3,
+    productType: "Robes",
+    tags: ["jupe", "cachemire"],
   },
   {
     title: "Poncho",
@@ -56,6 +68,8 @@ const placeholderCatalog: Omit<ShopifyProduct, "id">[] = [
     imageAlt: "Poncho en cachemire",
     price: "489,00 €",
     colorCount: 3,
+    productType: "Pulls",
+    tags: ["poncho", "cachemire"],
   },
   {
     title: "Écharpes unies",
@@ -64,16 +78,41 @@ const placeholderCatalog: Omit<ShopifyProduct, "id">[] = [
     imageAlt: "Écharpe unie en cachemire",
     price: "219,00 €",
     colorCount: 5,
+    productType: "Écharpes",
+    tags: ["écharpe", "cachemire"],
   },
 ];
 
-export function getPlaceholderProducts(limit = 12): ShopifyProduct[] {
+export function getPlaceholderProductByHandle(
+  handle: string,
+): ShopifyProductDetail | null {
+  const index = placeholderCatalog.findIndex(
+    (product) => product.handle === handle,
+  );
+
+  if (index < 0) return null;
+
+  const product = placeholderCatalog[index];
+
+  return {
+    id: `placeholder-${index}`,
+    ...product,
+    description:
+      "Pièce en cachemire d'exception, sélectionnée pour sa douceur et sa pureté. Fabriquée avec un savoir-faire exigeant, issue des hauts plateaux de Mongolie.",
+    variantId: `placeholder-variant-${index}`,
+    availableForSale: true,
+  };
+}
+
+export function getPlaceholderProducts(limit?: number): ShopifyProduct[] {
   const items =
-    limit >= placeholderCatalog.length
+    limit && limit > placeholderCatalog.length
       ? [...placeholderCatalog, ...placeholderCatalog]
       : placeholderCatalog;
 
-  return items.slice(0, limit).map((product, index) => ({
+  const slice = limit ? items.slice(0, limit) : items;
+
+  return slice.map((product, index) => ({
     id: `placeholder-${index}`,
     ...product,
   }));

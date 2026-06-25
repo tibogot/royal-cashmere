@@ -1,3 +1,4 @@
+import CartNavLink from "@/components/CartNavLink";
 import Image from "next/image";
 import Link from "next/link";
 import { routes } from "@/lib/routes";
@@ -15,7 +16,7 @@ const shopLinks = [
 const accountLinks = [
   { label: "Recherche", href: routes.search },
   { label: "Connexion", href: routes.signIn },
-  { label: "Panier (0)", href: routes.cart },
+  { label: "Mon compte", href: routes.account },
 ] as const;
 
 const socialLinks = [
@@ -26,7 +27,7 @@ const socialLinks = [
 
 export default function Footer() {
   return (
-    <footer className="w-full bg-white p-4 text-black md:p-8">
+    <footer className="w-full select-none bg-white p-4 text-black md:p-8">
       <div className="grid grid-cols-2 gap-x-6 gap-y-10 md:grid-cols-4 md:gap-x-8">
         <nav className="flex flex-col gap-1">
           {shopLinks.map(({ label, href }) => (
@@ -42,6 +43,7 @@ export default function Footer() {
               {label}
             </Link>
           ))}
+          <CartNavLink className={footerLinkClassName} />
         </nav>
 
         <div className="flex flex-col gap-1">

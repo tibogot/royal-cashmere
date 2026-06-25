@@ -1,5 +1,7 @@
 "use client";
 
+import AuthNavLink from "@/components/AuthNavLink";
+import CartNavLink from "@/components/CartNavLink";
 import { routes } from "@/lib/routes";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -18,11 +20,7 @@ const leftLinks = [
   { label: "À propos", href: routes.about },
 ] as const;
 
-const rightLinks = [
-  { label: "Rechercher", href: routes.search },
-  { label: "Se connecter", href: routes.signIn },
-  { label: "Panier (0)", href: routes.cart },
-] as const;
+const rightLinks = [{ label: "Rechercher", href: routes.search }] as const;
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -114,7 +112,7 @@ export default function Navbar() {
 
       <nav
         ref={navRef}
-        className="relative grid grid-cols-[1fr_auto_1fr] items-center px-6 py-6 md:px-12 md:py-8"
+        className="relative grid grid-cols-[1fr_auto_1fr] select-none items-center px-6 py-6 md:px-12 md:py-8"
       >
         <ul className="flex items-center gap-6 md:gap-8">
           {leftLinks.map(({ label, href }) => (
@@ -154,6 +152,12 @@ export default function Navbar() {
               </Link>
             </li>
           ))}
+          <li>
+            <AuthNavLink className={navLinkClassName} />
+          </li>
+          <li>
+            <CartNavLink className={navLinkClassName} />
+          </li>
         </ul>
       </nav>
     </header>

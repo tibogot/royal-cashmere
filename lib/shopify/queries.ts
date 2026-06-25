@@ -6,12 +6,16 @@ export type ShopifyProduct = {
   imageAlt: string;
   price: string;
   colorCount: number;
+  productType: string;
+  tags: string[];
 };
 
 type ShopifyProductNode = {
   id: string;
   title: string;
   handle: string;
+  productType: string;
+  tags: string[];
   priceRange: {
     minVariantPrice: {
       amount: string;
@@ -31,6 +35,10 @@ type ShopifyProductNode = {
 type ProductsQueryResponse = {
   data?: {
     products: {
+      pageInfo: {
+        hasNextPage: boolean;
+        endCursor: string | null;
+      };
       edges: {
         node: ShopifyProductNode;
       }[];
@@ -39,27 +47,105 @@ type ProductsQueryResponse = {
   errors?: { message: string }[];
 };
 
+const PRODUCT_FIELDS = `
+  id
+  title
+  handle
+  productType
+  tags
+  priceRange {
+    minVariantPrice {
+      amount
+      currencyCode
+    }
+  }
+  featuredImage {
+    url
+    altText
+  }
+  options {
+    name
+    values
+  }
+`;
+
 export const FEATURED_PRODUCTS_QUERY = `
   query FeaturedProducts($first: Int!) {
     products(first: $first, sortKey: CREATED_AT, reverse: true) {
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
       edges {
         node {
-          id
-          title
-          handle
-          priceRange {
-            minVariantPrice {
+          ${PRODUCT_FIELDS}
+        }
+      }
+    }
+  }
+`;
+
+export const ALL_PRODUCTS_QUERY = `
+  query AllProducts($first: Int!, $after: String) {
+    products(first: $first, after: $after, sortKey: CREATED_AT, reverse: true) {
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
+      edges {
+        node {
+          ${PRODUCT_FIELDS}
+        }
+      }
+    }
+  }
+`;
+
+export type ShopifyProductDetail = ShopifyProduct & {
+  description: string;
+  variantId: string;
+  availableForSale: boolean;
+};
+
+type ShopifyProductDetailNode = ShopifyProductNode & {
+  description: string;
+  availableForSale: boolean;
+  variants: {
+    edges: {
+      node: {
+        id: string;
+        availableForSale: boolean;
+        price: {
+          amount: string;
+          currencyCode: string;
+        };
+      };
+    }[];
+  };
+};
+
+type ProductByHandleQueryResponse = {
+  data?: {
+    product: ShopifyProductDetailNode | null;
+  };
+  errors?: { message: string }[];
+};
+
+export const PRODUCT_BY_HANDLE_QUERY = `
+  query ProductByHandle($handle: String!) {
+    product(handle: $handle) {
+      ${PRODUCT_FIELDS}
+      description
+      availableForSale
+      variants(first: 1) {
+        edges {
+          node {
+            id
+            availableForSale
+            price {
               amount
               currencyCode
             }
-          }
-          featuredImage {
-            url
-            altText
-          }
-          options {
-            name
-            values
           }
         }
       }
@@ -67,4 +153,9 @@ export const FEATURED_PRODUCTS_QUERY = `
   }
 `;
 
-export type { ProductsQueryResponse, ShopifyProductNode };
+export type {
+  ProductByHandleQueryResponse,
+  ProductsQueryResponse,
+  ShopifyProductDetailNode,
+  ShopifyProductNode,
+};

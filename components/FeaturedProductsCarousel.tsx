@@ -34,7 +34,7 @@ export default function FeaturedProductsCarousel({
       <div className="mb-10 flex items-start justify-between gap-6 md:mb-12">
         <Link
           href={routes.collectionsAll}
-          className="text-sm uppercase tracking-wide transition-opacity hover:opacity-60"
+          className="select-none text-sm uppercase tracking-wide transition-opacity hover:opacity-60"
         >
           Tout voir
         </Link>
@@ -44,7 +44,7 @@ export default function FeaturedProductsCarousel({
             type="button"
             onClick={() => scroll("next")}
             aria-label="Produits suivants"
-            className="flex size-8 items-center justify-center transition-opacity hover:opacity-60"
+            className="flex size-8 select-none items-center justify-center transition-opacity hover:opacity-60"
           >
             <svg
               width="16"
@@ -65,7 +65,7 @@ export default function FeaturedProductsCarousel({
             type="button"
             onClick={() => scroll("prev")}
             aria-label="Produits précédents"
-            className="flex size-8 items-center justify-center bg-black text-white transition-opacity hover:opacity-80"
+            className="flex size-8 select-none items-center justify-center bg-black text-white transition-opacity hover:opacity-80"
           >
             <svg
               width="16"

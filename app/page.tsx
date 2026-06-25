@@ -3,6 +3,7 @@ import { routes } from "@/lib/routes";
 import CategoryShowcase from "@/components/CategoryShowcase";
 import FeaturedProducts from "@/components/FeaturedProducts";
 import Faq from "@/components/Faq";
+import HeroProductGlass from "@/components/HeroProductGlass";
 import ProductImageBanner from "@/components/ProductImageBanner";
 import ProductShowcase from "@/components/ProductShowcase";
 import { getFeaturedProducts } from "@/lib/shopify/products";
@@ -16,6 +17,7 @@ export const metadata = createPageMetadata({
 
 export default async function Home() {
   const products = await getFeaturedProducts(8);
+  const heroProduct = products[0];
   const bannerProduct = products[6] ?? products[0];
 
   return (
@@ -37,12 +39,13 @@ export default async function Home() {
           className="pointer-events-none absolute inset-0 bg-linear-to-b from-black/50 via-black/20 to-transparent"
           aria-hidden="true"
         />
+        {heroProduct ? <HeroProductGlass product={heroProduct} /> : null}
       </section>
 
       <section className="bg-white px-4 pt-6 pb-20 text-center text-black md:px-8 md:pt-10 md:pb-32">
         <Link
           href={routes.shop}
-          className="text-sm uppercase tracking-wide transition-opacity hover:opacity-60"
+          className="select-none text-sm uppercase tracking-wide transition-opacity hover:opacity-60"
         >
           Voir les nouveautés
         </Link>
@@ -93,7 +96,7 @@ export default async function Home() {
 
         <Link
           href={routes.about}
-          className="mt-10 inline-block font-sans text-sm uppercase tracking-wide underline underline-offset-4 transition-opacity hover:opacity-60 md:mt-12"
+          className="mt-10 inline-block select-none font-sans text-sm uppercase tracking-wide underline underline-offset-4 transition-opacity hover:opacity-60 md:mt-12"
         >
           Découvrir notre histoire
         </Link>
@@ -134,7 +137,7 @@ export default async function Home() {
 
         <Link
           href={routes.contact}
-          className="mt-10 inline-block font-sans text-sm uppercase tracking-wide underline underline-offset-4 transition-opacity hover:opacity-60 md:mt-12"
+          className="mt-10 inline-block select-none font-sans text-sm uppercase tracking-wide underline underline-offset-4 transition-opacity hover:opacity-60 md:mt-12"
         >
           Nous rendre visite
         </Link>

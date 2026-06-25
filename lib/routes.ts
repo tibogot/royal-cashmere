@@ -6,6 +6,10 @@ export const routes = {
   contact: "/contact",
   search: "/recherche",
   signIn: "/connexion",
+  account: "/compte",
+  authLogin: "/api/auth/login",
+  authLogout: "/api/auth/logout",
   cart: "/panier",
   collectionsAll: "/boutique",
+  product: (handle: string) => `/products/${handle}`,
 } as const;
