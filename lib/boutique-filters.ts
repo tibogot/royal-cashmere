@@ -44,3 +44,20 @@ export function filterProducts(
 
   return products.filter((product) => productMatchesFilter(product, filter));
 }
+
+export function searchProducts(products: ShopifyProduct[], query: string) {
+  const normalizedQuery = normalize(query.trim());
+  if (!normalizedQuery) return products;
+
+  return products.filter((product) => {
+    const haystack = [
+      product.title,
+      product.productType,
+      ...product.tags,
+    ]
+      .map(normalize)
+      .join(" ");
+
+    return haystack.includes(normalizedQuery);
+  });
+}

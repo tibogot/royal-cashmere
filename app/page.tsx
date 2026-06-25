@@ -57,23 +57,23 @@ export default async function Home() {
 
       <FeaturedProducts />
 
-      <section className="flex h-[80svh] w-full">
-        <div className="relative h-full w-1/2">
+      <section className="flex w-full flex-col md:h-[80svh] md:flex-row">
+        <div className="relative h-[40svh] w-full md:h-full md:w-1/2">
           <Image
             src="/images/unsplash_mjtLS0CDuIQ.png"
             alt="Cachemire Royal Cashmere"
             fill
             className="object-cover"
-            sizes="50vw"
+            sizes="(max-width: 767px) 100vw, 50vw"
           />
         </div>
-        <div className="relative h-full w-1/2">
+        <div className="relative h-[40svh] w-full md:h-full md:w-1/2">
           <Image
             src="/images/unsplash_mjtLS0CDuIQ-1.png"
             alt="Cachemire Royal Cashmere"
             fill
             className="object-cover"
-            sizes="50vw"
+            sizes="(max-width: 767px) 100vw, 50vw"
           />
         </div>
       </section>

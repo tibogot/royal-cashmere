@@ -20,13 +20,13 @@ export default async function AccountPage() {
 
   const loggedIn = await isCustomerLoggedIn();
   if (!loggedIn) {
-    redirect(`${routes.authLogin}?return_to=${encodeURIComponent(routes.account)}`);
+    redirect(routes.signIn);
   }
 
   const account = await getCustomerAccountSummary();
 
   if (!account.ok) {
-    redirect(`${routes.authLogin}?return_to=${encodeURIComponent(routes.account)}`);
+    redirect(routes.signIn);
   }
 
   return (

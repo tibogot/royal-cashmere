@@ -6,9 +6,12 @@ import { useCallback, useEffect, useState } from "react";
 
 type CartNavLinkProps = {
   className: string;
-};
+} & React.ComponentPropsWithoutRef<"a">;
 
-export default function CartNavLink({ className }: CartNavLinkProps) {
+export default function CartNavLink({
+  className,
+  ...props
+}: CartNavLinkProps) {
   const [count, setCount] = useState(0);
 
   const refreshCount = useCallback(async () => {
@@ -37,7 +40,7 @@ export default function CartNavLink({ className }: CartNavLinkProps) {
   const label = count > 0 ? `Panier (${count})` : "Panier";
 
   return (
-    <Link href={routes.cart} className={className}>
+    <Link href={routes.cart} className={className} {...props}>
       {label}
     </Link>
   );

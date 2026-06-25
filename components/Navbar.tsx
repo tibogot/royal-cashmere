@@ -1,14 +1,17 @@
 "use client";
 
-import AuthNavLink from "@/components/AuthNavLink";
+import BurgerButton from "@/components/BurgerButton";
 import CartNavLink from "@/components/CartNavLink";
+import MobileNavMenu from "@/components/MobileNavMenu";
+import SearchIcon from "@/components/SearchIcon";
+import SearchPanel from "@/components/SearchPanel";
 import { routes } from "@/lib/routes";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useLayoutEffect, useRef } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -20,11 +23,13 @@ const leftLinks = [
   { label: "À propos", href: routes.about },
 ] as const;
 
-const rightLinks = [{ label: "Rechercher", href: routes.search }] as const;
+const rightLinks = [{ label: "Mon compte", href: routes.account }] as const;
 
 export default function Navbar() {
   const pathname = usePathname();
   const isHome = pathname === routes.home;
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const headerRef = useRef<HTMLElement>(null);
   const bgRef = useRef<HTMLDivElement>(null);
   const navRef = useRef<HTMLElement>(null);
@@ -37,7 +42,7 @@ export default function Navbar() {
     const logo = logoRef.current;
     if (!header || !bg || !nav || !logo) return;
 
-    const links = nav.querySelectorAll<HTMLElement>("ul a");
+    const links = nav.querySelectorAll<HTMLElement>("[data-nav-link]");
 
     const setSolid = (solid: boolean, immediate = false) => {
       const duration = immediate ? 0 : NAV_ANIM_DURATION;
@@ -96,9 +101,18 @@ export default function Navbar() {
     };
   }, [isHome, pathname]);
 
-  const navLinkClassName = `text-sm uppercase tracking-wide transition-opacity hover:opacity-60 ${
+  const navLinkClassName = `text-xs uppercase tracking-wide transition-opacity hover:opacity-60 ${
     isHome ? "text-white" : "text-black"
   }`;
+
+  const handleMenuToggle = () => {
+    setMenuOpen((current) => !current);
+  };
+
+  const handleSearchOpen = () => {
+    setMenuOpen(false);
+    setSearchOpen(true);
+  };
 
   return (
     <header ref={headerRef} className="fixed inset-x-0 top-0 z-50">
@@ -112,17 +126,36 @@ export default function Navbar() {
 
       <nav
         ref={navRef}
-        className="relative grid grid-cols-[1fr_auto_1fr] select-none items-center px-6 py-6 md:px-12 md:py-8"
+        className="relative grid grid-cols-[1fr_auto_1fr] select-none items-center px-4 py-4 md:px-8 md:py-5"
       >
-        <ul className="flex items-center gap-6 md:gap-8">
-          {leftLinks.map(({ label, href }) => (
-            <li key={label}>
-              <Link href={href} className={navLinkClassName}>
-                {label}
-              </Link>
-            </li>
-          ))}
-        </ul>
+        <div className="flex items-center gap-4 md:gap-8">
+          <div className="flex items-center gap-3 md:hidden">
+            <BurgerButton
+              open={menuOpen}
+              onClick={handleMenuToggle}
+              className={navLinkClassName}
+            />
+            <button
+              type="button"
+              onClick={handleSearchOpen}
+              aria-label="Rechercher"
+              className={`flex h-8 w-8 items-center justify-center transition-opacity hover:opacity-60 ${navLinkClassName}`}
+              data-nav-link
+            >
+              <SearchIcon />
+            </button>
+          </div>
+
+          <ul className="hidden items-center gap-6 md:flex md:gap-8">
+            {leftLinks.map(({ label, href }) => (
+              <li key={label}>
+                <Link href={href} className={navLinkClassName} data-nav-link>
+                  {label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
 
         <Link
           href={routes.home}
@@ -144,22 +177,41 @@ export default function Navbar() {
           </span>
         </Link>
 
-        <ul className="flex items-center justify-end gap-6 md:gap-8">
-          {rightLinks.map(({ label, href }) => (
-            <li key={label}>
-              <Link href={href} className={navLinkClassName}>
-                {label}
-              </Link>
+        <div className="flex items-center justify-end gap-6 md:gap-8">
+          <ul className="hidden items-center gap-6 md:flex md:gap-8">
+            <li>
+              <button
+                type="button"
+                onClick={() => setSearchOpen(true)}
+                className={navLinkClassName}
+                data-nav-link
+              >
+                Rechercher
+              </button>
             </li>
-          ))}
-          <li>
-            <AuthNavLink className={navLinkClassName} />
-          </li>
-          <li>
-            <CartNavLink className={navLinkClassName} />
-          </li>
-        </ul>
+            {rightLinks.map(({ label, href }) => (
+              <li key={label}>
+                <Link href={href} className={navLinkClassName} data-nav-link>
+                  {label}
+                </Link>
+              </li>
+            ))}
+            <li>
+              <CartNavLink className={navLinkClassName} data-nav-link />
+            </li>
+          </ul>
+
+          <div className="md:hidden">
+            <CartNavLink className={navLinkClassName} data-nav-link />
+          </div>
+        </div>
       </nav>
+
+      <MobileNavMenu
+        open={menuOpen}
+        onClose={() => setMenuOpen(false)}
+      />
+      <SearchPanel open={searchOpen} onClose={() => setSearchOpen(false)} />
     </header>
   );
 }

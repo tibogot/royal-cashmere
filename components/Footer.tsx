@@ -15,7 +15,6 @@ const shopLinks = [
 
 const accountLinks = [
   { label: "Recherche", href: routes.search },
-  { label: "Connexion", href: routes.signIn },
   { label: "Mon compte", href: routes.account },
 ] as const;
 

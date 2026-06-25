@@ -11,5 +11,6 @@ export const routes = {
   authLogout: "/api/auth/logout",
   cart: "/panier",
   collectionsAll: "/boutique",
+  collectionByHandle: (handle: string) => `/collection/${handle}`,
   product: (handle: string) => `/products/${handle}`,
 } as const;

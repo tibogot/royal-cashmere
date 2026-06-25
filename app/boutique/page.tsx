@@ -1,6 +1,7 @@
 import ShopCatalog from "@/components/ShopCatalog";
 import { createPageMetadata } from "@/lib/seo";
 import { getAllProducts } from "@/lib/shopify/products";
+import { Suspense } from "react";
 
 export const metadata = createPageMetadata({
   title: "Boutique",
@@ -19,7 +20,9 @@ export default async function ShopPage() {
           Boutique
         </h1>
 
-        <ShopCatalog products={products} />
+        <Suspense fallback={<div className="mt-12 h-40" aria-hidden="true" />}>
+          <ShopCatalog products={products} />
+        </Suspense>
       </section>
     </main>
   );
