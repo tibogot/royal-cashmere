@@ -1,8 +1,6 @@
 "use client";
 
 import { addToCart } from "@/app/actions/cart";
-import { routes } from "@/lib/routes";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 
@@ -28,9 +26,14 @@ export default function AddToCartButton({
       }
 
       window.dispatchEvent(new Event("cart-updated"));
-      router.push(routes.cart);
+      window.dispatchEvent(new Event("cart-item-added"));
+      window.dispatchEvent(new Event("cart-open"));
       router.refresh();
     });
+  };
+
+  const handleViewCart = () => {
+    window.dispatchEvent(new Event("cart-open"));
   };
 
   const label = isPending
@@ -50,12 +53,13 @@ export default function AddToCartButton({
         {label}
       </button>
 
-      <Link
-        href={routes.cart}
+      <button
+        type="button"
+        onClick={handleViewCart}
         className="w-fit select-none text-sm uppercase tracking-wide text-black/60 underline underline-offset-4 transition-opacity hover:opacity-80"
       >
         Voir le panier
-      </Link>
+      </button>
     </div>
   );
 }

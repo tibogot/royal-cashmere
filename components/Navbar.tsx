@@ -2,6 +2,7 @@
 
 import BurgerButton from "@/components/BurgerButton";
 import CartNavLink from "@/components/CartNavLink";
+import CartPanel from "@/components/CartPanel";
 import MobileNavMenu from "@/components/MobileNavMenu";
 import SearchIcon from "@/components/SearchIcon";
 import SearchPanel from "@/components/SearchPanel";
@@ -11,7 +12,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useLayoutEffect, useRef, useState } from "react";
+import { useLayoutEffect, useEffect, useRef, useState } from "react";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -29,6 +30,7 @@ export default function Navbar() {
   const pathname = usePathname();
   const isHome = pathname === routes.home;
   const [searchOpen, setSearchOpen] = useState(false);
+  const [cartOpen, setCartOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const headerRef = useRef<HTMLElement>(null);
   const bgRef = useRef<HTMLDivElement>(null);
@@ -111,8 +113,26 @@ export default function Navbar() {
 
   const handleSearchOpen = () => {
     setMenuOpen(false);
+    setCartOpen(false);
     setSearchOpen(true);
   };
+
+  const handleCartOpen = () => {
+    setMenuOpen(false);
+    setSearchOpen(false);
+    setCartOpen(true);
+  };
+
+  useEffect(() => {
+    const handleCartOpenEvent = () => {
+      setMenuOpen(false);
+      setSearchOpen(false);
+      setCartOpen(true);
+    };
+
+    window.addEventListener("cart-open", handleCartOpenEvent);
+    return () => window.removeEventListener("cart-open", handleCartOpenEvent);
+  }, []);
 
   return (
     <header ref={headerRef} className="fixed inset-x-0 top-0 z-50">
@@ -130,11 +150,13 @@ export default function Navbar() {
       >
         <div className="flex items-center gap-4 md:gap-8">
           <div className="flex items-center gap-3 md:hidden">
-            <BurgerButton
-              open={menuOpen}
-              onClick={handleMenuToggle}
-              className={navLinkClassName}
-            />
+            {!menuOpen ? (
+              <BurgerButton
+                open={menuOpen}
+                onClick={handleMenuToggle}
+                className={navLinkClassName}
+              />
+            ) : null}
             <button
               type="button"
               onClick={handleSearchOpen}
@@ -182,7 +204,7 @@ export default function Navbar() {
             <li>
               <button
                 type="button"
-                onClick={() => setSearchOpen(true)}
+                onClick={handleSearchOpen}
                 className={navLinkClassName}
                 data-nav-link
               >
@@ -197,12 +219,20 @@ export default function Navbar() {
               </li>
             ))}
             <li>
-              <CartNavLink className={navLinkClassName} data-nav-link />
+              <CartNavLink
+                className={navLinkClassName}
+                data-nav-link
+                onClick={handleCartOpen}
+              />
             </li>
           </ul>
 
           <div className="md:hidden">
-            <CartNavLink className={navLinkClassName} data-nav-link />
+            <CartNavLink
+              className={navLinkClassName}
+              data-nav-link
+              onClick={handleCartOpen}
+            />
           </div>
         </div>
       </nav>
@@ -210,8 +240,10 @@ export default function Navbar() {
       <MobileNavMenu
         open={menuOpen}
         onClose={() => setMenuOpen(false)}
+        onCartOpen={handleCartOpen}
       />
       <SearchPanel open={searchOpen} onClose={() => setSearchOpen(false)} />
+      <CartPanel open={cartOpen} onClose={() => setCartOpen(false)} />
     </header>
   );
 }

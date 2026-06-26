@@ -11,6 +11,7 @@ import { createPortal } from "react-dom";
 type MobileNavMenuProps = {
   open: boolean;
   onClose: () => void;
+  onCartOpen: () => void;
 };
 
 const MENU_ANIM_DURATION = 0.45;
@@ -28,6 +29,7 @@ const linkClassName =
 export default function MobileNavMenu({
   open,
   onClose,
+  onCartOpen,
 }: MobileNavMenuProps) {
   const pathname = usePathname();
   const panelRef = useRef<HTMLDivElement>(null);
@@ -117,24 +119,21 @@ export default function MobileNavMenu({
 
   return createPortal(
     <div className="fixed inset-0 z-60 md:hidden">
+      <button
+        type="button"
+        onClick={onClose}
+        aria-label="Fermer le menu"
+        className={`fixed top-4 left-4 z-[61] flex h-8 items-center ${linkClassName}`}
+      >
+        Fermer
+      </button>
+
       <div
         ref={panelRef}
-        className="absolute inset-0 flex flex-col bg-white px-6 py-6 text-black"
+        className="absolute inset-0 flex flex-col bg-white px-4 pb-6 pt-4 text-black"
         data-lenis-prevent
       >
-        <div className="flex items-center justify-between">
-          <p className="text-xs uppercase tracking-wide">Menu</p>
-          <button
-            type="button"
-            onClick={onClose}
-            aria-label="Fermer le menu"
-            className={linkClassName}
-          >
-            Fermer
-          </button>
-        </div>
-
-        <nav className="mt-16 flex flex-1 flex-col">
+        <nav className="mt-12 flex flex-1 flex-col">
           <ul className="flex flex-col gap-6">
             {menuLinks.map(({ label, href }) => (
               <li key={href}>
@@ -144,7 +143,13 @@ export default function MobileNavMenu({
               </li>
             ))}
             <li>
-              <CartNavLink className={linkClassName} />
+              <CartNavLink
+                className={linkClassName}
+                onClick={() => {
+                  onClose();
+                  onCartOpen();
+                }}
+              />
             </li>
           </ul>
         </nav>

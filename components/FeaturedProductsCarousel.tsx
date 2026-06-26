@@ -34,7 +34,7 @@ export default function FeaturedProductsCarousel({
       <div className="mb-10 flex items-start justify-between gap-6 md:mb-12">
         <Link
           href={routes.collectionsAll}
-          className="select-none text-sm uppercase tracking-wide transition-opacity hover:opacity-60"
+          className="inline-block select-none text-sm uppercase tracking-wide underline underline-offset-4 transition-opacity hover:opacity-60"
         >
           Tout voir
         </Link>

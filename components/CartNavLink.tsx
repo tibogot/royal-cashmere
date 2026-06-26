@@ -1,15 +1,15 @@
 "use client";
 
-import { routes } from "@/lib/routes";
-import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 
 type CartNavLinkProps = {
   className: string;
-} & React.ComponentPropsWithoutRef<"a">;
+  onClick?: () => void;
+} & Omit<React.ComponentPropsWithoutRef<"button">, "onClick" | "type">;
 
 export default function CartNavLink({
   className,
+  onClick,
   ...props
 }: CartNavLinkProps) {
   const [count, setCount] = useState(0);
@@ -37,11 +37,25 @@ export default function CartNavLink({
     return () => window.removeEventListener("cart-updated", handleCartUpdated);
   }, [refreshCount]);
 
+  const handleClick = () => {
+    if (onClick) {
+      onClick();
+      return;
+    }
+
+    window.dispatchEvent(new Event("cart-open"));
+  };
+
   const label = count > 0 ? `Panier (${count})` : "Panier";
 
   return (
-    <Link href={routes.cart} className={className} {...props}>
+    <button
+      type="button"
+      onClick={handleClick}
+      className={className}
+      {...props}
+    >
       {label}
-    </Link>
+    </button>
   );
 }

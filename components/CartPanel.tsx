@@ -1,30 +1,50 @@
 "use client";
 
-import { popularSearches } from "@/lib/categories";
-import { routes } from "@/lib/routes";
+import CartPageView from "@/components/CartPageView";
+import type { Cart } from "@/lib/shopify/cart";
 import gsap from "gsap";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useEffect, useId, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
-type SearchPanelProps = {
+type CartPanelProps = {
   open: boolean;
   onClose: () => void;
 };
 
 const PANEL_ANIM_DURATION = 0.5;
 
-export default function SearchPanel({ open, onClose }: SearchPanelProps) {
-  const router = useRouter();
+export default function CartPanel({ open, onClose }: CartPanelProps) {
   const titleId = useId();
   const panelRef = useRef<HTMLDivElement>(null);
   const overlayRef = useRef<HTMLButtonElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
   const tweenRef = useRef<gsap.core.Timeline | null>(null);
-  const [query, setQuery] = useState("");
+  const [cart, setCart] = useState<Cart | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [mounted, setMounted] = useState(false);
+
+  const refreshCart = useCallback(async (showLoading = false) => {
+    if (showLoading) {
+      setIsLoading(true);
+    }
+
+    try {
+      const response = await fetch("/api/cart", { cache: "no-store" });
+      if (!response.ok) {
+        setCart(null);
+        return;
+      }
+
+      const data = (await response.json()) as { cart: Cart | null };
+      setCart(data.cart);
+    } catch {
+      setCart(null);
+    } finally {
+      if (showLoading) {
+        setIsLoading(false);
+      }
+    }
+  }, []);
 
   useEffect(() => {
     setMounted(true);
@@ -33,8 +53,9 @@ export default function SearchPanel({ open, onClose }: SearchPanelProps) {
   useEffect(() => {
     if (open) {
       setIsVisible(true);
+      refreshCart(true);
     }
-  }, [open]);
+  }, [open, refreshCart]);
 
   useEffect(() => {
     if (!isVisible) return;
@@ -71,12 +92,7 @@ export default function SearchPanel({ open, onClose }: SearchPanelProps) {
           0,
         );
 
-      const frame = window.requestAnimationFrame(() => {
-        inputRef.current?.focus();
-      });
-
       return () => {
-        window.cancelAnimationFrame(frame);
         tweenRef.current?.kill();
       };
     }
@@ -139,20 +155,6 @@ export default function SearchPanel({ open, onClose }: SearchPanelProps) {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isVisible, onClose]);
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    const trimmed = query.trim();
-    onClose();
-
-    if (!trimmed) {
-      router.push(routes.shop);
-      return;
-    }
-
-    router.push(`${routes.shop}?q=${encodeURIComponent(trimmed)}`);
-  };
-
   if (!mounted || !isVisible) return null;
 
   return createPortal(
@@ -160,7 +162,7 @@ export default function SearchPanel({ open, onClose }: SearchPanelProps) {
       <button
         type="button"
         ref={overlayRef}
-        aria-label="Fermer la recherche"
+        aria-label="Fermer le panier"
         className="absolute inset-0 bg-black/40 opacity-0"
         onClick={onClose}
       />
@@ -174,11 +176,8 @@ export default function SearchPanel({ open, onClose }: SearchPanelProps) {
         data-lenis-prevent
       >
         <div className="flex items-center justify-between gap-4">
-          <h2
-            id={titleId}
-            className="font-serif text-sm uppercase tracking-wide"
-          >
-            Rechercher
+          <h2 id={titleId} className="text-sm uppercase tracking-wide">
+            Panier
           </h2>
           <button
             type="button"
@@ -190,46 +189,11 @@ export default function SearchPanel({ open, onClose }: SearchPanelProps) {
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="mt-10">
-          <label htmlFor="search-query" className="sr-only">
-            Rechercher un produit
-          </label>
-          <input
-            ref={inputRef}
-            id="search-query"
-            type="search"
-            value={query}
-            onChange={(event) => setQuery(event.target.value)}
-            placeholder="Rechercher un produit..."
-            className="w-full border-b border-black/20 bg-transparent py-3 text-sm outline-none placeholder:text-black/40 md:text-base"
-            autoComplete="off"
-          />
-          <button
-            type="submit"
-            className="mt-8 inline-flex items-center justify-center border border-black px-8 py-3 text-sm uppercase tracking-wide transition-opacity hover:opacity-60"
-          >
-            Rechercher
-          </button>
-        </form>
-
-        <div className="mt-12 border-t border-black/10 pt-10">
-          <p className="text-xs uppercase tracking-wide text-black">
-            Recherches populaires
-          </p>
-          <ul className="mt-4 flex flex-col gap-2">
-            {popularSearches.map(({ label, href }) => (
-              <li key={href}>
-                <Link
-                  href={href}
-                  onClick={onClose}
-                  className="text-xs uppercase tracking-wide transition-opacity hover:opacity-60"
-                >
-                  {label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
+        {isLoading ? (
+          <p className="mt-10 text-sm text-black/50">Chargement…</p>
+        ) : (
+          <CartPageView cart={cart} variant="panel" onClose={onClose} />
+        )}
       </div>
     </div>,
     document.body,

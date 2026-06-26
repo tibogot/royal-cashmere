@@ -4,6 +4,8 @@ import {
   addVariantToCart,
   getCartById,
   getCartCookieOptions,
+  removeCartLines,
+  updateCartLineQuantity,
 } from "@/lib/shopify/cart";
 import { isShopifyConfigured } from "@/lib/shopify/client";
 import { cookies } from "next/headers";
@@ -82,6 +84,58 @@ export async function addToCart(variantId: string) {
   }
 
   await setCartCookie(result.cartId);
+  revalidatePath("/panier");
+
+  return {
+    ok: true as const,
+    totalQuantity: result.totalQuantity,
+  };
+}
+
+export async function updateCartLine(lineId: string, quantity: number) {
+  if (!isShopifyConfigured()) {
+    return { ok: false as const, error: "Boutique non configurée." };
+  }
+
+  const cartId = await getCartIdFromCookies();
+  if (!cartId) {
+    return { ok: false as const, error: "Panier introuvable." };
+  }
+
+  const result = await updateCartLineQuantity(cartId, lineId, quantity);
+
+  if (!result.ok) {
+    return result;
+  }
+
+  revalidatePath("/panier");
+
+  return {
+    ok: true as const,
+    totalQuantity: result.totalQuantity,
+  };
+}
+
+export async function removeFromCart(lineId: string) {
+  if (!isShopifyConfigured()) {
+    return { ok: false as const, error: "Boutique non configurée." };
+  }
+
+  const cartId = await getCartIdFromCookies();
+  if (!cartId) {
+    return { ok: false as const, error: "Panier introuvable." };
+  }
+
+  const result = await removeCartLines(cartId, [lineId]);
+
+  if (!result.ok) {
+    return result;
+  }
+
+  if (result.totalQuantity === 0) {
+    await clearCartCookie();
+  }
+
   revalidatePath("/panier");
 
   return {

@@ -33,6 +33,14 @@ type CartMutationResponse = {
       cart: { id: string; checkoutUrl: string; totalQuantity: number } | null;
       userErrors: { field: string[] | null; message: string }[];
     };
+    cartLinesUpdate?: {
+      cart: { id: string; checkoutUrl: string; totalQuantity: number } | null;
+      userErrors: { field: string[] | null; message: string }[];
+    };
+    cartLinesRemove?: {
+      cart: { id: string; checkoutUrl: string; totalQuantity: number } | null;
+      userErrors: { field: string[] | null; message: string }[];
+    };
   };
   errors?: { message: string }[];
 };
@@ -97,6 +105,38 @@ const CART_CREATE_MUTATION = `
 const CART_LINES_ADD_MUTATION = `
   mutation CartLinesAdd($cartId: ID!, $lines: [CartLineInput!]!) {
     cartLinesAdd(cartId: $cartId, lines: $lines) {
+      cart {
+        id
+        checkoutUrl
+        totalQuantity
+      }
+      userErrors {
+        field
+        message
+      }
+    }
+  }
+`;
+
+const CART_LINES_UPDATE_MUTATION = `
+  mutation CartLinesUpdate($cartId: ID!, $lines: [CartLineUpdateInput!]!) {
+    cartLinesUpdate(cartId: $cartId, lines: $lines) {
+      cart {
+        id
+        checkoutUrl
+        totalQuantity
+      }
+      userErrors {
+        field
+        message
+      }
+    }
+  }
+`;
+
+const CART_LINES_REMOVE_MUTATION = `
+  mutation CartLinesRemove($cartId: ID!, $lineIds: [ID!]!) {
+    cartLinesRemove(cartId: $cartId, lineIds: $lineIds) {
       cart {
         id
         checkoutUrl
@@ -297,6 +337,82 @@ async function addLinesToCart(cartId: string, variantId: string) {
   };
 }
 
+async function updateLineQuantity(
+  cartId: string,
+  lineId: string,
+  quantity: number,
+) {
+  const client = getShopifyClient();
+  const { data, errors } = (await client.request(CART_LINES_UPDATE_MUTATION, {
+    variables: {
+      cartId,
+      lines: [{ id: lineId, quantity }],
+    },
+  })) as CartMutationResponse;
+
+  if (errors?.length) {
+    console.error("Shopify cartLinesUpdate errors:", errors);
+    return {
+      ok: false as const,
+      error: errors.map((error) => error.message).join(" "),
+    };
+  }
+
+  const payload = data?.cartLinesUpdate;
+  const userError = formatUserErrors(
+    payload?.userErrors,
+    "Impossible de mettre à jour le panier.",
+  );
+
+  if (!payload?.cart) {
+    console.error("Shopify cartLinesUpdate userErrors:", payload?.userErrors);
+    return { ok: false as const, error: userError };
+  }
+
+  return {
+    ok: true as const,
+    cartId: payload.cart.id,
+    checkoutUrl: payload.cart.checkoutUrl,
+    totalQuantity: payload.cart.totalQuantity,
+  };
+}
+
+async function removeLinesFromCart(cartId: string, lineIds: string[]) {
+  const client = getShopifyClient();
+  const { data, errors } = (await client.request(CART_LINES_REMOVE_MUTATION, {
+    variables: {
+      cartId,
+      lineIds,
+    },
+  })) as CartMutationResponse;
+
+  if (errors?.length) {
+    console.error("Shopify cartLinesRemove errors:", errors);
+    return {
+      ok: false as const,
+      error: errors.map((error) => error.message).join(" "),
+    };
+  }
+
+  const payload = data?.cartLinesRemove;
+  const userError = formatUserErrors(
+    payload?.userErrors,
+    "Impossible de retirer l'article du panier.",
+  );
+
+  if (!payload?.cart) {
+    console.error("Shopify cartLinesRemove userErrors:", payload?.userErrors);
+    return { ok: false as const, error: userError };
+  }
+
+  return {
+    ok: true as const,
+    cartId: payload.cart.id,
+    checkoutUrl: payload.cart.checkoutUrl,
+    totalQuantity: payload.cart.totalQuantity,
+  };
+}
+
 export async function getCartById(cartId: string): Promise<Cart | null> {
   if (!isShopifyConfigured()) return null;
 
@@ -339,4 +455,28 @@ export async function addVariantToCart(
   }
 
   return createCart(variantId);
+}
+
+export async function updateCartLineQuantity(
+  cartId: string,
+  lineId: string,
+  quantity: number,
+) {
+  if (!isShopifyConfigured()) {
+    return { ok: false as const, error: "Boutique non configurée." };
+  }
+
+  if (quantity < 1) {
+    return removeCartLines(cartId, [lineId]);
+  }
+
+  return updateLineQuantity(cartId, lineId, quantity);
+}
+
+export async function removeCartLines(cartId: string, lineIds: string[]) {
+  if (!isShopifyConfigured()) {
+    return { ok: false as const, error: "Boutique non configurée." };
+  }
+
+  return removeLinesFromCart(cartId, lineIds);
 }

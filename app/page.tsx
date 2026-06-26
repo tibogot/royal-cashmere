@@ -45,7 +45,7 @@ export default async function Home() {
       <section className="bg-white px-4 pt-6 pb-20 text-center text-black md:px-8 md:pt-10 md:pb-32">
         <Link
           href={routes.shop}
-          className="select-none text-sm uppercase tracking-wide transition-opacity hover:opacity-60"
+          className="inline-block select-none text-sm uppercase tracking-wide underline underline-offset-4 transition-opacity hover:opacity-60"
         >
           Voir les nouveautés
         </Link>

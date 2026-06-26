@@ -2,7 +2,7 @@ type SearchIconProps = {
   className?: string;
 };
 
-export default function SearchIcon({ className = "h-4 w-4" }: SearchIconProps) {
+export default function SearchIcon({ className = "h-5 w-5" }: SearchIconProps) {
   return (
     <svg
       viewBox="0 0 24 24"
