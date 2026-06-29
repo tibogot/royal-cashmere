@@ -1,21 +1,29 @@
 import CartNavLink from "@/components/CartNavLink";
+import FooterSearchLink from "@/components/FooterSearchLink";
 import Image from "next/image";
 import Link from "next/link";
 import { routes } from "@/lib/routes";
 
 const footerLinkClassName =
-  "text-sm uppercase leading-snug transition-opacity hover:opacity-60";
+  "w-fit text-left text-xs uppercase tracking-wide transition-opacity hover:opacity-60";
 
-const shopLinks = [
-  { label: "Meilleures ventes", href: routes.shop },
+const footerTextClassName = "text-xs uppercase tracking-wide";
+
+const footerLegalLinkClassName =
+  "text-[10px] text-black/50 transition-opacity hover:opacity-60 md:text-xs";
+
+const primaryLinks = [
+  { label: "Boutique", href: routes.shop },
+  { label: "Collection", href: routes.collection },
   { label: "À propos", href: routes.about },
   { label: "Contact", href: routes.contact },
-  { label: "Boutique", href: routes.shop },
 ] as const;
 
-const accountLinks = [
-  { label: "Recherche", href: routes.search },
-  { label: "Mon compte", href: routes.account },
+const legalLinks = [
+  { label: "Mentions légales", href: routes.legal },
+  { label: "Politique de confidentialité", href: routes.privacy },
+  { label: "CGV", href: routes.terms },
+  { label: "Cookies", href: routes.cookies },
 ] as const;
 
 const socialLinks = [
@@ -27,57 +35,60 @@ const socialLinks = [
 export default function Footer() {
   return (
     <footer className="w-full select-none bg-white p-4 text-black md:p-8">
-      <div className="grid grid-cols-2 gap-x-6 gap-y-10 md:grid-cols-4 md:gap-x-8">
-        <nav className="flex flex-col gap-1">
-          {shopLinks.map(({ label, href }) => (
-            <Link key={label} href={href} className={footerLinkClassName}>
-              {label}
-            </Link>
-          ))}
-        </nav>
-
-        <nav className="flex flex-col gap-1">
-          {accountLinks.map(({ label, href }) => (
-            <Link key={label} href={href} className={footerLinkClassName}>
-              {label}
-            </Link>
-          ))}
-          <CartNavLink className={footerLinkClassName} />
-        </nav>
-
-        <div className="flex flex-col gap-1">
-          <p className="text-sm uppercase leading-snug">Horaires d&apos;ouverture</p>
-          <p className="text-sm uppercase leading-snug">
-            Du lundi au vendredi de 10 h à 18 h
-          </p>
-        </div>
-
-        <div className="flex flex-col gap-1">
-          <p className="text-sm uppercase leading-snug">
-            Chaussée de Waterloo 1251B
-          </p>
-          <p className="text-sm uppercase leading-snug">Uccle, Belgique</p>
-          <a href="tel:+3228505944" className={`${footerLinkClassName} w-fit`}>
-            +32 2 850 59 44
-          </a>
-
-          <div className="mt-3 flex items-center gap-3">
-            {socialLinks.map(({ label, href, src, width, height }) => (
-              <Link
-                key={label}
-                href={href}
-                aria-label={label}
-                className="transition-opacity hover:opacity-60"
-              >
-                <Image
-                  src={src}
-                  alt=""
-                  width={width}
-                  height={height}
-                  className="h-4 w-auto"
-                />
+      <div className="flex flex-col gap-10 md:flex-row md:items-start md:justify-between md:gap-8">
+        <div className="grid grid-cols-2 gap-x-6 md:flex md:gap-x-12">
+          <nav className="flex flex-col gap-1">
+            {primaryLinks.map(({ label, href }) => (
+              <Link key={label} href={href} className={footerLinkClassName}>
+                {label}
               </Link>
             ))}
+          </nav>
+
+          <nav className="flex flex-col gap-1">
+            <Link href={routes.account} className={footerLinkClassName}>
+              Mon compte
+            </Link>
+            <FooterSearchLink className={footerLinkClassName} />
+            <CartNavLink className={footerLinkClassName} />
+          </nav>
+        </div>
+
+        <div className="grid grid-cols-2 gap-x-6 gap-y-10 md:flex md:gap-x-16 lg:gap-x-24">
+          <div className="flex flex-col gap-1">
+            <p className={footerTextClassName}>Horaires d&apos;ouverture</p>
+            <p className={footerTextClassName}>
+              Du lundi au vendredi de 10 h à 18 h
+            </p>
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <p className={footerTextClassName}>
+              Chaussée de Waterloo 1251B
+            </p>
+            <p className={footerTextClassName}>Uccle, Belgique</p>
+            <a href="tel:+3228505944" className={`${footerLinkClassName} w-fit`}>
+              +32 2 850 59 44
+            </a>
+
+            <div className="mt-3 flex items-center gap-3">
+              {socialLinks.map(({ label, href, src, width, height }) => (
+                <Link
+                  key={label}
+                  href={href}
+                  aria-label={label}
+                  className="transition-opacity hover:opacity-60"
+                >
+                  <Image
+                    src={src}
+                    alt=""
+                    width={width}
+                    height={height}
+                    className="h-4 w-auto"
+                  />
+                </Link>
+              ))}
+            </div>
           </div>
         </div>
       </div>
@@ -95,6 +106,20 @@ export default function Footer() {
           className="h-auto w-full brightness-0"
         />
       </Link>
+
+      <div className="mt-6 flex w-full flex-wrap items-center justify-between gap-x-4 gap-y-2 text-[10px] text-black/50 md:mt-8 md:text-xs">
+        <p>© 2026 Royal Cashmere</p>
+        <nav
+          aria-label="Informations légales"
+          className="flex flex-wrap items-center gap-x-4 gap-y-2"
+        >
+          {legalLinks.map(({ label, href }) => (
+            <Link key={href} href={href} className={footerLegalLinkClassName}>
+              {label}
+            </Link>
+          ))}
+        </nav>
+      </div>
     </footer>
   );
 }

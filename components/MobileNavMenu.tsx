@@ -20,6 +20,7 @@ const menuLinks = [
   { label: "Boutique", href: routes.shop },
   { label: "Collection", href: routes.collection },
   { label: "À propos", href: routes.about },
+  { label: "Contact", href: routes.contact },
   { label: "Mon compte", href: routes.account },
 ] as const;
 

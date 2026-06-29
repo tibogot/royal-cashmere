@@ -22,6 +22,7 @@ const leftLinks = [
   { label: "Boutique", href: routes.shop },
   { label: "Collection", href: routes.collection },
   { label: "À propos", href: routes.about },
+  { label: "Contact", href: routes.contact },
 ] as const;
 
 const rightLinks = [{ label: "Mon compte", href: routes.account }] as const;
@@ -130,8 +131,18 @@ export default function Navbar() {
       setCartOpen(true);
     };
 
+    const handleSearchOpenEvent = () => {
+      setMenuOpen(false);
+      setCartOpen(false);
+      setSearchOpen(true);
+    };
+
     window.addEventListener("cart-open", handleCartOpenEvent);
-    return () => window.removeEventListener("cart-open", handleCartOpenEvent);
+    window.addEventListener("search-open", handleSearchOpenEvent);
+    return () => {
+      window.removeEventListener("cart-open", handleCartOpenEvent);
+      window.removeEventListener("search-open", handleSearchOpenEvent);
+    };
   }, []);
 
   return (
