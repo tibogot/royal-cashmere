@@ -28,13 +28,13 @@ export default function CategoryShowcase() {
         <button
           type="button"
           onClick={() => setActiveIndex(prevIndex)}
-          className="hidden max-w-[8rem] shrink-0 select-none font-serif text-3xl uppercase leading-none transition-opacity hover:opacity-60 sm:block md:max-w-none md:text-5xl lg:text-6xl"
+          className="hidden max-w-32 shrink-0 select-none font-serif text-3xl uppercase leading-none transition-opacity hover:opacity-60 sm:block md:max-w-none md:text-5xl lg:text-6xl"
         >
           {prev.label}
         </button>
 
         <div className="flex min-w-0 flex-1 flex-col items-center">
-          <div className="relative aspect-[3/4] w-full max-w-[280px] md:max-w-[360px]">
+          <div className="relative aspect-3/4 w-full max-w-[280px] md:max-w-[360px]">
             <Image
               key={current.image}
               src={current.image}
@@ -76,7 +76,7 @@ export default function CategoryShowcase() {
         <button
           type="button"
           onClick={() => setActiveIndex(nextIndex)}
-          className="hidden max-w-[8rem] shrink-0 select-none font-serif text-3xl uppercase leading-none transition-opacity hover:opacity-60 sm:block md:max-w-none md:text-5xl lg:text-6xl"
+          className="hidden max-w-32 shrink-0 select-none font-serif text-3xl uppercase leading-none transition-opacity hover:opacity-60 sm:block md:max-w-none md:text-5xl lg:text-6xl"
         >
           {next.label}
         </button>
