@@ -54,7 +54,7 @@ export default function ProductPurchasePanel({
 
   return (
     <div className="flex min-w-0 w-full max-w-full flex-col">
-      <h1 className="break-words font-serif text-3xl uppercase leading-tight md:text-4xl lg:text-5xl">
+      <h1 className="wrap-break-word font-serif text-3xl uppercase leading-tight md:text-4xl lg:text-5xl">
         {product.title}
       </h1>
 
