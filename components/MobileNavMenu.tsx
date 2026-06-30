@@ -5,7 +5,7 @@ import { routes } from "@/lib/routes";
 import gsap from "gsap";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 
 type MobileNavMenuProps = {
@@ -27,6 +27,18 @@ const menuLinks = [
 const linkClassName =
   "text-xs uppercase tracking-wide transition-opacity hover:opacity-60";
 
+function subscribeNoop() {
+  return () => {};
+}
+
+function getClientSnapshot() {
+  return true;
+}
+
+function getServerSnapshot() {
+  return false;
+}
+
 export default function MobileNavMenu({
   open,
   onClose,
@@ -34,29 +46,31 @@ export default function MobileNavMenu({
 }: MobileNavMenuProps) {
   const pathname = usePathname();
   const panelRef = useRef<HTMLDivElement>(null);
-  const onCloseRef = useRef(onClose);
+  const previousPathnameRef = useRef(pathname);
   const tweenRef = useRef<gsap.core.Timeline | null>(null);
-  const [isVisible, setIsVisible] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
+  const mounted = useSyncExternalStore(
+    subscribeNoop,
+    getClientSnapshot,
+    getServerSnapshot,
+  );
 
-  onCloseRef.current = onClose;
+  const shouldRender = open || isClosing;
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  useEffect(() => {
-    if (open) {
-      setIsVisible(true);
-    }
-  }, [open]);
-
-  useEffect(() => {
-    onCloseRef.current();
-  }, [pathname]);
+  const handleClose = useCallback(() => {
+    setIsClosing(true);
+    onClose();
+  }, [onClose]);
 
   useEffect(() => {
-    if (!isVisible) return;
+    if (previousPathnameRef.current === pathname) return;
+
+    previousPathnameRef.current = pathname;
+    handleClose();
+  }, [pathname, handleClose]);
+
+  useEffect(() => {
+    if (!shouldRender) return;
 
     const blockBackgroundScroll = (event: Event) => {
       const panel = panelRef.current;
@@ -74,10 +88,10 @@ export default function MobileNavMenu({
       window.removeEventListener("wheel", blockBackgroundScroll);
       window.removeEventListener("touchmove", blockBackgroundScroll);
     };
-  }, [isVisible]);
+  }, [shouldRender]);
 
   useEffect(() => {
-    if (!isVisible) return;
+    if (!shouldRender) return;
 
     const panel = panelRef.current;
     if (!panel) return;
@@ -104,7 +118,7 @@ export default function MobileNavMenu({
     }
 
     tweenRef.current = gsap.timeline({
-      onComplete: () => setIsVisible(false),
+      onComplete: () => setIsClosing(false),
     }).to(panel, {
       xPercent: -100,
       duration,
@@ -114,17 +128,17 @@ export default function MobileNavMenu({
     return () => {
       tweenRef.current?.kill();
     };
-  }, [open, isVisible]);
+  }, [open, shouldRender]);
 
-  if (!mounted || !isVisible) return null;
+  if (!mounted || !shouldRender) return null;
 
   return createPortal(
     <div className="fixed inset-0 z-60 md:hidden">
       <button
         type="button"
-        onClick={onClose}
+        onClick={handleClose}
         aria-label="Fermer le menu"
-        className={`fixed top-4 left-4 z-[61] flex h-8 items-center ${linkClassName}`}
+        className={`fixed top-4 left-4 z-61 flex h-8 items-center ${linkClassName}`}
       >
         Fermer
       </button>
@@ -138,7 +152,7 @@ export default function MobileNavMenu({
           <ul className="flex flex-col gap-6">
             {menuLinks.map(({ label, href }) => (
               <li key={href}>
-                <Link href={href} onClick={onClose} className={linkClassName}>
+                <Link href={href} onClick={handleClose} className={linkClassName}>
                   {label}
                 </Link>
               </li>
@@ -147,7 +161,7 @@ export default function MobileNavMenu({
               <CartNavLink
                 className={linkClassName}
                 onClick={() => {
-                  onClose();
+                  handleClose();
                   onCartOpen();
                 }}
               />
