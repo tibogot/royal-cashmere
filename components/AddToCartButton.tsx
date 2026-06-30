@@ -56,7 +56,7 @@ export default function AddToCartButton({
       <button
         type="button"
         onClick={handleViewCart}
-        className="w-fit select-none text-sm uppercase tracking-wide text-black/60 underline underline-offset-4 transition-opacity hover:opacity-80"
+        className="w-fit select-none text-xs uppercase tracking-wide text-black/60 underline underline-offset-4 transition-opacity hover:opacity-80"
       >
         Voir le panier
       </button>

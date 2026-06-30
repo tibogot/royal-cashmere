@@ -68,7 +68,7 @@ export default function AccountPageView({
             <p>Vous n&apos;avez pas encore passé de commande.</p>
             <Link
               href={routes.shop}
-              className="mt-4 inline-block uppercase tracking-wide underline underline-offset-4 transition-opacity hover:opacity-60"
+              className="mt-4 inline-block text-xs uppercase tracking-wide underline underline-offset-4 transition-opacity hover:opacity-60"
             >
               Découvrir la boutique
             </Link>

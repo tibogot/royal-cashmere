@@ -12,7 +12,7 @@ export default function ProductNotFound() {
       </p>
       <Link
         href={routes.shop}
-        className="mt-10 select-none text-sm uppercase tracking-wide underline underline-offset-4 transition-opacity hover:opacity-60"
+        className="mt-10 select-none text-xs uppercase tracking-wide underline underline-offset-4 transition-opacity hover:opacity-60"
       >
         Retour à la boutique
       </Link>

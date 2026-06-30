@@ -146,7 +146,7 @@ export default function CartView({
         <Link
           href={routes.shop}
           onClick={onClose}
-          className="mt-8 inline-block select-none text-sm uppercase tracking-wide underline underline-offset-4 transition-opacity hover:opacity-60"
+          className="mt-8 inline-block select-none text-xs uppercase tracking-wide underline underline-offset-4 transition-opacity hover:opacity-60"
         >
           Continuer vos achats
         </Link>

@@ -47,7 +47,7 @@ export default async function Home() {
       <section className="bg-white px-4 pt-6 pb-20 text-center text-black md:px-8 md:pt-10 md:pb-32">
         <Link
           href={routes.shop}
-          className="inline-block select-none text-sm uppercase tracking-wide underline underline-offset-4 transition-opacity hover:opacity-60"
+          className="inline-block select-none text-xs uppercase tracking-wide underline underline-offset-4 transition-opacity hover:opacity-60"
         >
           Voir les nouveautés
         </Link>
@@ -98,7 +98,7 @@ export default async function Home() {
 
         <Link
           href={routes.about}
-          className="mt-10 inline-block select-none font-sans text-sm uppercase tracking-wide underline underline-offset-4 transition-opacity hover:opacity-60 md:mt-12"
+          className="mt-10 inline-block select-none font-sans text-xs uppercase tracking-wide underline underline-offset-4 transition-opacity hover:opacity-60 md:mt-12"
         >
           Découvrir notre histoire
         </Link>
@@ -139,7 +139,7 @@ export default async function Home() {
 
         <Link
           href={routes.contact}
-          className="mt-10 inline-block select-none font-sans text-sm uppercase tracking-wide underline underline-offset-4 transition-opacity hover:opacity-60 md:mt-12"
+          className="mt-10 inline-block select-none font-sans text-xs uppercase tracking-wide underline underline-offset-4 transition-opacity hover:opacity-60 md:mt-12"
         >
           Nous rendre visite
         </Link>
