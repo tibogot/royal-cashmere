@@ -14,8 +14,8 @@ import {
   type ShopifyProductDetailNode,
   type ShopifyProductNode,
 } from "./queries";
+import { getColorCount } from "./variants";
 
-const COLOR_OPTION_NAMES = ["color", "couleur", "colour"];
 const PRODUCTS_PAGE_SIZE = 100;
 
 function formatPrice(amount: string, currencyCode: string) {
@@ -23,16 +23,6 @@ function formatPrice(amount: string, currencyCode: string) {
     style: "currency",
     currency: currencyCode,
   }).format(Number(amount));
-}
-
-function getColorCount(
-  options: { name: string; values: string[] }[],
-): number {
-  const colorOption = options.find((option) =>
-    COLOR_OPTION_NAMES.includes(option.name.toLowerCase()),
-  );
-
-  return colorOption?.values.length ?? 0;
 }
 
 function formatColorCount(count: number) {
@@ -97,10 +87,18 @@ async function fetchProductsPage(after?: string | null) {
 function mapProductDetailNode(
   node: ShopifyProductDetailNode,
 ): ShopifyProductDetail | null {
-  const variant = node.variants.edges[0]?.node;
-  if (!node.featuredImage?.url || !variant) return null;
+  const variants = node.variants.edges
+    .map(({ node: variant }) => ({
+      id: variant.id,
+      availableForSale: variant.availableForSale,
+      price: formatPrice(variant.price.amount, variant.price.currencyCode),
+      selectedOptions: variant.selectedOptions,
+    }))
+    .filter((variant) => variant.selectedOptions.length > 0);
 
-  const { amount, currencyCode } = variant.price;
+  if (!node.featuredImage?.url || variants.length === 0) return null;
+
+  const { amount, currencyCode } = node.priceRange.minVariantPrice;
 
   return {
     id: node.id,
@@ -113,8 +111,12 @@ function mapProductDetailNode(
     productType: node.productType,
     tags: node.tags,
     description: node.description,
-    variantId: variant.id,
-    availableForSale: node.availableForSale && variant.availableForSale,
+    descriptionHtml: node.descriptionHtml,
+    options: node.options.map((option) => ({
+      name: option.name,
+      values: option.values,
+    })),
+    variants,
   };
 }
 

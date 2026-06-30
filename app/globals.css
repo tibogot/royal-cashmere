@@ -29,3 +29,45 @@ button:not(:disabled),
 [role="button"]:not(:disabled) {
   cursor: pointer;
 }
+
+.product-description {
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: hidden;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.product-description,
+.product-description * {
+  font-family: var(--font-sans) !important;
+  font-weight: 300;
+  font-style: normal;
+}
+
+.product-description :where(p, li, span, div, td, th) {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.product-description p + p {
+  margin-top: 1rem;
+}
+
+.product-description img,
+.product-description video,
+.product-description iframe {
+  max-width: 100%;
+  height: auto;
+}
+
+.product-description table {
+  width: 100%;
+  max-width: 100%;
+  table-layout: fixed;
+}
+
+.product-description pre {
+  white-space: pre-wrap;
+  overflow-x: hidden;
+}

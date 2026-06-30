@@ -101,15 +101,28 @@ export const ALL_PRODUCTS_QUERY = `
   }
 `;
 
+export type ProductOption = {
+  name: string;
+  values: string[];
+};
+
+export type ProductVariant = {
+  id: string;
+  availableForSale: boolean;
+  price: string;
+  selectedOptions: { name: string; value: string }[];
+};
+
 export type ShopifyProductDetail = ShopifyProduct & {
   description: string;
-  variantId: string;
-  availableForSale: boolean;
+  descriptionHtml: string;
+  options: ProductOption[];
+  variants: ProductVariant[];
 };
 
 type ShopifyProductDetailNode = ShopifyProductNode & {
   description: string;
-  availableForSale: boolean;
+  descriptionHtml: string;
   variants: {
     edges: {
       node: {
@@ -119,6 +132,10 @@ type ShopifyProductDetailNode = ShopifyProductNode & {
           amount: string;
           currencyCode: string;
         };
+        selectedOptions: {
+          name: string;
+          value: string;
+        }[];
       };
     }[];
   };
@@ -136,8 +153,8 @@ export const PRODUCT_BY_HANDLE_QUERY = `
     product(handle: $handle) {
       ${PRODUCT_FIELDS}
       description
-      availableForSale
-      variants(first: 1) {
+      descriptionHtml
+      variants(first: 100) {
         edges {
           node {
             id
@@ -145,6 +162,10 @@ export const PRODUCT_BY_HANDLE_QUERY = `
             price {
               amount
               currencyCode
+            }
+            selectedOptions {
+              name
+              value
             }
           }
         }

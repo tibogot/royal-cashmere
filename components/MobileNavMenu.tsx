@@ -134,21 +134,21 @@ export default function MobileNavMenu({
 
   return createPortal(
     <div className="fixed inset-0 z-60 md:hidden">
-      <button
-        type="button"
-        onClick={handleClose}
-        aria-label="Fermer le menu"
-        className={`fixed top-4 left-4 z-61 flex h-8 items-center ${linkClassName}`}
-      >
-        Fermer
-      </button>
-
       <div
         ref={panelRef}
         className="absolute inset-0 flex flex-col bg-white px-4 pb-6 pt-4 text-black"
         data-lenis-prevent
       >
-        <nav className="mt-12 flex flex-1 flex-col">
+        <button
+          type="button"
+          onClick={handleClose}
+          aria-label="Fermer le menu"
+          className={`flex h-8 w-fit items-center ${linkClassName}`}
+        >
+          Fermer
+        </button>
+
+        <nav className="mt-8 flex flex-1 flex-col">
           <ul className="flex flex-col gap-6">
             {menuLinks.map(({ label, href }) => (
               <li key={href}>

@@ -34,7 +34,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
   }
 
   return (
-    <main className="w-full pt-24 md:pt-0">
+    <main className="w-full overflow-x-hidden pt-24 md:pt-0">
       <ProductDetailView product={product} />
     </main>
   );

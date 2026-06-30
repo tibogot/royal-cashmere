@@ -1,4 +1,37 @@
-import type { ShopifyProduct, ShopifyProductDetail } from "./queries";
+import type {
+  ProductOption,
+  ProductVariant,
+  ShopifyProduct,
+  ShopifyProductDetail,
+} from "./queries";
+
+const PLACEHOLDER_OPTIONS: ProductOption[] = [
+  { name: "Couleur", values: ["Noir", "Camel", "Ivoire"] },
+  { name: "Taille", values: ["XS", "S", "M", "L", "XL"] },
+];
+
+function buildPlaceholderVariants(
+  basePrice: string,
+  index: number,
+): ProductVariant[] {
+  const variants: ProductVariant[] = [];
+
+  for (const color of PLACEHOLDER_OPTIONS[0].values) {
+    for (const size of PLACEHOLDER_OPTIONS[1].values) {
+      variants.push({
+        id: `placeholder-variant-${index}-${color}-${size}`,
+        availableForSale: true,
+        price: basePrice,
+        selectedOptions: [
+          { name: "Couleur", value: color },
+          { name: "Taille", value: size },
+        ],
+      });
+    }
+  }
+
+  return variants;
+}
 
 const placeholderCatalog: Omit<ShopifyProduct, "id">[] = [
   {
@@ -99,8 +132,10 @@ export function getPlaceholderProductByHandle(
     ...product,
     description:
       "Pièce en cachemire d'exception, sélectionnée pour sa douceur et sa pureté. Fabriquée avec un savoir-faire exigeant, issue des hauts plateaux de Mongolie.",
-    variantId: `placeholder-variant-${index}`,
-    availableForSale: true,
+    descriptionHtml:
+      "<p>Pièce en cachemire d'exception, sélectionnée pour sa douceur et sa pureté. Fabriquée avec un savoir-faire exigeant, issue des hauts plateaux de Mongolie.</p>",
+    options: PLACEHOLDER_OPTIONS,
+    variants: buildPlaceholderVariants(product.price, index),
   };
 }
 
