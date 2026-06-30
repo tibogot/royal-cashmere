@@ -40,3 +40,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# video assets (upload to Vercel Blob; keep out of git)
+/video-output/
+/public/videos/*.mp4

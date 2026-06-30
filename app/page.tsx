@@ -4,6 +4,7 @@ import CategoryShowcase from "@/components/CategoryShowcase";
 import FeaturedProducts from "@/components/FeaturedProducts";
 import Faq from "@/components/Faq";
 import HeroProductGlass from "@/components/HeroProductGlass";
+import HomeHeroBackground from "@/components/HomeHeroBackground";
 import ProductImageBanner from "@/components/ProductImageBanner";
 import ProductShowcase from "@/components/ProductShowcase";
 import { getFeaturedProducts } from "@/lib/shopify/products";
@@ -22,21 +23,22 @@ export default async function Home() {
 
   return (
     <main className="w-full">
-      <section id="home-hero" className="relative h-svh w-full">
+      <section id="home-hero" className="relative h-svh w-full overflow-hidden">
         <h1 className="sr-only">
           Royal Cashmere — Boutique de cachemire d&apos;exception à Uccle,
           Bruxelles
         </h1>
-        <Image
+        <HomeHeroBackground />
+        {/* <Image
           src="/images/nick-karvounis.jpg"
           alt="Boutique Royal Cashmere — cachemire d'exception à Bruxelles"
           fill
           priority
           className="object-cover"
           sizes="100vw"
-        />
+        /> */}
         <div
-          className="pointer-events-none absolute inset-0 bg-linear-to-b from-black/50 via-black/20 to-transparent"
+          className="pointer-events-none absolute inset-0 z-1 bg-linear-to-b from-black/50 via-black/20 to-transparent"
           aria-hidden="true"
         />
         {heroProduct ? <HeroProductGlass product={heroProduct} /> : null}
