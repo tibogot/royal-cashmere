@@ -88,3 +88,48 @@ export function getSelectableValues(
     }),
   );
 }
+
+export function getProductImageForSelections(
+  product: {
+    imageUrl: string;
+    imageAlt: string;
+    variants: ProductVariant[];
+  },
+  selections: Record<string, string>,
+) {
+  const selectedVariant = findVariantBySelections(product.variants, selections);
+
+  if (selectedVariant?.imageUrl) {
+    return {
+      imageUrl: selectedVariant.imageUrl,
+      imageAlt: selectedVariant.imageAlt ?? product.imageAlt,
+    };
+  }
+
+  const colorSelection = Object.entries(selections).find(([name]) =>
+    isColorOption(name),
+  );
+
+  if (colorSelection) {
+    const [, colorValue] = colorSelection;
+    const colorVariant = product.variants.find(
+      (variant) =>
+        variant.imageUrl &&
+        variant.selectedOptions.some(
+          (option) => isColorOption(option.name) && option.value === colorValue,
+        ),
+    );
+
+    if (colorVariant?.imageUrl) {
+      return {
+        imageUrl: colorVariant.imageUrl,
+        imageAlt: colorVariant.imageAlt ?? product.imageAlt,
+      };
+    }
+  }
+
+  return {
+    imageUrl: product.imageUrl,
+    imageAlt: product.imageAlt,
+  };
+}

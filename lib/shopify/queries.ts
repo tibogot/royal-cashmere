@@ -110,6 +110,8 @@ export type ProductVariant = {
   id: string;
   availableForSale: boolean;
   price: string;
+  imageUrl?: string;
+  imageAlt?: string;
   selectedOptions: { name: string; value: string }[];
 };
 
@@ -136,6 +138,10 @@ type ShopifyProductDetailNode = ShopifyProductNode & {
           name: string;
           value: string;
         }[];
+        image: {
+          url: string;
+          altText: string | null;
+        } | null;
       };
     }[];
   };
@@ -166,6 +172,10 @@ export const PRODUCT_BY_HANDLE_QUERY = `
             selectedOptions {
               name
               value
+            }
+            image {
+              url
+              altText
             }
           }
         }

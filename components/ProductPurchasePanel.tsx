@@ -5,16 +5,17 @@ import { getProductDescriptionHtml } from "@/lib/shopify/format-description";
 import type { ShopifyProductDetail } from "@/lib/shopify/queries";
 import {
   findVariantBySelections,
-  getDefaultSelections,
   getSelectableValues,
   isColorOption,
   isSizeOption,
   sortProductOptions,
 } from "@/lib/shopify/variants";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 
 type ProductPurchasePanelProps = {
   product: ShopifyProductDetail;
+  selections: Record<string, string>;
+  onSelectionChange: (optionName: string, value: string) => void;
 };
 
 function getOptionLabel(name: string) {
@@ -25,14 +26,12 @@ function getOptionLabel(name: string) {
 
 export default function ProductPurchasePanel({
   product,
+  selections,
+  onSelectionChange,
 }: ProductPurchasePanelProps) {
   const sortedOptions = useMemo(
     () => sortProductOptions(product.options),
     [product.options],
-  );
-
-  const [selections, setSelections] = useState(() =>
-    getDefaultSelections(product.options, product.variants),
   );
 
   const selectedVariant = useMemo(
@@ -41,10 +40,7 @@ export default function ProductPurchasePanel({
   );
 
   const handleOptionChange = (optionName: string, value: string) => {
-    setSelections((current) => ({
-      ...current,
-      [optionName]: value,
-    }));
+    onSelectionChange(optionName, value);
   };
 
   const descriptionHtml = getProductDescriptionHtml(

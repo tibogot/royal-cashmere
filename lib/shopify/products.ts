@@ -92,6 +92,8 @@ function mapProductDetailNode(
       id: variant.id,
       availableForSale: variant.availableForSale,
       price: formatPrice(variant.price.amount, variant.price.currencyCode),
+      imageUrl: variant.image?.url,
+      imageAlt: variant.image?.altText ?? undefined,
       selectedOptions: variant.selectedOptions,
     }))
     .filter((variant) => variant.selectedOptions.length > 0);

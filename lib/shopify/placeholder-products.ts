@@ -13,8 +13,13 @@ const PLACEHOLDER_OPTIONS: ProductOption[] = [
 function buildPlaceholderVariants(
   basePrice: string,
   index: number,
+  imageUrl: string,
 ): ProductVariant[] {
   const variants: ProductVariant[] = [];
+  const alternateImage =
+    index % 2 === 0
+      ? "/images/unsplash_mjtLS0CDuIQ-1.png"
+      : "/images/unsplash_mjtLS0CDuIQ.png";
 
   for (const color of PLACEHOLDER_OPTIONS[0].values) {
     for (const size of PLACEHOLDER_OPTIONS[1].values) {
@@ -22,6 +27,8 @@ function buildPlaceholderVariants(
         id: `placeholder-variant-${index}-${color}-${size}`,
         availableForSale: true,
         price: basePrice,
+        imageUrl: color === "Noir" ? imageUrl : alternateImage,
+        imageAlt: color,
         selectedOptions: [
           { name: "Couleur", value: color },
           { name: "Taille", value: size },
@@ -135,7 +142,7 @@ export function getPlaceholderProductByHandle(
     descriptionHtml:
       "<p>Pièce en cachemire d'exception, sélectionnée pour sa douceur et sa pureté. Fabriquée avec un savoir-faire exigeant, issue des hauts plateaux de Mongolie.</p>",
     options: PLACEHOLDER_OPTIONS,
-    variants: buildPlaceholderVariants(product.price, index),
+    variants: buildPlaceholderVariants(product.price, index, product.imageUrl),
   };
 }
 
