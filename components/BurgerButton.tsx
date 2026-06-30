@@ -24,17 +24,17 @@ export default function BurgerButton({
     >
       <span className="sr-only">{open ? "Fermer le menu" : "Ouvrir le menu"}</span>
       <span
-        className={`absolute block h-px w-5 bg-current transition duration-300 ease-out ${
+        className={`absolute block h-px w-5 transition-[transform,opacity,background-color] duration-300 ease-out ${
           open ? "translate-y-0 rotate-45" : "-translate-y-1.5"
         } ${lineClassName}`}
       />
       <span
-        className={`absolute block h-px w-5 bg-current transition duration-300 ease-out ${
+        className={`absolute block h-px w-5 transition-[transform,opacity,background-color] duration-300 ease-out ${
           open ? "scale-x-0 opacity-0" : "scale-x-100 opacity-100"
         } ${lineClassName}`}
       />
       <span
-        className={`absolute block h-px w-5 bg-current transition duration-300 ease-out ${
+        className={`absolute block h-px w-5 transition-[transform,opacity,background-color] duration-300 ease-out ${
           open ? "translate-y-0 -rotate-45" : "translate-y-1.5"
         } ${lineClassName}`}
       />

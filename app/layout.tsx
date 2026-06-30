@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
+import OrganizationJsonLd from "@/components/OrganizationJsonLd";
 import SmoothScroll from "@/components/SmoothScroll";
 import { rootMetadata } from "@/lib/seo";
 import { ivyPrestoHeadline, neueHaasDisplay } from "./fonts";
@@ -19,6 +20,7 @@ export default function RootLayout({
       className={`${neueHaasDisplay.variable} ${ivyPrestoHeadline.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-sans font-light">
+        <OrganizationJsonLd />
         <SmoothScroll>
           <Navbar />
           {children}

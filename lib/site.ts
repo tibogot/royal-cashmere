@@ -12,6 +12,9 @@ export const siteConfig = {
     country: "Belgique",
     phone: "+32 2 850 59 44",
   },
+  social: {
+    facebook: "https://www.facebook.com/RoyalCashmere.be/",
+  },
 } as const;
 
 export type SiteLocale = (typeof siteConfig.locales)[number];

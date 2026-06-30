@@ -33,6 +33,7 @@ export default function Navbar() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [navSolid, setNavSolid] = useState(pathname !== routes.home);
   const headerRef = useRef<HTMLElement>(null);
   const bgRef = useRef<HTMLDivElement>(null);
   const navRef = useRef<HTMLElement>(null);
@@ -48,6 +49,7 @@ export default function Navbar() {
     const links = nav.querySelectorAll<HTMLElement>("[data-nav-link]");
 
     const setSolid = (solid: boolean, immediate = false) => {
+      setNavSolid(solid);
       const duration = immediate ? 0 : NAV_ANIM_DURATION;
 
       gsap.to(bg, {
@@ -105,8 +107,10 @@ export default function Navbar() {
   }, [isHome, pathname]);
 
   const navLinkClassName = `text-xs uppercase tracking-wide transition-opacity hover:opacity-60 ${
-    isHome ? "text-white" : "text-black"
+    navSolid ? "text-black" : "text-white"
   }`;
+
+  const burgerLineClassName = navSolid ? "bg-black" : "bg-white";
 
   const handleMenuToggle = () => {
     setMenuOpen((current) => !current);
@@ -166,6 +170,7 @@ export default function Navbar() {
                 open={menuOpen}
                 onClick={handleMenuToggle}
                 className={navLinkClassName}
+                lineClassName={burgerLineClassName}
               />
             ) : null}
             <button

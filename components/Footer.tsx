@@ -3,6 +3,7 @@ import FooterSearchLink from "@/components/FooterSearchLink";
 import Image from "next/image";
 import Link from "next/link";
 import { routes } from "@/lib/routes";
+import { siteConfig } from "@/lib/site";
 
 const footerLinkClassName =
   "w-fit text-left text-xs uppercase tracking-wide transition-opacity hover:opacity-60";
@@ -27,7 +28,14 @@ const legalLinks = [
 ] as const;
 
 const socialLinks = [
-  { label: "Facebook", href: "#", src: "/brand/facebook.svg", width: 20, height: 20 },
+  {
+    label: "Facebook",
+    href: siteConfig.social.facebook,
+    src: "/brand/facebook.svg",
+    width: 20,
+    height: 20,
+    external: true,
+  },
   { label: "X", href: "#", src: "/brand/twitter.svg", width: 18, height: 17 },
   { label: "Instagram", href: "#", src: "/brand/instagram.svg", width: 20, height: 20 },
 ] as const;
@@ -72,11 +80,13 @@ export default function Footer() {
             </a>
 
             <div className="mt-3 flex items-center gap-3">
-              {socialLinks.map(({ label, href, src, width, height }) => (
+              {socialLinks.map(({ label, href, src, width, height, external }) => (
                 <Link
                   key={label}
                   href={href}
                   aria-label={label}
+                  target={external ? "_blank" : undefined}
+                  rel={external ? "noopener noreferrer" : undefined}
                   className="transition-opacity hover:opacity-60"
                 >
                   <Image
