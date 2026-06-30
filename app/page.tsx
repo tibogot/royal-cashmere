@@ -37,10 +37,10 @@ export default async function Home() {
           className="object-cover"
           sizes="100vw"
         /> */}
-        <div
+        {/* <div
           className="pointer-events-none absolute inset-0 z-1 bg-linear-to-b from-black/50 via-black/20 to-transparent"
           aria-hidden="true"
-        />
+        /> */}
         {heroProduct ? <HeroProductGlass product={heroProduct} /> : null}
       </section>
 
@@ -84,8 +84,8 @@ export default async function Home() {
         <h2 className="mx-auto max-w-4xl font-serif text-2xl uppercase leading-snug md:max-w-3xl md:text-3xl">
           Nous vous présentons Royal Cashmere, où le luxe rencontre la raison
           d&apos;être, où la durabilité s&apos;entrelace avec le style, et où
-          chaque fibre raconte un voyage des hauts plateaux de Mongolie jusqu&apos;à
-          votre garde-robe.
+          chaque fibre raconte un voyage des hauts plateaux de Mongolie
+          jusqu&apos;à votre garde-robe.
         </h2>
 
         <p className="mx-auto mt-8 max-w-2xl text-sm text-black/70 md:mt-10 md:text-base">

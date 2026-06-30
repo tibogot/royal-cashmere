@@ -51,7 +51,7 @@ export default function ShopCatalog({
                 type="button"
                 onClick={() => setActiveFilterId(filter.id)}
                 aria-pressed={isActive}
-                className={`select-none text-sm uppercase tracking-wide transition-opacity ${
+                className={`select-none text-xs uppercase tracking-wide transition-opacity ${
                   isActive
                     ? "text-black"
                     : "text-black/50 hover:text-black/80"
