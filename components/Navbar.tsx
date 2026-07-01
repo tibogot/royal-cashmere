@@ -24,6 +24,7 @@ const EASE = "power2.out";
 const CLOSE_EASE = "power2.inOut";
 const MENU_CONTENT_OFFSET = 6;
 const CONTENT_REVEAL_AT = 0.22;
+const TRANSPARENT_NAV_SECTION_ID = "home-hero";
 
 type NavAppearance = {
   white: boolean;
@@ -189,27 +190,24 @@ export default function Navbar() {
         return;
       }
 
-      setNavSolid(false);
+      const transparentSection = document.getElementById(TRANSPARENT_NAV_SECTION_ID);
+      if (!transparentSection) {
+        setNavSolid(true);
+        return;
+      }
 
-      const hero = document.getElementById("home-hero");
-      if (!hero) return;
+      setNavSolid(transparentSection.getBoundingClientRect().bottom <= 0);
 
-      const reduceMotion = window.matchMedia(
-        "(prefers-reduced-motion: reduce)",
-      ).matches;
-
-      ScrollTrigger.create({
-        trigger: hero,
+      const transparentSectionTrigger = ScrollTrigger.create({
+        trigger: transparentSection,
         start: "bottom top",
         onEnter: () => setNavSolid(true),
         onLeaveBack: () => setNavSolid(false),
       });
 
-      if (reduceMotion) {
-        ScrollTrigger.refresh();
-      } else {
-        ScrollTrigger.refresh();
-      }
+      ScrollTrigger.refresh();
+
+      return () => transparentSectionTrigger.kill();
     },
     { scope: headerRef, dependencies: [isHome, pathname] },
   );

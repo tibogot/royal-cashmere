@@ -65,6 +65,7 @@ export default function MobileNavMenu({
 
   const handleClose = useCallback(() => {
     setIsClosing(true);
+    setBoutiqueOpen(false);
     onClose();
   }, [onClose]);
 
@@ -72,15 +73,14 @@ export default function MobileNavMenu({
     if (previousPathnameRef.current === pathname) return;
 
     previousPathnameRef.current = pathname;
-    handleClose();
-  }, [pathname, handleClose]);
+    tweenRef.current?.kill();
+    setIsClosing(false);
+    setBoutiqueOpen(false);
+    onClose();
+  }, [pathname, onClose]);
 
   useEffect(() => {
-    if (!open) setBoutiqueOpen(false);
-  }, [open]);
-
-  useEffect(() => {
-    if (!shouldRender) return;
+    if (!open) return;
 
     const blockBackgroundScroll = (event: Event) => {
       const panel = panelRef.current;
@@ -98,7 +98,7 @@ export default function MobileNavMenu({
       window.removeEventListener("wheel", blockBackgroundScroll);
       window.removeEventListener("touchmove", blockBackgroundScroll);
     };
-  }, [shouldRender]);
+  }, [open]);
 
   useEffect(() => {
     if (!shouldRender) return;
@@ -143,7 +143,7 @@ export default function MobileNavMenu({
   if (!mounted || !shouldRender) return null;
 
   return createPortal(
-    <div className="fixed inset-0 z-60 md:hidden">
+    <div className={`fixed inset-0 z-60 md:hidden ${open ? "" : "pointer-events-none"}`}>
       <div
         ref={panelRef}
         className="absolute inset-0 flex flex-col bg-white px-4 pb-6 pt-4 text-black"
