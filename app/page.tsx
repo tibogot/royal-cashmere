@@ -62,7 +62,7 @@ export default async function Home() {
       <section className="flex w-full flex-col md:h-[80svh] md:flex-row">
         <div className="relative h-[40svh] w-full md:h-full md:w-1/2">
           <Image
-            src="/images/unsplash_mjtLS0CDuIQ.png"
+            src="/images/Frame 63.png"
             alt="Cachemire Royal Cashmere"
             fill
             className="object-cover"
@@ -71,7 +71,7 @@ export default async function Home() {
         </div>
         <div className="relative h-[40svh] w-full md:h-full md:w-1/2">
           <Image
-            src="/images/unsplash_mjtLS0CDuIQ-1.png"
+            src="/images/Frame 64.png"
             alt="Cachemire Royal Cashmere"
             fill
             className="object-cover"

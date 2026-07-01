@@ -1,8 +1,8 @@
 "use client";
 
+import ShopifyProductImage from "@/components/ShopifyProductImage";
 import { routes } from "@/lib/routes";
 import type { CartLine } from "@/lib/shopify/cart";
-import Image from "next/image";
 import Link from "next/link";
 
 type CartLineItemProps = {
@@ -37,13 +37,13 @@ export default function CartLineItem({
       <Link
         href={routes.product(line.productHandle)}
         onClick={onClose}
-        className="relative aspect-4/5 overflow-hidden bg-[#f3efe8]"
+        className="block"
       >
-        <Image
+        <ShopifyProductImage
           src={line.imageUrl}
           alt={line.imageAlt}
-          fill
-          className="object-cover"
+          padding="sm"
+          className="aspect-4/5"
           sizes={isPanel ? "72px" : "120px"}
         />
       </Link>

@@ -1,12 +1,12 @@
 "use client";
 
 import ProductPurchasePanel from "@/components/ProductPurchasePanel";
+import ShopifyProductImage from "@/components/ShopifyProductImage";
 import type { ShopifyProductDetail } from "@/lib/shopify/queries";
 import {
   getDefaultSelections,
   getProductImageForSelections,
 } from "@/lib/shopify/variants";
-import Image from "next/image";
 import { useMemo, useState } from "react";
 
 type ProductDetailClientProps = {
@@ -34,17 +34,15 @@ export default function ProductDetailClient({
 
   return (
     <section className="flex min-h-svh flex-col overflow-x-hidden bg-white text-black md:flex-row">
-      <div className="relative h-[55svh] w-full shrink-0 md:h-auto md:min-h-svh md:w-1/2">
-        <Image
-          key={displayImage.imageUrl}
-          src={displayImage.imageUrl}
-          alt={displayImage.imageAlt}
-          fill
-          priority
-          className="object-cover"
-          sizes="(max-width: 768px) 100vw, 50vw"
-        />
-      </div>
+      <ShopifyProductImage
+        key={displayImage.imageUrl}
+        src={displayImage.imageUrl}
+        alt={displayImage.imageAlt}
+        priority
+        padding="lg"
+        className="h-[55svh] w-full shrink-0 md:min-h-svh md:w-1/2 md:self-stretch"
+        sizes="(max-width: 768px) 100vw, 50vw"
+      />
 
       <div className="flex min-w-0 w-full flex-col justify-center overflow-x-hidden px-4 py-12 md:w-1/2 md:px-12 md:py-24 lg:px-20">
         <ProductPurchasePanel

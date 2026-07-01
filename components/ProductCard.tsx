@@ -1,4 +1,4 @@
-import Image from "next/image";
+import ShopifyProductImage from "@/components/ShopifyProductImage";
 import Link from "next/link";
 import type { ShopifyProduct } from "@/lib/shopify/queries";
 
@@ -31,15 +31,13 @@ export default function ProductCard({
   return (
     <article className={articleClassName}>
       <Link href={`/products/${product.handle}`} className="group block">
-        <div className="relative aspect-[4/5] overflow-hidden bg-[#f3efe8]">
-          <Image
-            src={product.imageUrl}
-            alt={product.imageAlt}
-            fill
-            className="object-cover transition-opacity group-hover:opacity-90"
-            sizes={imageSizes}
-          />
-        </div>
+        <ShopifyProductImage
+          src={product.imageUrl}
+          alt={product.imageAlt}
+          sizes={imageSizes}
+          className="aspect-4/5"
+          imageClassName="transition-opacity group-hover:opacity-90"
+        />
 
         <div className="mt-4 space-y-1 text-left">
           <h3 className="font-serif text-base font-medium">{product.title}</h3>
