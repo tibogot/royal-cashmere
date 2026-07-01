@@ -19,11 +19,11 @@ import { useEffect, useRef, useState } from "react";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
-const DURATION = 0.42;
-const EASE = "power2.inOut";
-const MENU_CONTENT_OFFSET = 8;
-const COLOR_SHIFT_AT = 0.52;
-const CONTENT_REVEAL_OVERLAP = 0.28;
+const DURATION = 0.48;
+const EASE = "power2.out";
+const CLOSE_EASE = "power2.inOut";
+const MENU_CONTENT_OFFSET = 6;
+const CONTENT_REVEAL_AT = 0.22;
 
 type NavAppearance = {
   white: boolean;
@@ -52,95 +52,112 @@ export default function Navbar() {
 
   const isNavWhite = !isHome || navSolid || navHovered;
 
-  const { contextSafe } = useGSAP({ scope: headerRef });
+  const runNavAnimation = ({
+    white,
+    expanded,
+    immediate = false,
+  }: NavAppearance) => {
+    const nav = navRef.current;
+    const bg = bgRef.current;
+    const menu = menuRef.current;
+    const menuInner = menuInnerRef.current;
+    const logo = logoRef.current;
+    if (!nav || !bg || !logo) return;
 
-  const runNavAnimation = contextSafe(
-    ({ white, expanded, immediate = false }: NavAppearance) => {
-      const nav = navRef.current;
-      const bg = bgRef.current;
-      const menu = menuRef.current;
-      const menuInner = menuInnerRef.current;
-      const logo = logoRef.current;
-      if (!nav || !bg || !logo) return;
+    const links = nav.querySelectorAll<HTMLElement>("[data-nav-link]");
+    const navHeight = nav.offsetHeight;
+    const menuHeight = menuInner?.offsetHeight ?? 0;
+    const duration = immediate ? 0 : DURATION;
+    const colorAt = duration * 0.52;
 
-      const links = nav.querySelectorAll<HTMLElement>("[data-nav-link]");
-      const navHeight = nav.offsetHeight;
-      const menuHeight = menuInner?.offsetHeight ?? 0;
-      const duration = immediate ? 0 : DURATION;
-      const colorAt = duration * COLOR_SHIFT_AT;
+    navTweenRef.current?.kill();
+    gsap.set(bg, { transformOrigin: "top center" });
 
-      navTweenRef.current?.kill();
-      gsap.set(bg, { transformOrigin: "top center" });
+    const tl = gsap.timeline({
+      defaults: { duration, ease: EASE, overwrite: "auto" },
+    });
+    navTweenRef.current = tl;
 
-      const tl = gsap.timeline({
-        defaults: { duration, ease: EASE, overwrite: "auto" },
-      });
-      navTweenRef.current = tl;
+    const bgScaleY = Number(gsap.getProperty(bg, "scaleY") ?? 0);
+    const bgVisible = bgScaleY > 0.01;
+    const menuCurrentH = menu ? Number(gsap.getProperty(menu, "height") ?? 0) : 0;
+    const menuIsOpen = menuCurrentH > 1;
 
-      const bgScaleY = Number(gsap.getProperty(bg, "scaleY") ?? 0);
-      const bgVisible = bgScaleY > 0.01;
-      const menuCurrentH = menu ? Number(gsap.getProperty(menu, "height") ?? 0) : 0;
-      const menuIsOpen = menuCurrentH > 1;
+    if (white) {
+      tl.set(links, { color: "#000000" }, 0);
+      tl.set(logo, { filter: "brightness(0)" }, 0);
 
-      if (white) {
-        const showMenu = expanded && menu != null && menuInner != null && menuHeight > 0;
+      const showMenu = expanded && menu != null && menuInner != null && menuHeight > 0;
 
-        if (showMenu) {
-          // Start content invisible (opacity only — CSS handles visibility:visible on the panel)
-          tl.set(menuInner, { opacity: 0, y: MENU_CONTENT_OFFSET }, 0);
-
-          if (!bgVisible) {
-            // Phase 1: slide white bar in from top
-            tl.to(bg, { scaleY: 1, height: navHeight }, 0);
-            tl.to(links, { color: "#000000", duration: duration * 0.4 }, colorAt);
-            tl.to(logo, { filter: "brightness(0)", duration: duration * 0.4 }, colorAt);
-            // Phase 2: expand bar + menu area sequentially after phase 1
-            tl.to(menu, { height: menuHeight }, duration);
-            tl.to(bg, { height: navHeight + menuHeight, scaleY: 1 }, "<");
-          } else {
-            // Bar already visible — use 2×DURATION so the expand feels the same as Phase 1+Phase 2
-            tl.to(bg, { scaleY: 1, height: navHeight + menuHeight, duration: duration * 2 }, 0);
-            tl.to(menu, { height: menuHeight, duration: duration * 2 }, 0);
-          }
-          // Fade content in near the end of menu expansion
-          tl.to(
-            menuInner,
-            { opacity: 1, y: 0, duration: duration * 0.55 },
-            `-=${duration * CONTENT_REVEAL_OVERLAP}`,
-          );
-        } else if (menuIsOpen && menu && menuInner) {
-          // Collapse open menu, keep white bar
-          tl.to(menuInner, { opacity: 0, y: MENU_CONTENT_OFFSET, duration: duration * 0.35 }, 0);
-          tl.to(menu, { height: 0 }, ">");
-          tl.to(bg, { scaleY: 1, height: navHeight }, "<");
-        } else {
-          // Simple white nav bar (no menu)
-          if (menu) tl.set(menu, { height: 0 });
-          if (menuInner) tl.set(menuInner, { opacity: 0, y: MENU_CONTENT_OFFSET });
-          tl.to(bg, { scaleY: 1, height: navHeight }, 0);
-          tl.to(links, { color: "#000000", duration: duration * 0.4 }, colorAt);
-          tl.to(logo, { filter: "brightness(0)", duration: duration * 0.4 }, colorAt);
+      if (showMenu) {
+        if (!menuIsOpen) {
+          tl.set(menuInner, { autoAlpha: 0, y: MENU_CONTENT_OFFSET }, 0);
         }
+
+        tl.to(
+          bg,
+          {
+            scaleY: 1,
+            height: navHeight + menuHeight,
+            duration: duration * (bgVisible ? 1 : 1.1),
+          },
+          0,
+        );
+        tl.to(menu, { height: menuHeight, duration: duration * 1.1 }, 0);
+        tl.to(
+          menuInner,
+          {
+            autoAlpha: 1,
+            y: 0,
+            duration: duration * 0.7,
+          },
+          duration * CONTENT_REVEAL_AT,
+        );
+      } else if (menuIsOpen && menu && menuInner) {
+        tl.to(
+          menuInner,
+          {
+            autoAlpha: 0,
+            y: MENU_CONTENT_OFFSET,
+            duration: duration * 0.28,
+            ease: "power1.out",
+          },
+          0,
+        );
+        tl.to(menu, { height: 0, ease: CLOSE_EASE }, 0);
+        tl.to(bg, { scaleY: 1, height: navHeight, ease: CLOSE_EASE }, 0);
       } else {
-        // Hide white bg
-        if (menuIsOpen && menu && menuInner) {
-          tl.to(menuInner, { opacity: 0, y: MENU_CONTENT_OFFSET, duration: duration * 0.35 }, 0);
-          tl.to(menu, { height: 0 }, ">");
-          tl.to(bg, { scaleY: 0, height: navHeight }, "<");
-        } else {
-          if (menu) tl.set(menu, { height: 0 });
-          if (menuInner) tl.set(menuInner, { opacity: 0, y: MENU_CONTENT_OFFSET });
-          tl.to(bg, { scaleY: 0, height: navHeight }, 0);
-        }
-        tl.to(links, { color: "#ffffff", duration: duration * 0.4 }, colorAt);
-        tl.to(logo, { filter: "brightness(1)", duration: duration * 0.4 }, colorAt);
+        if (menu) tl.set(menu, { height: 0 });
+        if (menuInner) tl.set(menuInner, { autoAlpha: 0, y: MENU_CONTENT_OFFSET });
+        tl.to(bg, { scaleY: 1, height: navHeight, duration: duration * 0.75 }, 0);
       }
+    } else {
+      if (menuIsOpen && menu && menuInner) {
+        tl.to(
+          menuInner,
+          {
+            autoAlpha: 0,
+            y: MENU_CONTENT_OFFSET,
+            duration: duration * 0.28,
+            ease: "power1.out",
+          },
+          0,
+        );
+        tl.to(menu, { height: 0, ease: CLOSE_EASE }, 0);
+        tl.to(bg, { scaleY: 0, height: navHeight, ease: CLOSE_EASE }, 0);
+      } else {
+        if (menu) tl.set(menu, { height: 0 });
+        if (menuInner) tl.set(menuInner, { autoAlpha: 0, y: MENU_CONTENT_OFFSET });
+        tl.to(bg, { scaleY: 0, height: navHeight, ease: CLOSE_EASE }, 0);
+      }
+      tl.to(links, { color: "#ffffff", duration: duration * 0.35 }, colorAt);
+      tl.to(logo, { filter: "brightness(1)", duration: duration * 0.35 }, colorAt);
+    }
 
-      if (immediate) {
-        tl.progress(1, false);
-      }
-    },
-  );
+    if (immediate) {
+      tl.progress(1, false);
+    }
+  };
 
   useGSAP(
     () => {
@@ -164,7 +181,7 @@ export default function Navbar() {
       }
 
       if (menuInner) {
-        gsap.set(menuInner, { opacity: 0, y: MENU_CONTENT_OFFSET });
+        gsap.set(menuInner, { autoAlpha: 0, y: MENU_CONTENT_OFFSET });
       }
 
       if (!isHome) {
@@ -448,7 +465,7 @@ export default function Navbar() {
 
         <div
           ref={menuRef}
-          className="nav-boutique-panel relative hidden md:block"
+          className="relative hidden h-0 overflow-hidden md:block"
           aria-hidden={!shopMenuOpen}
           onMouseEnter={openShopMenu}
         >

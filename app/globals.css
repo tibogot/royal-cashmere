@@ -72,12 +72,6 @@ button:not(:disabled),
   overflow-x: hidden;
 }
 
-.nav-boutique-panel {
-  height: 0;
-  overflow: hidden;
-  visibility: visible;
-}
-
 .animated-underline {
   position: relative;
   display: inline-block;
