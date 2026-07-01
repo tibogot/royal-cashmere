@@ -184,9 +184,124 @@ export const PRODUCT_BY_HANDLE_QUERY = `
   }
 `;
 
+export type ShopifyCollection = {
+  id: string;
+  title: string;
+  handle: string;
+  imageUrl?: string;
+  imageAlt?: string;
+};
+
+type ShopifyCollectionListNode = {
+  id: string;
+  title: string;
+  handle: string;
+  image: {
+    url: string;
+    altText: string | null;
+  } | null;
+  products: {
+    edges: {
+      node: {
+        featuredImage: {
+          url: string;
+          altText: string | null;
+        } | null;
+      };
+    }[];
+  };
+};
+
+type ShopifyCollectionNode = {
+  id: string;
+  title: string;
+  handle: string;
+};
+
+type CollectionsQueryResponse = {
+  data?: {
+    collections: {
+      edges: {
+        node: ShopifyCollectionListNode;
+      }[];
+    };
+  };
+  errors?: { message: string }[];
+};
+
+export const COLLECTIONS_QUERY = `
+  query Collections($first: Int!) {
+    collections(first: $first, sortKey: TITLE) {
+      edges {
+        node {
+          id
+          title
+          handle
+          image {
+            url
+            altText
+          }
+          products(first: 1) {
+            edges {
+              node {
+                featuredImage {
+                  url
+                  altText
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+type CollectionByHandleQueryResponse = {
+  data?: {
+    collection: (ShopifyCollectionNode & {
+      products: {
+        pageInfo: {
+          hasNextPage: boolean;
+          endCursor: string | null;
+        };
+        edges: {
+          node: ShopifyProductNode;
+        }[];
+      };
+    }) | null;
+  };
+  errors?: { message: string }[];
+};
+
+export const COLLECTION_BY_HANDLE_QUERY = `
+  query CollectionByHandle($handle: String!, $first: Int!, $after: String) {
+    collection(handle: $handle) {
+      id
+      title
+      handle
+      products(first: $first, after: $after) {
+        pageInfo {
+          hasNextPage
+          endCursor
+        }
+        edges {
+          node {
+            ${PRODUCT_FIELDS}
+          }
+        }
+      }
+    }
+  }
+`;
+
 export type {
+  CollectionByHandleQueryResponse,
+  CollectionsQueryResponse,
   ProductByHandleQueryResponse,
   ProductsQueryResponse,
+  ShopifyCollectionListNode,
+  ShopifyCollectionNode,
   ShopifyProductDetailNode,
   ShopifyProductNode,
 };

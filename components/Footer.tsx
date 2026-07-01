@@ -27,7 +27,16 @@ const legalLinks = [
   { label: "Cookies", href: routes.cookies },
 ] as const;
 
-const socialLinks = [
+type SocialLink = {
+  label: string;
+  href: string;
+  src: string;
+  width: number;
+  height: number;
+  external?: boolean;
+};
+
+const socialLinks: SocialLink[] = [
   {
     label: "Facebook",
     href: siteConfig.social.facebook,
@@ -38,7 +47,7 @@ const socialLinks = [
   },
   { label: "X", href: "#", src: "/brand/twitter.svg", width: 18, height: 17 },
   { label: "Instagram", href: "#", src: "/brand/instagram.svg", width: 20, height: 20 },
-] as const;
+];
 
 export default function Footer() {
   return (

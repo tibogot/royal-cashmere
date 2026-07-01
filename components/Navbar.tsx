@@ -1,31 +1,35 @@
 "use client";
 
 import BurgerButton from "@/components/BurgerButton";
+import BoutiqueNavMenu from "@/components/BoutiqueNavMenu";
 import CartNavLink from "@/components/CartNavLink";
 import CartPanel from "@/components/CartPanel";
 import MobileNavMenu from "@/components/MobileNavMenu";
 import SearchIcon from "@/components/SearchIcon";
 import SearchPanel from "@/components/SearchPanel";
 import { routes } from "@/lib/routes";
+import type { ShopifyCollection } from "@/lib/shopify/queries";
+import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useLayoutEffect, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
-gsap.registerPlugin(ScrollTrigger);
+gsap.registerPlugin(ScrollTrigger, useGSAP);
 
-const NAV_ANIM_DURATION = 0.45;
+const DURATION = 0.42;
+const EASE = "power2.inOut";
+const MENU_CONTENT_OFFSET = 8;
+const COLOR_SHIFT_AT = 0.52;
+const CONTENT_REVEAL_OVERLAP = 0.28;
 
-const leftLinks = [
-  { label: "Boutique", href: routes.shop },
-  { label: "Collection", href: routes.collection },
-  { label: "À propos", href: routes.about },
-  { label: "Contact", href: routes.contact },
-] as const;
-
-const rightLinks = [{ label: "Mon compte", href: routes.account }] as const;
+type NavAppearance = {
+  white: boolean;
+  expanded: boolean;
+  immediate?: boolean;
+};
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -33,52 +37,142 @@ export default function Navbar() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [shopMenuOpen, setShopMenuOpen] = useState(false);
+  const [navHovered, setNavHovered] = useState(false);
+  const [collections, setCollections] = useState<ShopifyCollection[]>([]);
   const [navSolid, setNavSolid] = useState(pathname !== routes.home);
   const headerRef = useRef<HTMLElement>(null);
+  const shellRef = useRef<HTMLDivElement>(null);
   const bgRef = useRef<HTMLDivElement>(null);
   const navRef = useRef<HTMLElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const menuInnerRef = useRef<HTMLDivElement>(null);
   const logoRef = useRef<HTMLSpanElement>(null);
+  const navTweenRef = useRef<gsap.core.Timeline | null>(null);
 
-  useLayoutEffect(() => {
-    const header = headerRef.current;
-    const bg = bgRef.current;
-    const nav = navRef.current;
-    const logo = logoRef.current;
-    if (!header || !bg || !nav || !logo) return;
+  const isNavWhite = !isHome || navSolid || navHovered;
 
-    const links = nav.querySelectorAll<HTMLElement>("[data-nav-link]");
+  const { contextSafe } = useGSAP({ scope: headerRef });
 
-    const setSolid = (solid: boolean, immediate = false) => {
-      setNavSolid(solid);
-      const duration = immediate ? 0 : NAV_ANIM_DURATION;
+  const runNavAnimation = contextSafe(
+    ({ white, expanded, immediate = false }: NavAppearance) => {
+      const nav = navRef.current;
+      const bg = bgRef.current;
+      const menu = menuRef.current;
+      const menuInner = menuInnerRef.current;
+      const logo = logoRef.current;
+      if (!nav || !bg || !logo) return;
 
-      gsap.to(bg, {
-        opacity: solid ? 1 : 0,
-        duration,
-        ease: "power2.inOut",
-        overwrite: true,
+      const links = nav.querySelectorAll<HTMLElement>("[data-nav-link]");
+      const navHeight = nav.offsetHeight;
+      const menuHeight = menuInner?.offsetHeight ?? 0;
+      const duration = immediate ? 0 : DURATION;
+      const colorAt = duration * COLOR_SHIFT_AT;
+
+      navTweenRef.current?.kill();
+      gsap.set(bg, { transformOrigin: "top center" });
+
+      const tl = gsap.timeline({
+        defaults: { duration, ease: EASE, overwrite: "auto" },
       });
-      gsap.to(links, {
-        color: solid ? "#000000" : "#ffffff",
-        duration,
-        ease: "power2.inOut",
-        overwrite: true,
-      });
-      gsap.to(logo, {
-        filter: solid ? "brightness(0)" : "brightness(1)",
-        duration,
-        ease: "power2.inOut",
-        overwrite: true,
-      });
-    };
+      navTweenRef.current = tl;
 
-    const ctx = gsap.context(() => {
+      const bgScaleY = Number(gsap.getProperty(bg, "scaleY") ?? 0);
+      const bgVisible = bgScaleY > 0.01;
+      const menuCurrentH = menu ? Number(gsap.getProperty(menu, "height") ?? 0) : 0;
+      const menuIsOpen = menuCurrentH > 1;
+
+      if (white) {
+        const showMenu = expanded && menu != null && menuInner != null && menuHeight > 0;
+
+        if (showMenu) {
+          // Start content invisible (opacity only — CSS handles visibility:visible on the panel)
+          tl.set(menuInner, { opacity: 0, y: MENU_CONTENT_OFFSET }, 0);
+
+          if (!bgVisible) {
+            // Phase 1: slide white bar in from top
+            tl.to(bg, { scaleY: 1, height: navHeight }, 0);
+            tl.to(links, { color: "#000000", duration: duration * 0.4 }, colorAt);
+            tl.to(logo, { filter: "brightness(0)", duration: duration * 0.4 }, colorAt);
+            // Phase 2: expand bar + menu area sequentially after phase 1
+            tl.to(menu, { height: menuHeight }, duration);
+            tl.to(bg, { height: navHeight + menuHeight, scaleY: 1 }, "<");
+          } else {
+            // Bar already visible — use 2×DURATION so the expand feels the same as Phase 1+Phase 2
+            tl.to(bg, { scaleY: 1, height: navHeight + menuHeight, duration: duration * 2 }, 0);
+            tl.to(menu, { height: menuHeight, duration: duration * 2 }, 0);
+          }
+          // Fade content in near the end of menu expansion
+          tl.to(
+            menuInner,
+            { opacity: 1, y: 0, duration: duration * 0.55 },
+            `-=${duration * CONTENT_REVEAL_OVERLAP}`,
+          );
+        } else if (menuIsOpen && menu && menuInner) {
+          // Collapse open menu, keep white bar
+          tl.to(menuInner, { opacity: 0, y: MENU_CONTENT_OFFSET, duration: duration * 0.35 }, 0);
+          tl.to(menu, { height: 0 }, ">");
+          tl.to(bg, { scaleY: 1, height: navHeight }, "<");
+        } else {
+          // Simple white nav bar (no menu)
+          if (menu) tl.set(menu, { height: 0 });
+          if (menuInner) tl.set(menuInner, { opacity: 0, y: MENU_CONTENT_OFFSET });
+          tl.to(bg, { scaleY: 1, height: navHeight }, 0);
+          tl.to(links, { color: "#000000", duration: duration * 0.4 }, colorAt);
+          tl.to(logo, { filter: "brightness(0)", duration: duration * 0.4 }, colorAt);
+        }
+      } else {
+        // Hide white bg
+        if (menuIsOpen && menu && menuInner) {
+          tl.to(menuInner, { opacity: 0, y: MENU_CONTENT_OFFSET, duration: duration * 0.35 }, 0);
+          tl.to(menu, { height: 0 }, ">");
+          tl.to(bg, { scaleY: 0, height: navHeight }, "<");
+        } else {
+          if (menu) tl.set(menu, { height: 0 });
+          if (menuInner) tl.set(menuInner, { opacity: 0, y: MENU_CONTENT_OFFSET });
+          tl.to(bg, { scaleY: 0, height: navHeight }, 0);
+        }
+        tl.to(links, { color: "#ffffff", duration: duration * 0.4 }, colorAt);
+        tl.to(logo, { filter: "brightness(1)", duration: duration * 0.4 }, colorAt);
+      }
+
+      if (immediate) {
+        tl.progress(1, false);
+      }
+    },
+  );
+
+  useGSAP(
+    () => {
+      const header = headerRef.current;
+      const bg = bgRef.current;
+      const menu = menuRef.current;
+      const menuInner = menuInnerRef.current;
+      const nav = navRef.current;
+      if (!header || !bg || !nav) return;
+
+      const navHeight = nav.offsetHeight;
+
+      gsap.set(bg, {
+        transformOrigin: "top center",
+        scaleY: 0,
+        height: navHeight,
+      });
+
+      if (menu) {
+        gsap.set(menu, { height: 0, overflow: "hidden" });
+      }
+
+      if (menuInner) {
+        gsap.set(menuInner, { opacity: 0, y: MENU_CONTENT_OFFSET });
+      }
+
       if (!isHome) {
-        setSolid(true, true);
+        setNavSolid(true);
         return;
       }
 
-      setSolid(false, true);
+      setNavSolid(false);
 
       const hero = document.getElementById("home-hero");
       if (!hero) return;
@@ -90,27 +184,80 @@ export default function Navbar() {
       ScrollTrigger.create({
         trigger: hero,
         start: "bottom top",
-        onEnter: () => setSolid(true, reduceMotion),
-        onLeaveBack: () => setSolid(false, reduceMotion),
+        onEnter: () => setNavSolid(true),
+        onLeaveBack: () => setNavSolid(false),
       });
 
-      ScrollTrigger.refresh();
-    }, header);
+      if (reduceMotion) {
+        ScrollTrigger.refresh();
+      } else {
+        ScrollTrigger.refresh();
+      }
+    },
+    { scope: headerRef, dependencies: [isHome, pathname] },
+  );
 
-    const refresh = () => ScrollTrigger.refresh();
-    window.addEventListener("load", refresh);
+  useGSAP(
+    () => {
+      const reduceMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      ).matches;
 
-    return () => {
-      window.removeEventListener("load", refresh);
-      ctx.revert();
-    };
-  }, [isHome, pathname]);
+      runNavAnimation({
+        white: isNavWhite,
+        expanded: shopMenuOpen,
+        immediate: reduceMotion,
+      });
+    },
+    {
+      scope: headerRef,
+      dependencies: [isNavWhite, shopMenuOpen, collections.length, isHome],
+    },
+  );
 
-  const navLinkClassName = `text-xs uppercase tracking-wide transition-opacity hover:opacity-60 ${
-    navSolid ? "text-black" : "text-white"
+  useGSAP(
+    () => {
+      const menuInner = menuInnerRef.current;
+      const menu = menuRef.current;
+      const bg = bgRef.current;
+      const nav = navRef.current;
+      if (!menuInner || !menu || !bg || !nav || !shopMenuOpen) return;
+
+      const observer = new ResizeObserver(() => {
+        const navHeight = nav.offsetHeight;
+        const menuHeight = menuInner.offsetHeight;
+
+        gsap.to(menu, {
+          height: menuHeight,
+          duration: DURATION * 0.35,
+          ease: EASE,
+          overwrite: "auto",
+        });
+        gsap.to(bg, {
+          height: navHeight + menuHeight,
+          duration: DURATION * 0.35,
+          ease: EASE,
+          overwrite: "auto",
+        });
+      });
+
+      observer.observe(menuInner);
+      return () => observer.disconnect();
+    },
+    {
+      scope: headerRef,
+      dependencies: [shopMenuOpen],
+    },
+  );
+
+  const navLinkClassName = `animated-underline w-fit text-xs uppercase tracking-wide ${
+    isHome && !isNavWhite ? "text-white" : "text-black"
   }`;
 
-  const burgerLineClassName = navSolid ? "bg-black" : "bg-white";
+  const navIconButtonClassName =
+    "flex h-8 w-8 items-center justify-center text-xs uppercase tracking-wide";
+
+  const burgerLineClassName = isNavWhite ? "bg-black" : "bg-white";
 
   const handleMenuToggle = () => {
     setMenuOpen((current) => !current);
@@ -127,6 +274,31 @@ export default function Navbar() {
     setSearchOpen(false);
     setCartOpen(true);
   };
+
+  const openShopMenu = () => {
+    setShopMenuOpen(true);
+  };
+
+  const closeShopMenu = () => {
+    setShopMenuOpen(false);
+  };
+
+  useEffect(() => {
+    let cancelled = false;
+
+    fetch("/api/collections")
+      .then((response) => response.json())
+      .then((data: { collections?: ShopifyCollection[] }) => {
+        if (!cancelled && data.collections) {
+          setCollections(data.collections);
+        }
+      })
+      .catch(() => {});
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   useEffect(() => {
     const handleCartOpenEvent = () => {
@@ -152,114 +324,156 @@ export default function Navbar() {
   return (
     <header ref={headerRef} className="fixed inset-x-0 top-0 z-50">
       <div
-        ref={bgRef}
-        className={`pointer-events-none absolute inset-0 bg-white ${
-          isHome ? "opacity-0" : "opacity-100"
-        }`}
-        aria-hidden="true"
-      />
-
-      <nav
-        ref={navRef}
-        className="relative grid grid-cols-[1fr_auto_1fr] select-none items-center px-4 py-4 md:px-8 md:py-5"
+        ref={shellRef}
+        className="relative"
+        onMouseEnter={() => setNavHovered(true)}
+        onMouseLeave={() => {
+          setNavHovered(false);
+          setShopMenuOpen(false);
+        }}
       >
-        <div className="flex items-center gap-4 md:gap-8">
-          <div className="flex items-center gap-3 md:hidden">
-            {!menuOpen ? (
-              <BurgerButton
-                open={menuOpen}
-                onClick={handleMenuToggle}
-                className={navLinkClassName}
-                lineClassName={burgerLineClassName}
-              />
-            ) : null}
-            <button
-              type="button"
-              onClick={handleSearchOpen}
-              aria-label="Rechercher"
-              className={`flex h-8 w-8 items-center justify-center transition-opacity hover:opacity-60 ${navLinkClassName}`}
-              data-nav-link
-            >
-              <SearchIcon />
-            </button>
-          </div>
+        <div
+          ref={bgRef}
+          className="pointer-events-none absolute inset-x-0 top-0 bg-white"
+          aria-hidden="true"
+        />
 
-          <ul className="hidden items-center gap-6 md:flex md:gap-8">
-            {leftLinks.map(({ label, href }) => (
-              <li key={label}>
-                <Link href={href} className={navLinkClassName} data-nav-link>
-                  {label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <Link
-          href={routes.home}
-          className="justify-self-center"
-          aria-label="Royal Cashmere accueil"
+        <nav
+          ref={navRef}
+          className="relative grid grid-cols-[1fr_auto_1fr] select-none items-center px-4 py-4 md:px-8 md:py-5"
         >
-          <span
-            ref={logoRef}
-            className={`inline-flex ${isHome ? "" : "brightness-0"}`}
-          >
-            <Image
-              src="/brand/logo-nav.svg"
-              alt="Royal Cashmere"
-              width={224}
-              height={18}
-              priority
-              className="h-3.5 w-auto md:h-4"
-            />
-          </span>
-        </Link>
-
-        <div className="flex items-center justify-end gap-6 md:gap-8">
-          <ul className="hidden items-center gap-6 md:flex md:gap-8">
-            <li>
+          <div className="flex items-center gap-4 md:gap-8">
+            <div
+              className="flex items-center gap-3 md:hidden"
+              onMouseEnter={closeShopMenu}
+            >
+              {!menuOpen ? (
+                <BurgerButton
+                  open={menuOpen}
+                  onClick={handleMenuToggle}
+                  className={navIconButtonClassName}
+                  lineClassName={burgerLineClassName}
+                />
+              ) : null}
               <button
                 type="button"
                 onClick={handleSearchOpen}
-                className={navLinkClassName}
+                aria-label="Rechercher"
+                className={navIconButtonClassName}
                 data-nav-link
               >
-                Rechercher
+                <SearchIcon />
               </button>
-            </li>
-            {rightLinks.map(({ label, href }) => (
-              <li key={label}>
-                <Link href={href} className={navLinkClassName} data-nav-link>
-                  {label}
+            </div>
+
+            <ul className="hidden items-center md:flex">
+              <li onMouseEnter={openShopMenu} onFocus={openShopMenu}>
+                <Link href={routes.shop} className={navLinkClassName} data-nav-link>
+                  Boutique
                 </Link>
               </li>
-            ))}
-            <li>
+            </ul>
+            <ul
+              className="hidden items-center gap-6 md:flex md:gap-8"
+              onMouseEnter={closeShopMenu}
+            >
+              {leftLinks.map(({ label, href }) => (
+                <li key={label}>
+                  <Link href={href} className={navLinkClassName} data-nav-link>
+                    {label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <Link
+            href={routes.home}
+            className="justify-self-center"
+            aria-label="Royal Cashmere accueil"
+            onMouseEnter={closeShopMenu}
+          >
+            <span ref={logoRef} className="inline-flex">
+              <Image
+                src="/brand/logo-nav.svg"
+                alt="Royal Cashmere"
+                width={224}
+                height={18}
+                priority
+                className="h-3.5 w-auto md:h-4"
+              />
+            </span>
+          </Link>
+
+          <div
+            className="flex items-center justify-end gap-6 md:gap-8"
+            onMouseEnter={closeShopMenu}
+          >
+            <ul className="hidden items-center gap-6 md:flex md:gap-8">
+              <li>
+                <button
+                  type="button"
+                  onClick={handleSearchOpen}
+                  className={navLinkClassName}
+                  data-nav-link
+                >
+                  Rechercher
+                </button>
+              </li>
+              {rightLinks.map(({ label, href }) => (
+                <li key={label}>
+                  <Link href={href} className={navLinkClassName} data-nav-link>
+                    {label}
+                  </Link>
+                </li>
+              ))}
+              <li>
+                <CartNavLink
+                  className={navLinkClassName}
+                  data-nav-link
+                  onClick={handleCartOpen}
+                />
+              </li>
+            </ul>
+
+            <div className="md:hidden">
               <CartNavLink
                 className={navLinkClassName}
                 data-nav-link
                 onClick={handleCartOpen}
               />
-            </li>
-          </ul>
+            </div>
+          </div>
+        </nav>
 
-          <div className="md:hidden">
-            <CartNavLink
-              className={navLinkClassName}
-              data-nav-link
-              onClick={handleCartOpen}
-            />
+        <div
+          ref={menuRef}
+          className="nav-boutique-panel relative hidden md:block"
+          aria-hidden={!shopMenuOpen}
+          onMouseEnter={openShopMenu}
+        >
+          <div ref={menuInnerRef}>
+            <BoutiqueNavMenu collections={collections} />
           </div>
         </div>
-      </nav>
+      </div>
 
       <MobileNavMenu
         open={menuOpen}
         onClose={() => setMenuOpen(false)}
         onCartOpen={handleCartOpen}
+        collections={collections}
       />
       <SearchPanel open={searchOpen} onClose={() => setSearchOpen(false)} />
       <CartPanel open={cartOpen} onClose={() => setCartOpen(false)} />
     </header>
   );
 }
+
+const leftLinks = [
+  { label: "Collection", href: routes.collection },
+  { label: "À propos", href: routes.about },
+  { label: "Contact", href: routes.contact },
+] as const;
+
+const rightLinks = [{ label: "Mon compte", href: routes.account }] as const;

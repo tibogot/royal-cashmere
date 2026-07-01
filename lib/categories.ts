@@ -56,3 +56,23 @@ export const collectionHandles = categoryConfig.map((category) => category.id);
 export function getCollectionLabel(handle: string) {
   return boutiqueFilters.find((filter) => filter.id === handle)?.label;
 }
+
+const navCardFallbacks = [
+  {
+    imageUrl: "/images/Frame 53.jpg",
+    imageAlt: "Collection Royal Cashmere",
+  },
+  {
+    imageUrl: "/images/Frame 54.jpg",
+    imageAlt: "Collection Royal Cashmere",
+  },
+] as const;
+
+export function getCollectionNavCardImage(handle: string, index: number) {
+  const match = categoryConfig.find((category) => category.id === handle);
+  if (match) {
+    return { imageUrl: match.image, imageAlt: match.imageAlt };
+  }
+
+  return navCardFallbacks[index % navCardFallbacks.length];
+}

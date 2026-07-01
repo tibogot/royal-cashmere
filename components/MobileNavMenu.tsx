@@ -2,6 +2,7 @@
 
 import CartNavLink from "@/components/CartNavLink";
 import { routes } from "@/lib/routes";
+import type { ShopifyCollection } from "@/lib/shopify/queries";
 import gsap from "gsap";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -12,12 +13,12 @@ type MobileNavMenuProps = {
   open: boolean;
   onClose: () => void;
   onCartOpen: () => void;
+  collections?: ShopifyCollection[];
 };
 
 const MENU_ANIM_DURATION = 0.45;
 
-const menuLinks = [
-  { label: "Boutique", href: routes.shop },
+const otherLinks = [
   { label: "Collection", href: routes.collection },
   { label: "À propos", href: routes.about },
   { label: "Contact", href: routes.contact },
@@ -26,6 +27,9 @@ const menuLinks = [
 
 const linkClassName =
   "text-xs uppercase tracking-wide transition-opacity hover:opacity-60";
+
+const subLinkClassName =
+  "text-[11px] uppercase tracking-wide transition-opacity hover:opacity-60";
 
 function subscribeNoop() {
   return () => {};
@@ -43,12 +47,14 @@ export default function MobileNavMenu({
   open,
   onClose,
   onCartOpen,
+  collections = [],
 }: MobileNavMenuProps) {
   const pathname = usePathname();
   const panelRef = useRef<HTMLDivElement>(null);
   const previousPathnameRef = useRef(pathname);
   const tweenRef = useRef<gsap.core.Timeline | null>(null);
   const [isClosing, setIsClosing] = useState(false);
+  const [boutiqueOpen, setBoutiqueOpen] = useState(false);
   const mounted = useSyncExternalStore(
     subscribeNoop,
     getClientSnapshot,
@@ -68,6 +74,10 @@ export default function MobileNavMenu({
     previousPathnameRef.current = pathname;
     handleClose();
   }, [pathname, handleClose]);
+
+  useEffect(() => {
+    if (!open) setBoutiqueOpen(false);
+  }, [open]);
 
   useEffect(() => {
     if (!shouldRender) return;
@@ -150,7 +160,47 @@ export default function MobileNavMenu({
 
         <nav className="mt-8 flex flex-1 flex-col">
           <ul className="flex flex-col gap-6">
-            {menuLinks.map(({ label, href }) => (
+            {/* Boutique with expandable sub-links */}
+            <li>
+              <div className="flex items-center justify-between">
+                <Link href={routes.shop} onClick={handleClose} className={linkClassName}>
+                  Boutique
+                </Link>
+                <button
+                  type="button"
+                  onClick={() => setBoutiqueOpen((v) => !v)}
+                  aria-label={boutiqueOpen ? "Masquer les catégories" : "Afficher les catégories"}
+                  className="flex h-6 w-6 items-center justify-center text-sm leading-none transition-opacity hover:opacity-60"
+                >
+                  {boutiqueOpen ? "−" : "+"}
+                </button>
+              </div>
+              <div
+                className="overflow-hidden transition-all duration-300 ease-in-out"
+                style={{ maxHeight: boutiqueOpen ? "20rem" : "0" }}
+              >
+                <ul className="mt-3 flex flex-col gap-3 border-l border-black/15 pl-3">
+                  <li>
+                    <Link href={routes.shop} onClick={handleClose} className={subLinkClassName}>
+                      Tout
+                    </Link>
+                  </li>
+                  {collections.map((collection) => (
+                    <li key={collection.id}>
+                      <Link
+                        href={routes.collectionByHandle(collection.handle)}
+                        onClick={handleClose}
+                        className={subLinkClassName}
+                      >
+                        {collection.title}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </li>
+
+            {otherLinks.map(({ label, href }) => (
               <li key={href}>
                 <Link href={href} onClick={handleClose} className={linkClassName}>
                   {label}
