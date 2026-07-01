@@ -2,12 +2,17 @@
 
 import ProductPurchasePanel from "@/components/ProductPurchasePanel";
 import ShopifyProductImage from "@/components/ShopifyProductImage";
+import {
+  getUniqueProductImageUrls,
+  prefetchShopifyImages,
+  SHOPIFY_IMAGE_WIDTH,
+} from "@/lib/shopify/image";
 import type { ShopifyProductDetail } from "@/lib/shopify/queries";
 import {
   getDefaultSelections,
   getProductImageForSelections,
 } from "@/lib/shopify/variants";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 type ProductDetailClientProps = {
   product: ShopifyProductDetail;
@@ -25,6 +30,13 @@ export default function ProductDetailClient({
     [product, selections],
   );
 
+  useEffect(() => {
+    prefetchShopifyImages(
+      getUniqueProductImageUrls(product),
+      SHOPIFY_IMAGE_WIDTH.detail,
+    );
+  }, [product]);
+
   const handleSelectionChange = (optionName: string, value: string) => {
     setSelections((current) => ({
       ...current,
@@ -35,11 +47,11 @@ export default function ProductDetailClient({
   return (
     <section className="flex min-h-svh flex-col overflow-x-hidden bg-white text-black md:flex-row">
       <ShopifyProductImage
-        key={displayImage.imageUrl}
         src={displayImage.imageUrl}
         alt={displayImage.imageAlt}
         priority
         padding="lg"
+        width={SHOPIFY_IMAGE_WIDTH.detail}
         className="h-[55svh] w-full shrink-0 md:min-h-svh md:w-1/2 md:self-stretch"
         sizes="(max-width: 768px) 100vw, 50vw"
       />

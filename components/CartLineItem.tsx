@@ -1,6 +1,7 @@
 "use client";
 
 import ShopifyProductImage from "@/components/ShopifyProductImage";
+import { SHOPIFY_IMAGE_WIDTH } from "@/lib/shopify/image";
 import { routes } from "@/lib/routes";
 import type { CartLine } from "@/lib/shopify/cart";
 import Link from "next/link";
@@ -43,6 +44,7 @@ export default function CartLineItem({
           src={line.imageUrl}
           alt={line.imageAlt}
           padding="sm"
+          width={SHOPIFY_IMAGE_WIDTH.thumb}
           className="aspect-4/5"
           sizes={isPanel ? "72px" : "120px"}
         />

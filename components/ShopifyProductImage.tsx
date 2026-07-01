@@ -1,3 +1,8 @@
+import {
+  isShopifyCdnUrl,
+  shopifyImageUrl,
+  SHOPIFY_IMAGE_WIDTH,
+} from "@/lib/shopify/image";
 import Image from "next/image";
 
 type ShopifyProductImageProps = {
@@ -8,6 +13,7 @@ type ShopifyProductImageProps = {
   imageClassName?: string;
   padding?: "sm" | "md" | "lg";
   priority?: boolean;
+  width?: number;
 };
 
 const paddingClassName = {
@@ -24,14 +30,19 @@ export default function ShopifyProductImage({
   imageClassName = "",
   padding = "md",
   priority,
+  width = SHOPIFY_IMAGE_WIDTH.card,
 }: ShopifyProductImageProps) {
+  const resolvedSrc = shopifyImageUrl(src, width);
+  const useShopifyCdn = isShopifyCdnUrl(src);
+
   return (
     <div className={`relative w-full overflow-hidden bg-white ${className}`}>
       <Image
-        src={src}
+        src={resolvedSrc}
         alt={alt}
         fill
         priority={priority}
+        unoptimized={useShopifyCdn}
         className={`box-border object-contain ${paddingClassName[padding]} ${imageClassName}`}
         sizes={sizes}
       />
