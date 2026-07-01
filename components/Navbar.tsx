@@ -15,7 +15,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
@@ -190,11 +190,14 @@ export default function Navbar() {
         return;
       }
 
-      gsap.set(bg, {
-        transformOrigin: "top center",
-        scaleY: 0,
-        height: navHeight,
-      });
+      const isHovered = shellRef.current?.matches(":hover") ?? false;
+      if (!isHovered) {
+        gsap.set(bg, {
+          transformOrigin: "top center",
+          scaleY: 0,
+          height: navHeight,
+        });
+      }
 
       const transparentSection = document.getElementById(TRANSPARENT_NAV_SECTION_ID);
       if (!transparentSection) {
@@ -248,7 +251,7 @@ export default function Navbar() {
     },
     {
       scope: headerRef,
-      dependencies: [isNavWhite, shopMenuOpen, collections.length],
+      dependencies: [isNavWhite, shopMenuOpen, collections.length, isHome],
     },
   );
 
@@ -320,20 +323,24 @@ export default function Navbar() {
     setShopMenuOpen(false);
   };
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!isHome) {
       setNavSolid(true);
     }
-    setNavHovered(false);
     setShopMenuOpen(false);
     menuMeasureAttemptsRef.current = 0;
+
+    // The navbar persists across routes; if the pointer never left it,
+    // onMouseEnter won't fire again after navigation.
+    const isHovered = shellRef.current?.matches(":hover") ?? false;
+    setNavHovered(isHovered);
 
     const reduceMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
 
     runNavAnimation({
-      white: !isHome,
+      white: !isHome || isHovered,
       expanded: false,
       immediate: reduceMotion || !isHome,
     });
