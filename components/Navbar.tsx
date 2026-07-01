@@ -50,8 +50,10 @@ export default function Navbar() {
   const menuInnerRef = useRef<HTMLDivElement>(null);
   const logoRef = useRef<HTMLSpanElement>(null);
   const navTweenRef = useRef<gsap.core.Timeline | null>(null);
+  const isHomeRef = useRef(isHome);
+  isHomeRef.current = isHome;
 
-  const isNavWhite = !isHome || navSolid || navHovered;
+  const isNavWhite = isHome ? navSolid || navHovered : true;
 
   const runNavAnimation = ({
     white,
@@ -171,12 +173,6 @@ export default function Navbar() {
 
       const navHeight = nav.offsetHeight;
 
-      gsap.set(bg, {
-        transformOrigin: "top center",
-        scaleY: 0,
-        height: navHeight,
-      });
-
       if (menu) {
         gsap.set(menu, { height: 0, overflow: "hidden" });
       }
@@ -190,6 +186,12 @@ export default function Navbar() {
         return;
       }
 
+      gsap.set(bg, {
+        transformOrigin: "top center",
+        scaleY: 0,
+        height: navHeight,
+      });
+
       const transparentSection = document.getElementById(TRANSPARENT_NAV_SECTION_ID);
       if (!transparentSection) {
         setNavSolid(true);
@@ -201,8 +203,12 @@ export default function Navbar() {
       const transparentSectionTrigger = ScrollTrigger.create({
         trigger: transparentSection,
         start: "bottom top",
-        onEnter: () => setNavSolid(true),
-        onLeaveBack: () => setNavSolid(false),
+        onEnter: () => {
+          if (isHomeRef.current) setNavSolid(true);
+        },
+        onLeaveBack: () => {
+          if (isHomeRef.current) setNavSolid(false);
+        },
       });
 
       ScrollTrigger.refresh();
@@ -221,12 +227,12 @@ export default function Navbar() {
       runNavAnimation({
         white: isNavWhite,
         expanded: shopMenuOpen,
-        immediate: reduceMotion,
+        immediate: reduceMotion || !isHome,
       });
     },
     {
       scope: headerRef,
-      dependencies: [isNavWhite, shopMenuOpen, collections.length, isHome],
+      dependencies: [isNavWhite, shopMenuOpen, collections.length, isHome, pathname],
     },
   );
 
@@ -297,6 +303,14 @@ export default function Navbar() {
   const closeShopMenu = () => {
     setShopMenuOpen(false);
   };
+
+  useEffect(() => {
+    if (!isHome) {
+      setNavSolid(true);
+    }
+    setNavHovered(false);
+    setShopMenuOpen(false);
+  }, [pathname, isHome]);
 
   useEffect(() => {
     let cancelled = false;
