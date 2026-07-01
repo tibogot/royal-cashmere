@@ -50,6 +50,7 @@ export default function Navbar() {
   const menuInnerRef = useRef<HTMLDivElement>(null);
   const logoRef = useRef<HTMLSpanElement>(null);
   const navTweenRef = useRef<gsap.core.Timeline | null>(null);
+  const menuMeasureAttemptsRef = useRef(0);
   const isHomeRef = useRef(isHome);
   isHomeRef.current = isHome;
 
@@ -69,7 +70,9 @@ export default function Navbar() {
 
     const links = nav.querySelectorAll<HTMLElement>("[data-nav-link]");
     const navHeight = nav.offsetHeight;
-    const menuHeight = menuInner?.offsetHeight ?? 0;
+    const menuHeight = expanded && menuInner
+      ? Math.max(menuInner.offsetHeight, menuInner.scrollHeight)
+      : 0;
     const duration = immediate ? 0 : DURATION;
     const colorAt = duration * 0.52;
 
@@ -160,26 +163,27 @@ export default function Navbar() {
     if (immediate) {
       tl.progress(1, false);
     }
+
+    if (expanded && menuInner && menuHeight === 0 && menuMeasureAttemptsRef.current < 2) {
+      menuMeasureAttemptsRef.current += 1;
+      requestAnimationFrame(() => {
+        runNavAnimation({ white, expanded, immediate });
+      });
+      return;
+    }
+
+    if (menuHeight > 0) {
+      menuMeasureAttemptsRef.current = 0;
+    }
   };
 
   useGSAP(
     () => {
-      const header = headerRef.current;
       const bg = bgRef.current;
-      const menu = menuRef.current;
-      const menuInner = menuInnerRef.current;
       const nav = navRef.current;
-      if (!header || !bg || !nav) return;
+      if (!bg || !nav) return;
 
       const navHeight = nav.offsetHeight;
-
-      if (menu) {
-        gsap.set(menu, { height: 0, overflow: "hidden" });
-      }
-
-      if (menuInner) {
-        gsap.set(menuInner, { autoAlpha: 0, y: MENU_CONTENT_OFFSET });
-      }
 
       if (!isHome) {
         setNavSolid(true);
@@ -220,6 +224,18 @@ export default function Navbar() {
 
   useGSAP(
     () => {
+      const menu = menuRef.current;
+      const menuInner = menuInnerRef.current;
+      if (!menu || !menuInner) return;
+
+      gsap.set(menu, { height: 0, overflow: "hidden" });
+      gsap.set(menuInner, { autoAlpha: 0, y: MENU_CONTENT_OFFSET });
+    },
+    { scope: headerRef },
+  );
+
+  useGSAP(
+    () => {
       const reduceMotion = window.matchMedia(
         "(prefers-reduced-motion: reduce)",
       ).matches;
@@ -227,12 +243,12 @@ export default function Navbar() {
       runNavAnimation({
         white: isNavWhite,
         expanded: shopMenuOpen,
-        immediate: reduceMotion || !isHome,
+        immediate: reduceMotion,
       });
     },
     {
       scope: headerRef,
-      dependencies: [isNavWhite, shopMenuOpen, collections.length, isHome, pathname],
+      dependencies: [isNavWhite, shopMenuOpen, collections.length],
     },
   );
 
@@ -310,6 +326,17 @@ export default function Navbar() {
     }
     setNavHovered(false);
     setShopMenuOpen(false);
+    menuMeasureAttemptsRef.current = 0;
+
+    const reduceMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+
+    runNavAnimation({
+      white: !isHome,
+      expanded: false,
+      immediate: reduceMotion || !isHome,
+    });
   }, [pathname, isHome]);
 
   useEffect(() => {
