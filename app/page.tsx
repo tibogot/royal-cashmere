@@ -5,6 +5,7 @@ import FeaturedProducts from "@/components/FeaturedProducts";
 import Faq from "@/components/Faq";
 import HeroProductGlass from "@/components/HeroProductGlass";
 import HomeHeroBackground from "@/components/HomeHeroBackground";
+import MouseDrivenGallery from "@/components/MouseDrivenGallery";
 import ProductImageBanner from "@/components/ProductImageBanner";
 import ProductShowcase from "@/components/ProductShowcase";
 import { getFeaturedProducts } from "@/lib/shopify/products";
@@ -120,6 +121,8 @@ export default async function Home() {
       </section>
 
       <CategoryShowcase />
+
+      <MouseDrivenGallery />
 
       <Faq />
 

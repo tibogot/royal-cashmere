@@ -1,6 +1,7 @@
 "use client";
 
 import AddToCartButton from "@/components/AddToCartButton";
+import ColorOptionSwatches from "@/components/ColorOptionSwatches";
 import { getProductDescriptionHtml } from "@/lib/shopify/format-description";
 import type { ShopifyProductDetail } from "@/lib/shopify/queries";
 import {
@@ -72,31 +73,50 @@ export default function ProductPurchasePanel({
               <div key={option.name}>
                 <p className="text-xs uppercase tracking-wide text-black/60">
                   {getOptionLabel(option.name)}
+                  {isColorOption(option.name) && selections[option.name] ? (
+                    <span className="normal-case text-black/80">
+                      {" "}
+                      — {selections[option.name]}
+                    </span>
+                  ) : null}
                 </p>
 
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {option.values.map((value) => {
-                    const isSelected = selections[option.name] === value;
-                    const isAvailable = selectableValues.includes(value);
+                {isColorOption(option.name) ? (
+                  <ColorOptionSwatches
+                    optionName={option.name}
+                    values={option.values}
+                    selectedValue={selections[option.name] ?? ""}
+                    selectableValues={selectableValues}
+                    variants={product.variants}
+                    fallbackImageUrl={product.imageUrl}
+                    fallbackImageAlt={product.imageAlt}
+                    onSelect={(value) => handleOptionChange(option.name, value)}
+                  />
+                ) : (
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {option.values.map((value) => {
+                      const isSelected = selections[option.name] === value;
+                      const isAvailable = selectableValues.includes(value);
 
-                    return (
-                      <button
-                        key={value}
-                        type="button"
-                        onClick={() => handleOptionChange(option.name, value)}
-                        disabled={!isAvailable}
-                        aria-pressed={isSelected}
-                        className={`min-w-11 border px-4 py-2 text-sm transition-colors ${
-                          isSelected
-                            ? "border-black bg-black text-white"
-                            : "border-black/20 bg-white text-black hover:border-black/50"
-                        } disabled:cursor-not-allowed disabled:border-black/10 disabled:text-black/30`}
-                      >
-                        {value}
-                      </button>
-                    );
-                  })}
-                </div>
+                      return (
+                        <button
+                          key={value}
+                          type="button"
+                          onClick={() => handleOptionChange(option.name, value)}
+                          disabled={!isAvailable}
+                          aria-pressed={isSelected}
+                          className={`min-w-11 border px-4 py-2 text-sm transition-colors ${
+                            isSelected
+                              ? "border-black bg-black text-white"
+                              : "border-black/20 bg-white text-black hover:border-black/50"
+                          } disabled:cursor-not-allowed disabled:border-black/10 disabled:text-black/30`}
+                        >
+                          {value}
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
             );
           })}
@@ -110,7 +130,7 @@ export default function ProductPurchasePanel({
 
       {descriptionHtml ? (
         <div
-          className="product-description font-sans mt-12 text-sm font-light leading-relaxed text-black/75 md:mt-16 md:text-base"
+          className="product-description max-w-lg font-sans mt-12 text-sm font-light leading-relaxed text-black/75 md:mt-16 md:text-base"
           dangerouslySetInnerHTML={{ __html: descriptionHtml }}
         />
       ) : null}

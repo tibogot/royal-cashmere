@@ -7,7 +7,9 @@ import {
   ALL_PRODUCTS_QUERY,
   FEATURED_PRODUCTS_QUERY,
   PRODUCT_BY_HANDLE_QUERY,
+  PRODUCT_RECOMMENDATIONS_QUERY,
   type ProductByHandleQueryResponse,
+  type ProductRecommendationsQueryResponse,
   type ProductsQueryResponse,
   type ShopifyProduct,
   type ShopifyProductDetail,
@@ -198,4 +200,136 @@ export async function getFeaturedProducts(
     console.error("Failed to fetch Shopify products:", error);
     return getPlaceholderProducts(limit);
   }
+}
+
+function getSimilarityScore(reference: ShopifyProduct, candidate: ShopifyProduct) {
+  let score = 0;
+
+  if (
+    reference.productType &&
+    candidate.productType &&
+    reference.productType === candidate.productType
+  ) {
+    score += 3;
+  }
+
+  for (const tag of reference.tags) {
+    if (candidate.tags.includes(tag)) {
+      score += 1;
+    }
+  }
+
+  return score;
+}
+
+function pickSimilarProducts(
+  product: ShopifyProduct,
+  catalog: ShopifyProduct[],
+  limit: number,
+) {
+  const ranked = catalog
+    .filter((item) => item.handle !== product.handle)
+    .map((item) => ({ item, score: getSimilarityScore(product, item) }))
+    .sort((a, b) => b.score - a.score);
+
+  const similar = ranked
+    .filter(({ score }) => score > 0)
+    .map(({ item }) => item);
+  const fallback = ranked
+    .filter(({ score }) => score === 0)
+    .map(({ item }) => item);
+
+  return [...similar, ...fallback].slice(0, limit);
+}
+
+async function getRecommendedProducts(
+  productId: string,
+  limit: number,
+): Promise<ShopifyProduct[]> {
+  const client = getShopifyClient();
+  const { data, errors } = (await client.request(
+    PRODUCT_RECOMMENDATIONS_QUERY,
+    { variables: { productId } },
+  )) as ProductRecommendationsQueryResponse;
+
+  if (errors?.length) {
+    throw new Error(errors.map((error) => error.message).join(", "));
+  }
+
+  return (data?.productRecommendations ?? [])
+    .map((node) => mapProductNode(node))
+    .filter((item): item is ShopifyProduct => item !== null)
+    .slice(0, limit);
+}
+
+export async function getSimilarProducts(
+  product: ShopifyProduct,
+  limit = 4,
+): Promise<ShopifyProduct[]> {
+  if (!isShopifyConfigured()) {
+    return pickSimilarProducts(product, getPlaceholderProducts(), limit);
+  }
+
+  try {
+    const recommendations = await getRecommendedProducts(product.id, limit);
+    const filteredRecommendations = recommendations.filter(
+      (item) => item.handle !== product.handle,
+    );
+
+    if (filteredRecommendations.length >= limit) {
+      return filteredRecommendations.slice(0, limit);
+    }
+
+    const catalog = await getAllProducts();
+    const fallback = pickSimilarProducts(product, catalog, limit).filter(
+      (item) =>
+        item.handle !== product.handle &&
+        !filteredRecommendations.some(
+          (recommended) => recommended.handle === item.handle,
+        ),
+    );
+
+    return [...filteredRecommendations, ...fallback].slice(0, limit);
+  } catch (error) {
+    console.error("Failed to fetch similar products:", error);
+    const catalog = await getAllProducts();
+    return pickSimilarProducts(product, catalog, limit);
+  }
+}
+
+export async function getProductsByHandles(
+  handles: string[],
+): Promise<ShopifyProduct[]> {
+  const uniqueHandles = [...new Set(handles.filter(Boolean))];
+  if (uniqueHandles.length === 0) return [];
+
+  const products = await Promise.all(
+    uniqueHandles.map((handle) => getProductByHandle(handle)),
+  );
+
+  return products
+    .filter((product): product is ShopifyProductDetail => product !== null)
+    .map(
+      ({
+        id,
+        title,
+        handle,
+        imageUrl,
+        imageAlt,
+        price,
+        colorCount,
+        productType,
+        tags,
+      }) => ({
+        id,
+        title,
+        handle,
+        imageUrl,
+        imageAlt,
+        price,
+        colorCount,
+        productType,
+        tags,
+      }),
+    );
 }

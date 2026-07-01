@@ -184,6 +184,23 @@ export const PRODUCT_BY_HANDLE_QUERY = `
   }
 `;
 
+type ProductRecommendationsQueryResponse = {
+  data?: {
+    productRecommendations: ShopifyProductNode[] | null;
+  };
+  errors?: { message: string }[];
+};
+
+export const PRODUCT_RECOMMENDATIONS_QUERY = `
+  query ProductRecommendations($productId: ID!) {
+    productRecommendations(productId: $productId) {
+      ${PRODUCT_FIELDS}
+    }
+  }
+`;
+
+export type { ProductRecommendationsQueryResponse };
+
 export type ShopifyCollection = {
   id: string;
   title: string;

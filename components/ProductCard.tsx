@@ -55,10 +55,12 @@ export default function ProductCard({
         />
 
         <div className="mt-4 space-y-1 text-left">
-          <h3 className="font-serif text-base font-medium">{product.title}</h3>
-          <p className="text-sm text-black/70">{product.price}</p>
+          <h3 className="font-serif text-base font-medium text-black">
+            {product.title}
+          </h3>
+          <p className="text-sm font-normal text-neutral-800">{product.price}</p>
           {colorLabel ? (
-            <p className="text-sm text-black/50">{colorLabel}</p>
+            <p className="text-sm font-normal text-neutral-600">{colorLabel}</p>
           ) : null}
         </div>
       </Link>

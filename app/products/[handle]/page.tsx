@@ -1,4 +1,6 @@
 import ProductDetailView from "@/components/ProductDetailView";
+import RecentlyViewedProducts from "@/components/RecentlyViewedProducts";
+import SimilarProducts from "@/components/SimilarProducts";
 import { createPageMetadata } from "@/lib/seo";
 import { getProductByHandle } from "@/lib/shopify/products";
 import type { Metadata } from "next";
@@ -36,6 +38,8 @@ export default async function ProductPage({ params }: ProductPageProps) {
   return (
     <main className="w-full overflow-x-hidden pt-24 md:pt-0">
       <ProductDetailView product={product} />
+      <SimilarProducts product={product} />
+      <RecentlyViewedProducts currentHandle={product.handle} />
     </main>
   );
 }

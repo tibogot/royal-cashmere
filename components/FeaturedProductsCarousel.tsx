@@ -14,10 +14,12 @@ gsap.registerPlugin(Draggable, InertiaPlugin, useGSAP);
 
 type FeaturedProductsCarouselProps = {
   products: ShopifyProduct[];
+  showViewAll?: boolean;
 };
 
 export default function FeaturedProductsCarousel({
   products,
+  showViewAll = true,
 }: FeaturedProductsCarouselProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const viewportRef = useRef<HTMLDivElement>(null);
@@ -106,13 +108,21 @@ export default function FeaturedProductsCarousel({
 
   return (
     <div ref={containerRef}>
-      <div className="mb-10 flex items-start justify-between gap-6 md:mb-12">
-        <Link
-          href={routes.collectionsAll}
-          className="inline-block select-none text-xs uppercase tracking-wide underline underline-offset-4 transition-opacity hover:opacity-60"
-        >
-          Tout voir
-        </Link>
+      <div
+        className={`flex items-start justify-between gap-6 ${
+          showViewAll ? "mb-10 md:mb-12" : "mb-0"
+        }`}
+      >
+        {showViewAll ? (
+          <Link
+            href={routes.collectionsAll}
+            className="inline-block select-none text-xs uppercase tracking-wide underline underline-offset-4 transition-opacity hover:opacity-60"
+          >
+            Tout voir
+          </Link>
+        ) : (
+          <div aria-hidden="true" />
+        )}
 
         <div className="flex flex-col items-end gap-2">
           <button

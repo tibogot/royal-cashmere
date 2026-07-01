@@ -32,7 +32,6 @@ button:not(:disabled),
 
 .product-description {
   min-width: 0;
-  max-width: 100%;
   overflow-x: hidden;
   overflow-wrap: anywhere;
   word-break: break-word;
@@ -46,6 +45,7 @@ button:not(:disabled),
 }
 
 .product-description :where(p, li, span, div, td, th) {
+  max-width: 100%;
   overflow-wrap: anywhere;
   word-break: break-word;
 }

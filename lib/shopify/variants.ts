@@ -133,3 +133,24 @@ export function getProductImageForSelections(
     imageAlt: product.imageAlt,
   };
 }
+
+export function getColorValueImage(
+  variants: ProductVariant[],
+  colorOptionName: string,
+  colorValue: string,
+  fallback: { imageUrl: string; imageAlt: string },
+) {
+  const variant = variants.find(
+    (item) =>
+      item.imageUrl &&
+      item.selectedOptions.some(
+        (option) =>
+          option.name === colorOptionName && option.value === colorValue,
+      ),
+  );
+
+  return {
+    imageUrl: variant?.imageUrl ?? fallback.imageUrl,
+    imageAlt: variant?.imageAlt ?? fallback.imageAlt ?? colorValue,
+  };
+}
