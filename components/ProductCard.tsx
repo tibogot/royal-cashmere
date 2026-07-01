@@ -1,15 +1,18 @@
 import ShopifyProductImage from "@/components/ShopifyProductImage";
+import { Draggable } from "gsap/Draggable";
 import Link from "next/link";
 import type { ShopifyProduct } from "@/lib/shopify/queries";
 
 type ProductCardProps = {
   product: ShopifyProduct;
   layout?: "carousel" | "grid";
+  preventClickAfterDrag?: boolean;
 };
 
 export default function ProductCard({
   product,
   layout = "carousel",
+  preventClickAfterDrag = false,
 }: ProductCardProps) {
   const colorLabel =
     product.colorCount > 0
@@ -21,7 +24,7 @@ export default function ProductCard({
   const articleClassName =
     layout === "grid"
       ? "w-full"
-      : "w-[72vw] shrink-0 snap-start md:w-[calc(50%-12px)] lg:w-[calc(25%-18px)]";
+      : "w-[72vw] shrink-0 md:w-[calc((100vw-4rem)/2-0.75rem)] lg:w-[calc((100vw-4rem)/4-1.125rem)]";
 
   const imageSizes =
     layout === "grid"
@@ -30,7 +33,19 @@ export default function ProductCard({
 
   return (
     <article className={articleClassName}>
-      <Link href={`/products/${product.handle}`} className="group block">
+      <Link
+        href={`/products/${product.handle}`}
+        className="group block"
+        onClick={
+          preventClickAfterDrag
+            ? (event) => {
+                if (Draggable.timeSinceDrag() < 0.15) {
+                  event.preventDefault();
+                }
+              }
+            : undefined
+        }
+      >
         <ShopifyProductImage
           src={product.imageUrl}
           alt={product.imageAlt}

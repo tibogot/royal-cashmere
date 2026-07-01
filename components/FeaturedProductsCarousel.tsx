@@ -1,10 +1,16 @@
 "use client";
 
-import { routes } from "@/lib/routes";
 import ProductCard from "@/components/ProductCard";
+import { routes } from "@/lib/routes";
 import type { ShopifyProduct } from "@/lib/shopify/queries";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+import { Draggable } from "gsap/Draggable";
+import { InertiaPlugin } from "gsap/InertiaPlugin";
 import Link from "next/link";
 import { useRef } from "react";
+
+gsap.registerPlugin(Draggable, InertiaPlugin, useGSAP);
 
 type FeaturedProductsCarouselProps = {
   products: ShopifyProduct[];
@@ -13,24 +19,93 @@ type FeaturedProductsCarouselProps = {
 export default function FeaturedProductsCarousel({
   products,
 }: FeaturedProductsCarouselProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const viewportRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
+
+  useGSAP(
+    () => {
+      const track = trackRef.current;
+      const viewport = viewportRef.current;
+      if (!track || !viewport) return;
+
+      const reduceMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      ).matches;
+
+      const getBounds = () => {
+        const overflow = track.scrollWidth - viewport.clientWidth;
+        return { minX: overflow > 0 ? -overflow : 0, maxX: 0 };
+      };
+
+      gsap.set(track, { x: 0 });
+
+      const draggable = Draggable.create(track, {
+        type: "x",
+        inertia: !reduceMotion,
+        dragClickables: true,
+        allowNativeTouchScrolling: true,
+        edgeResistance: 0.85,
+        cursor: "grab",
+        activeCursor: "grabbing",
+        bounds: getBounds(),
+      })[0];
+
+      const syncBounds = () => {
+        const bounds = getBounds();
+        draggable.applyBounds(bounds);
+        const currentX = Number(gsap.getProperty(track, "x") ?? 0);
+        gsap.set(track, {
+          x: gsap.utils.clamp(bounds.minX, bounds.maxX, currentX),
+        });
+      };
+
+      const onResize = () => {
+        syncBounds();
+      };
+
+      window.addEventListener("resize", onResize);
+      const resizeObserver = new ResizeObserver(onResize);
+      resizeObserver.observe(track);
+      resizeObserver.observe(viewport);
+      requestAnimationFrame(syncBounds);
+
+      return () => {
+        window.removeEventListener("resize", onResize);
+        resizeObserver.disconnect();
+        draggable.kill();
+        gsap.set(track, { clearProps: "transform" });
+      };
+    },
+    { scope: containerRef, dependencies: [products.length] },
+  );
 
   const scroll = (direction: "prev" | "next") => {
     const track = trackRef.current;
-    if (!track) return;
+    const viewport = viewportRef.current;
+    if (!track || !viewport) return;
 
     const firstCard = track.querySelector<HTMLElement>("article");
     const gap = 24;
-    const distance = (firstCard?.offsetWidth ?? track.clientWidth) + gap;
+    const distance = (firstCard?.offsetWidth ?? viewport.clientWidth) + gap;
+    const overflow = track.scrollWidth - viewport.clientWidth;
+    const minX = overflow > 0 ? -overflow : 0;
+    const currentX = Number(gsap.getProperty(track, "x") ?? 0);
+    const target = gsap.utils.clamp(
+      minX,
+      0,
+      currentX + (direction === "next" ? -distance : distance),
+    );
 
-    track.scrollBy({
-      left: direction === "next" ? distance : -distance,
-      behavior: "smooth",
+    gsap.to(track, {
+      x: target,
+      duration: 0.6,
+      ease: "power2.out",
     });
   };
 
   return (
-    <>
+    <div ref={containerRef}>
       <div className="mb-10 flex items-start justify-between gap-6 md:mb-12">
         <Link
           href={routes.collectionsAll}
@@ -85,13 +160,20 @@ export default function FeaturedProductsCarousel({
       </div>
 
       <div
-        ref={trackRef}
-        className="flex snap-x snap-mandatory gap-6 overflow-x-auto scroll-smooth [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        ref={viewportRef}
+        className="overflow-hidden"
+        style={{ touchAction: "pan-y" }}
       >
-        {products.map((product) => (
-          <ProductCard key={product.id} product={product} />
-        ))}
+        <div ref={trackRef} className="flex w-max gap-6">
+          {products.map((product) => (
+            <ProductCard
+              key={product.id}
+              product={product}
+              preventClickAfterDrag
+            />
+          ))}
+        </div>
       </div>
-    </>
+    </div>
   );
 }
