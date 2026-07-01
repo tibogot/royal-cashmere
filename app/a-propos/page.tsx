@@ -1,5 +1,6 @@
 import { createPageMetadata } from "@/lib/seo";
 import { routes } from "@/lib/routes";
+import aboutHeroImage from "@/public/images/ekaterina-grosheva.jpg";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -21,11 +22,13 @@ export default function AboutPage() {
 
       <section className="relative h-[80svh] w-full">
         <Image
-          src="/images/ekaterina-grosheva.jpg"
+          src={aboutHeroImage}
           alt="Atelier Royal Cashmere à Uccle"
           fill
           className="object-cover"
           sizes="100vw"
+          quality={70}
+          placeholder="blur"
           priority
         />
       </section>

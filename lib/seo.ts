@@ -7,6 +7,8 @@ type PageMetadataOptions = {
   path?: string;
 };
 
+export const defaultPageTitle = `${siteConfig.name} | Cachemire d'exception à Uccle, Bruxelles`;
+
 export function createPageMetadata({
   title,
   description = siteConfig.description,
@@ -14,9 +16,14 @@ export function createPageMetadata({
 }: PageMetadataOptions = {}): Metadata {
   const canonicalPath = path.startsWith("/") ? path : `/${path}`;
   const pageTitle = title ?? siteConfig.name;
+  const resolvedTitle = title
+    ? pageTitle
+    : canonicalPath === "/"
+      ? { absolute: defaultPageTitle }
+      : undefined;
 
   return {
-    title: title ? pageTitle : undefined,
+    ...(resolvedTitle ? { title: resolvedTitle } : {}),
     description,
     alternates: {
       canonical: canonicalPath === "/" ? "/" : canonicalPath,
@@ -26,12 +33,12 @@ export function createPageMetadata({
       locale: "fr_BE",
       url: `${siteConfig.url}${canonicalPath === "/" ? "" : canonicalPath}`,
       siteName: siteConfig.name,
-      title: title ? `${title} | ${siteConfig.name}` : siteConfig.name,
+      title: title ? `${title} | ${siteConfig.name}` : defaultPageTitle,
       description,
     },
     twitter: {
       card: "summary_large_image",
-      title: title ? `${title} | ${siteConfig.name}` : siteConfig.name,
+      title: title ? `${title} | ${siteConfig.name}` : defaultPageTitle,
       description,
     },
   };
@@ -40,7 +47,7 @@ export function createPageMetadata({
 export const rootMetadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: {
-    default: `${siteConfig.name} | Cachemire d'exception à Uccle, Bruxelles`,
+    default: defaultPageTitle,
     template: `%s | ${siteConfig.name}`,
   },
   description: siteConfig.description,
@@ -48,12 +55,12 @@ export const rootMetadata: Metadata = {
     type: "website",
     locale: "fr_BE",
     siteName: siteConfig.name,
-    title: `${siteConfig.name} | Cachemire d'exception à Uccle, Bruxelles`,
+    title: defaultPageTitle,
     description: siteConfig.description,
   },
   twitter: {
     card: "summary_large_image",
-    title: `${siteConfig.name} | Cachemire d'exception à Uccle, Bruxelles`,
+    title: defaultPageTitle,
     description: siteConfig.description,
   },
   robots: {

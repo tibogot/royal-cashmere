@@ -14,6 +14,7 @@ import Link from "next/link";
 export const metadata = createPageMetadata({
   description:
     "Royal Cashmere, boutique de cachemire d'exception à Uccle. Découvrez nos nouveautés en pur cachemire de Mongolie — pulls, écharpes et accessoires.",
+  path: "/",
 });
 
 export default async function Home() {
