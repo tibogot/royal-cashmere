@@ -11,6 +11,7 @@ export const siteConfig = {
     region: "Bruxelles",
     country: "Belgique",
     phone: "+32 2 850 59 44",
+    email: "contact@royal-cashmere.eu",
   },
   social: {
     facebook: "https://www.facebook.com/RoyalCashmere.be/",

@@ -1,7 +1,7 @@
 import { createPageMetadata } from "@/lib/seo";
 import { routes } from "@/lib/routes";
 import { ctaLinkClassName } from "@/lib/ui";
-import CategoryShowcase from "@/components/CategoryShowcase";
+// import CategoryShowcase from "@/components/CategoryShowcase";
 import FeaturedProducts from "@/components/FeaturedProducts";
 import Faq from "@/components/Faq";
 import HeroProductGlass from "@/components/HeroProductGlass";
@@ -115,8 +115,10 @@ export default async function Home() {
           sizes="100vw"
         />
         <div className="relative z-10 h-full">
-          <h2 className="sticky top-0 px-4 py-10 text-left font-serif text-5xl uppercase leading-[1.1] text-white md:px-8 md:text-7xl lg:text-8xl">
-            Nouvelle collection 2026
+          <h2 className="sticky top-0 px-4 py-10 text-left font-serif text-5xl uppercase leading-[1.1] text-white md:px-8 md:text-7xl ">
+            Collection
+            <br />
+            2026
           </h2>
         </div>
       </section>
