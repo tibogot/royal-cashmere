@@ -9,12 +9,14 @@ type ProductCardProps = {
   product: ShopifyProduct;
   layout?: "carousel" | "grid";
   preventClickAfterDrag?: boolean;
+  uppercaseSerifTitle?: boolean;
 };
 
 export default function ProductCard({
   product,
   layout = "carousel",
   preventClickAfterDrag = false,
+  uppercaseSerifTitle = layout === "grid",
 }: ProductCardProps) {
   const colorLabel =
     layout === "grid" && product.colorCount > 0
@@ -59,7 +61,7 @@ export default function ProductCard({
         <div className="mt-4 space-y-1 text-left">
           <h3
             className={`text-base font-medium text-black ${
-              layout === "carousel" ? "font-sans" : "font-serif"
+              uppercaseSerifTitle ? "font-serif uppercase" : "font-sans"
             }`}
           >
             {product.title}

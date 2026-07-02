@@ -53,10 +53,7 @@ export default async function Home() {
       </section>
 
       <section className="bg-white px-4 pt-6 pb-6 text-center text-black md:px-8 md:pt-10 md:pb-10">
-        <Link
-          href={routes.shop}
-          className={`${ctaLinkClassName} inline-block`}
-        >
+        <Link href={routes.shop} className={`${ctaLinkClassName} inline-block`}>
           Voir les nouveautés
         </Link>
 
@@ -86,13 +83,13 @@ export default async function Home() {
             sizes="(max-width: 767px) 100vw, 50vw"
           /> */}
           <p className="px-4 text-center font-serif text-3xl uppercase leading-[1.1] tracking-wide md:text-5xl">
-            Made in
+            Fabriqué en
             <br />
-            Mongolia
+            Mongolie
           </p>
           <div className="relative aspect-4/5 w-44 overflow-hidden md:w-56">
             <Image
-              src="/images/red.png"
+              src="/images/degleex-ganzorig-SQoH2ZQd80E-unsplash.jpg"
               alt="Cachemire Royal Cashmere"
               fill
               className="object-cover"
@@ -103,10 +100,7 @@ export default async function Home() {
             Pur cachemire des hauts plateaux de Mongolie, sélectionné pour sa
             douceur et sa pureté exceptionnelles.
           </p>
-          <Link
-            href={routes.about}
-            className={`${ctaLinkClassName} font-sans`}
-          >
+          <Link href={routes.about} className={`${ctaLinkClassName} font-sans`}>
             Découvrir notre histoire
           </Link>
         </div>
@@ -120,6 +114,11 @@ export default async function Home() {
           className="object-cover"
           sizes="100vw"
         />
+        <div className="relative z-10 h-full">
+          <h2 className="sticky top-0 px-4 py-10 text-left font-serif text-5xl uppercase leading-[1.1] text-white md:px-8 md:text-7xl lg:text-8xl">
+            Nouvelle collection 2026
+          </h2>
+        </div>
       </section>
 
       <section className="bg-white px-4 py-32 text-center text-black md:px-8">
@@ -160,13 +159,13 @@ export default async function Home() {
         ) : null}
       </section>
 
-      <CategoryShowcase />
+      {/* <CategoryShowcase /> */}
 
       <MouseDrivenGallery />
 
       <Faq />
 
-      <section className="bg-white px-4 py-32 text-center text-black md:px-8">
+      {/* <section className="bg-white px-4 py-32 text-center text-black md:px-8">
         <h2 className="mx-auto max-w-4xl font-serif text-2xl uppercase leading-snug md:max-w-3xl md:text-3xl">
           Une invitation à découvrir l&apos;art du cachemire, au cœur
           d&apos;Uccle, dans un écrin où l&apos;élégance se vit, se touche et se
@@ -187,7 +186,7 @@ export default async function Home() {
         >
           Nous rendre visite
         </Link>
-      </section>
+      </section> */}
     </main>
   );
 }

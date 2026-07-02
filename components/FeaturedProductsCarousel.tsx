@@ -16,11 +16,13 @@ gsap.registerPlugin(Draggable, InertiaPlugin, useGSAP);
 type FeaturedProductsCarouselProps = {
   products: ShopifyProduct[];
   showViewAll?: boolean;
+  uppercaseSerifTitles?: boolean;
 };
 
 export default function FeaturedProductsCarousel({
   products,
   showViewAll = true,
+  uppercaseSerifTitles = false,
 }: FeaturedProductsCarouselProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const viewportRef = useRef<HTMLDivElement>(null);
@@ -181,6 +183,7 @@ export default function FeaturedProductsCarousel({
               key={product.id}
               product={product}
               preventClickAfterDrag
+              uppercaseSerifTitle={uppercaseSerifTitles}
             />
           ))}
         </div>

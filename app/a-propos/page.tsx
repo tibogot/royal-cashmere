@@ -12,6 +12,8 @@ export const metadata = createPageMetadata({
   path: "/a-propos",
 });
 
+const sectionHeadingClassName = "font-serif text-2xl leading-snug md:text-4xl";
+
 export default function AboutPage() {
   return (
     <main className="w-full">
@@ -36,58 +38,77 @@ export default function AboutPage() {
 
       <section className="bg-white px-4 py-16 text-left text-black md:px-8">
         <div className="max-w-2xl">
-          <h2 className="font-serif text-xl uppercase leading-snug md:text-2xl">
+          {/* <h2 className={sectionHeadingClassName}>
             Une maison où le luxe rencontre la raison d&apos;être
-          </h2>
-          <p className="mt-6 text-sm leading-relaxed text-black/80 md:text-base">
+          </h2> */}
+          <p className="mt-6 font-serif text-base leading-relaxed text-black/80 md:text-lg">
             Nous vous présentons Royal Cashmere, boutique de cachemire
             d&apos;exception à Uccle, à Bruxelles, où la durabilité
-            s&apos;entrelace avec le style. Nous proposons des pièces
-            exquises en cachemire et en soie, issues des paysages intemporels
-            de la steppe mongole, et sélectionnées pour leur pureté et leur
-            douceur incomparable.
+            s&apos;entrelace avec le style. Nous proposons des pièces exquises
+            en cachemire et en soie, issues des paysages intemporels de la
+            steppe mongole, et sélectionnées pour leur pureté et leur douceur
+            incomparable.
           </p>
-          <p className="mt-6 text-sm leading-relaxed text-black/80 md:text-base">
-            Installés chaussée de Waterloo, nous accueillons chaque visite
-            comme une rencontre. En choisissant Royal Cashmere, vous
-            participez à une histoire qui soutient les éleveurs nomades et
-            leurs terres ancestrales, tout en investissant dans un vestiaire
-            intemporel, pensé pour durer.
-          </p>
-        </div>
-      </section>
-
-      <section className="relative h-svh w-full">
-        <Image
-          src="/images/fadhil-abhimantra.jpg"
-          alt="Cachemire Royal Cashmere"
-          fill
-          className="object-cover"
-          sizes="100vw"
-        />
-      </section>
-
-      <section className="bg-white px-4 py-16 text-left text-black md:px-8">
-        <div className="max-w-2xl">
-          <h2 className="font-serif text-xl uppercase leading-snug md:text-2xl">
-            Cachemire mongol, héritage nomade
-          </h2>
-          <p className="mt-6 text-sm leading-relaxed text-black/80 md:text-base">
-            Sur les hauts plateaux de Mongolie, le cachemire naît d&apos;un lien
-            ancestral entre les éleveurs, leurs troupeaux et des steppes d&apos;une
-            beauté rare. Nous sélectionnons nos fibres à la source, en
-            privilégiant des filières respectueuses des nomades et de leur
-            environnement, pour un avenir durable des générations à venir.
-          </p>
-          <p className="mt-6 text-sm leading-relaxed text-black/80 md:text-base">
-            Nos créations sont conçues avec une attention méticuleuse aux
-            détails, garantissant une qualité inégalée, une grande douceur au
-            toucher et une durabilité réelle au quotidien. Chaque pièce
-            reflète notre engagement à préserver la beauté de la nature et à
-            honorer le riche héritage de la culture nomade mongole.
+          <p className="mt-6 font-serif text-sm leading-relaxed text-black/80 md:text-base">
+            Installés chaussée de Waterloo, nous accueillons chaque visite comme
+            une rencontre. En choisissant Royal Cashmere, vous participez à une
+            histoire qui soutient les éleveurs nomades et leurs terres
+            ancestrales, tout en investissant dans un vestiaire intemporel,
+            pensé pour durer.
           </p>
         </div>
       </section>
+      <div className="flex flex-col gap-12 md:gap-20">
+        <section className="flex w-full flex-col md:h-[80svh] md:flex-row">
+          <div
+            className="hidden md:block md:h-full md:w-1/2"
+            aria-hidden="true"
+          />
+          <div className="relative h-[50svh] w-full md:h-full md:w-1/2">
+            <Image
+              src="/images/fadhil-abhimantra.jpg"
+              alt="Cachemire Royal Cashmere"
+              fill
+              className="object-cover"
+              sizes="(max-width: 767px) 100vw, 50vw"
+            />
+          </div>
+        </section>
+
+        <section className="flex w-full flex-col md:min-h-[80svh] md:flex-row pb-20">
+          <div className="relative h-[50svh] w-full md:h-auto md:min-h-[80svh] md:w-1/2">
+            <Image
+              src="/images/fadhil-abhimantra.jpg"
+              alt="Cachemire Royal Cashmere"
+              fill
+              className="object-cover"
+              sizes="(max-width: 767px) 100vw, 50vw"
+            />
+          </div>
+          <div className="flex w-full  bg-white px-4 py-4 text-left text-black md:w-1/2 md:px-8 md:py-8">
+            <div className="max-w-xl">
+              {/* <h2 className={sectionHeadingClassName}>
+              Cachemire mongol, héritage nomade
+            </h2> */}
+              <p className="font-serif text-base leading-relaxed text-black/80 md:text-lg">
+                Sur les hauts plateaux de Mongolie, le cachemire naît d&apos;un
+                lien ancestral entre les éleveurs, leurs troupeaux et des
+                steppes d&apos;une beauté rare. Nous sélectionnons nos fibres à
+                la source, en privilégiant des filières respectueuses des
+                nomades et de leur environnement, pour un avenir durable des
+                générations à venir.
+              </p>
+              <p className="mt-6 font-serif text-base leading-relaxed text-black/80 md:text-lg">
+                Nos créations sont conçues avec une attention méticuleuse aux
+                détails, garantissant une qualité inégalée, une grande douceur
+                au toucher et une durabilité réelle au quotidien. Chaque pièce
+                reflète notre engagement à préserver la beauté de la nature et à
+                honorer le riche héritage de la culture nomade mongole.
+              </p>
+            </div>
+          </div>
+        </section>
+      </div>
 
       <section className="relative h-svh w-full">
         <Image
@@ -99,12 +120,12 @@ export default function AboutPage() {
         />
       </section>
 
-      <section className="bg-white px-4 py-32 text-center text-black md:px-8">
-        <h2 className="mx-auto max-w-4xl font-serif text-2xl uppercase leading-snug md:max-w-3xl md:text-3xl">
+      {/* <section className="bg-white px-4 py-32 text-center text-black md:px-8">
+        <h2 className={`${sectionHeadingClassName} mx-auto max-w-2xl`}>
           Un style élégant et responsable, de la steppe mongole à Uccle
         </h2>
 
-        <p className="mx-auto mt-8 max-w-2xl text-sm text-black/70 md:mt-10 md:text-base">
+        <p className="mx-auto mt-8 max-w-2xl font-serif text-sm text-black/70 md:mt-10 md:text-base">
           De la sélection du cachemire mongol à la finition dans notre boutique
           bruxelloise, nous cultivons une approche exigeante à chaque étape.
           Rejoignez-nous et adoptez un style de vie raffiné, durable et
@@ -119,7 +140,7 @@ export default function AboutPage() {
         >
           Explorer la boutique
         </Link>
-      </section>
+      </section> */}
     </main>
   );
 }
