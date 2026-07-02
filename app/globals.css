@@ -105,3 +105,37 @@ button:not(:disabled),
     transform-origin: 0% 50%;
   }
 }
+
+.animated-underline-visible {
+  position: relative;
+  display: inline-block;
+  width: fit-content;
+  padding-bottom: 3px;
+  text-decoration: none;
+}
+
+.animated-underline-visible::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 1px;
+  background-color: currentColor;
+  transform: scaleX(1);
+  transform-origin: 0% 50%;
+  transition: transform 0.35s ease;
+  pointer-events: none;
+}
+
+@media (hover: hover) {
+  .animated-underline-visible:hover::after {
+    transform: scaleX(0);
+    transform-origin: 100% 50%;
+  }
+
+  .group:hover .animated-underline-visible::after {
+    transform: scaleX(0);
+    transform-origin: 100% 50%;
+  }
+}

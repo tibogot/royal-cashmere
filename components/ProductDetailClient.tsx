@@ -9,21 +9,29 @@ import {
 } from "@/lib/shopify/image";
 import type { ShopifyProductDetail } from "@/lib/shopify/queries";
 import {
-  getDefaultSelections,
+  getInitialSelections,
   getProductImageForSelections,
 } from "@/lib/shopify/variants";
 import { useEffect, useMemo, useState } from "react";
 
 type ProductDetailClientProps = {
   product: ShopifyProductDetail;
+  initialColor?: string;
 };
 
 export default function ProductDetailClient({
   product,
+  initialColor,
 }: ProductDetailClientProps) {
   const [selections, setSelections] = useState(() =>
-    getDefaultSelections(product.options, product.variants),
+    getInitialSelections(product.options, product.variants, initialColor),
   );
+
+  useEffect(() => {
+    setSelections(
+      getInitialSelections(product.options, product.variants, initialColor),
+    );
+  }, [product, initialColor]);
 
   const displayImage = useMemo(
     () => getProductImageForSelections(product, selections),

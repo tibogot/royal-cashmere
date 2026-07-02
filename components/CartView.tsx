@@ -3,6 +3,7 @@
 import { removeFromCart, updateCartLine } from "@/app/actions/cart";
 import CartLineItem from "@/components/CartLineItem";
 import { routes } from "@/lib/routes";
+import { ctaLinkClassName } from "@/lib/ui";
 import type { Cart } from "@/lib/shopify/cart";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -146,7 +147,7 @@ export default function CartView({
         <Link
           href={routes.shop}
           onClick={onClose}
-          className="mt-8 inline-block select-none text-xs uppercase tracking-wide underline underline-offset-4 transition-opacity hover:opacity-60"
+          className={`${ctaLinkClassName} mt-8 inline-block`}
         >
           Continuer vos achats
         </Link>

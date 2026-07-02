@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { routes } from "@/lib/routes";
+import { ctaLinkClassName } from "@/lib/ui";
 
 export default function CollectionNotFound() {
   return (
@@ -10,7 +11,7 @@ export default function CollectionNotFound() {
         </h1>
         <Link
           href={routes.shop}
-          className="mt-10 inline-block text-xs uppercase tracking-wide underline underline-offset-4 transition-opacity hover:opacity-60"
+          className={`${ctaLinkClassName} mt-10 inline-block`}
         >
           Retour à la boutique
         </Link>

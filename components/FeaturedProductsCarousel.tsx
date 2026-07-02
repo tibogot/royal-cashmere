@@ -2,6 +2,7 @@
 
 import ProductCard from "@/components/ProductCard";
 import { routes } from "@/lib/routes";
+import { ctaLinkClassName } from "@/lib/ui";
 import type { ShopifyProduct } from "@/lib/shopify/queries";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
@@ -116,7 +117,7 @@ export default function FeaturedProductsCarousel({
         {showViewAll ? (
           <Link
             href={routes.collectionsAll}
-            className="inline-block select-none text-xs uppercase tracking-wide underline underline-offset-4 transition-opacity hover:opacity-60"
+            className={`${ctaLinkClassName} inline-block`}
           >
             Tout voir
           </Link>

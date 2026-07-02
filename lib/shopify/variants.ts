@@ -1,4 +1,9 @@
-import type { ProductOption, ProductVariant } from "./queries";
+import { normalizeSwatchColor } from "@/lib/shopify/color-swatch";
+import type {
+  ProductOption,
+  ProductVariant,
+  ShopifyProductOptionNode,
+} from "@/lib/shopify/queries";
 
 export const COLOR_OPTION_NAMES = ["color", "couleur", "colour"];
 export const SIZE_OPTION_NAMES = ["size", "taille", "sizes"];
@@ -12,13 +17,56 @@ export function isSizeOption(name: string) {
 }
 
 export function getColorCount(
-  options: { name: string; values: string[] }[],
+  options: Array<
+    Pick<ShopifyProductOptionNode, "name" | "values"> & {
+      optionValues?: ShopifyProductOptionNode["optionValues"];
+    }
+  >,
 ): number {
   const colorOption = options.find((option) =>
     COLOR_OPTION_NAMES.includes(option.name.toLowerCase()),
   );
 
-  return colorOption?.values.length ?? 0;
+  if (!colorOption) return 0;
+
+  return colorOption.optionValues && colorOption.optionValues.length > 0
+    ? colorOption.optionValues.length
+    : colorOption.values.length;
+}
+
+export type ColorSwatch = {
+  value: string;
+  color: string;
+};
+
+export function buildColorSwatches(
+  options: Array<
+    Pick<ShopifyProductOptionNode, "name" | "values"> & {
+      optionValues?: ShopifyProductOptionNode["optionValues"];
+    }
+  >,
+): ColorSwatch[] {
+  const colorOption = options.find((option) =>
+    COLOR_OPTION_NAMES.includes(option.name.toLowerCase()),
+  );
+
+  if (!colorOption) return [];
+
+  const optionValues =
+    colorOption.optionValues && colorOption.optionValues.length > 0
+      ? colorOption.optionValues
+      : colorOption.values.map((name) => ({
+          name,
+          swatch: null,
+        }));
+
+  return optionValues.map((optionValue) => ({
+    value: optionValue.name,
+    color: normalizeSwatchColor(
+      optionValue.swatch?.color ?? "",
+      optionValue.name,
+    ),
+  }));
 }
 
 export function sortProductOptions(options: ProductOption[]) {
@@ -62,6 +110,48 @@ export function getDefaultSelections(
   }
 
   return selectionsFromVariant(availableVariant);
+}
+
+export function getInitialSelections(
+  options: ProductOption[],
+  variants: ProductVariant[],
+  colorValue?: string | null,
+) {
+  const defaults = getDefaultSelections(options, variants);
+  if (!colorValue) return defaults;
+
+  const colorOption = options.find((option) => isColorOption(option.name));
+  if (!colorOption || !colorOption.values.includes(colorValue)) {
+    return defaults;
+  }
+
+  const withColor = {
+    ...defaults,
+    [colorOption.name]: colorValue,
+  };
+
+  if (findVariantBySelections(variants, withColor)) {
+    return withColor;
+  }
+
+  const matchingVariant =
+    variants.find(
+      (variant) =>
+        variant.availableForSale &&
+        variant.selectedOptions.some(
+          (option) =>
+            isColorOption(option.name) && option.value === colorValue,
+        ),
+    ) ?? variants.find((variant) =>
+      variant.selectedOptions.some(
+        (option) =>
+          isColorOption(option.name) && option.value === colorValue,
+      ),
+    );
+
+  return matchingVariant
+    ? selectionsFromVariant(matchingVariant)
+    : withColor;
 }
 
 export function getSelectableValues(

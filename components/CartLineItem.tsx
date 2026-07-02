@@ -3,6 +3,7 @@
 import ShopifyProductImage from "@/components/ShopifyProductImage";
 import { SHOPIFY_IMAGE_WIDTH } from "@/lib/shopify/image";
 import { routes } from "@/lib/routes";
+import { ctaLinkClassName } from "@/lib/ui";
 import type { CartLine } from "@/lib/shopify/cart";
 import Link from "next/link";
 
@@ -88,7 +89,7 @@ export default function CartLineItem({
         <button
           type="button"
           onClick={onRemove}
-          className="mt-4 text-xs uppercase tracking-wide underline underline-offset-4 transition-opacity hover:opacity-60"
+          className={`${ctaLinkClassName} mt-4`}
         >
           Retirer
         </button>

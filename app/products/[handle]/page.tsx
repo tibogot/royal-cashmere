@@ -8,6 +8,7 @@ import { notFound } from "next/navigation";
 
 type ProductPageProps = {
   params: Promise<{ handle: string }>;
+  searchParams: Promise<{ couleur?: string }>;
 };
 
 export async function generateMetadata({
@@ -27,8 +28,12 @@ export async function generateMetadata({
   });
 }
 
-export default async function ProductPage({ params }: ProductPageProps) {
+export default async function ProductPage({
+  params,
+  searchParams,
+}: ProductPageProps) {
   const { handle } = await params;
+  const { couleur } = await searchParams;
   const product = await getProductByHandle(handle);
 
   if (!product) {
@@ -37,7 +42,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
   return (
     <main className="w-full overflow-x-hidden pt-24 md:pt-0">
-      <ProductDetailView product={product} />
+      <ProductDetailView product={product} initialColor={couleur} />
       <SimilarProducts product={product} />
       <RecentlyViewedProducts currentHandle={product.handle} />
     </main>

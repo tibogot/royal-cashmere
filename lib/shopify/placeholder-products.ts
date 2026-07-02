@@ -3,11 +3,30 @@ import type {
   ProductVariant,
   ShopifyProduct,
   ShopifyProductDetail,
+  ShopifyProductOptionNode,
 } from "./queries";
+import { buildColorSwatches } from "./variants";
 
 const PLACEHOLDER_OPTIONS: ProductOption[] = [
   { name: "Couleur", values: ["Noir", "Camel", "Ivoire"] },
   { name: "Taille", values: ["XS", "S", "M", "L", "XL"] },
+];
+
+const PLACEHOLDER_OPTION_NODES: ShopifyProductOptionNode[] = [
+  {
+    name: "Couleur",
+    values: ["Noir", "Camel", "Ivoire"],
+    optionValues: [
+      { name: "Noir", swatch: { color: "#1a1a1a" } },
+      { name: "Camel", swatch: { color: "#c19a6b" } },
+      { name: "Ivoire", swatch: { color: "#f4f0e8" } },
+    ],
+  },
+  {
+    name: "Taille",
+    values: ["XS", "S", "M", "L", "XL"],
+    optionValues: [],
+  },
 ];
 
 function buildPlaceholderVariants(
@@ -40,7 +59,7 @@ function buildPlaceholderVariants(
   return variants;
 }
 
-const placeholderCatalog: Omit<ShopifyProduct, "id">[] = [
+const placeholderCatalog: Omit<ShopifyProduct, "id" | "colorSwatches">[] = [
   {
     title: "Pull ouvert",
     handle: "pull-ouvert",
@@ -137,6 +156,7 @@ export function getPlaceholderProductByHandle(
   return {
     id: `placeholder-${index}`,
     ...product,
+    colorSwatches: buildColorSwatches(PLACEHOLDER_OPTION_NODES),
     description:
       "Pièce en cachemire d'exception, sélectionnée pour sa douceur et sa pureté. Fabriquée avec un savoir-faire exigeant, issue des hauts plateaux de Mongolie.",
     descriptionHtml:
@@ -157,5 +177,6 @@ export function getPlaceholderProducts(limit?: number): ShopifyProduct[] {
   return slice.map((product, index) => ({
     id: `placeholder-${index}`,
     ...product,
+    colorSwatches: buildColorSwatches(PLACEHOLDER_OPTION_NODES),
   }));
 }

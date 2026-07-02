@@ -1,4 +1,5 @@
 import { routes } from "@/lib/routes";
+import { ctaLinkClassName } from "@/lib/ui";
 import Link from "next/link";
 
 export default function ProductNotFound() {
@@ -12,7 +13,7 @@ export default function ProductNotFound() {
       </p>
       <Link
         href={routes.shop}
-        className="mt-10 select-none text-xs uppercase tracking-wide underline underline-offset-4 transition-opacity hover:opacity-60"
+        className={`${ctaLinkClassName} mt-10`}
       >
         Retour à la boutique
       </Link>

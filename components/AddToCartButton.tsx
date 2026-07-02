@@ -1,6 +1,7 @@
 "use client";
 
 import { addToCart } from "@/app/actions/cart";
+import { ctaLinkClassName } from "@/lib/ui";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 
@@ -56,7 +57,7 @@ export default function AddToCartButton({
       <button
         type="button"
         onClick={handleViewCart}
-        className="w-fit select-none text-xs uppercase tracking-wide text-black/60 underline underline-offset-4 transition-opacity hover:opacity-80"
+        className={`${ctaLinkClassName} text-black/60`}
       >
         Voir le panier
       </button>

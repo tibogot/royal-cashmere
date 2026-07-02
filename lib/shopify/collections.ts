@@ -10,7 +10,7 @@ import {
   type ShopifyProduct,
   type ShopifyProductNode,
 } from "./queries";
-import { getColorCount } from "./variants";
+import { buildColorSwatches, getColorCount } from "./variants";
 
 const COLLECTIONS_PAGE_SIZE = 50;
 const COLLECTION_PRODUCTS_PAGE_SIZE = 100;
@@ -26,15 +26,18 @@ function mapProductNode(node: ShopifyProductNode): ShopifyProduct | null {
   if (!node.featuredImage?.url) return null;
 
   const { amount, currencyCode } = node.priceRange.minVariantPrice;
+  const imageUrl = node.featuredImage.url;
+  const imageAlt = node.featuredImage.altText ?? node.title;
 
   return {
     id: node.id,
     title: node.title,
     handle: node.handle,
-    imageUrl: node.featuredImage.url,
-    imageAlt: node.featuredImage.altText ?? node.title,
+    imageUrl,
+    imageAlt,
     price: formatPrice(amount, currencyCode),
     colorCount: getColorCount(node.options),
+    colorSwatches: buildColorSwatches(node.options),
     productType: node.productType,
     tags: node.tags,
   };

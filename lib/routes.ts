@@ -16,5 +16,10 @@ export const routes = {
   cookies: "/cookies",
   collectionsAll: "/boutique",
   collectionByHandle: (handle: string) => `/collection/${handle}`,
-  product: (handle: string) => `/products/${handle}`,
+  product: (handle: string, options?: { color?: string }) => {
+    const path = `/products/${handle}`;
+    if (!options?.color) return path;
+
+    return `${path}?couleur=${encodeURIComponent(options.color)}`;
+  },
 } as const;

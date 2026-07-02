@@ -1,5 +1,6 @@
 import { createPageMetadata } from "@/lib/seo";
 import { routes } from "@/lib/routes";
+import { ctaLinkClassName } from "@/lib/ui";
 import aboutHeroImage from "@/public/images/ekaterina-grosheva.jpg";
 import Image from "next/image";
 import Link from "next/link";
@@ -114,7 +115,7 @@ export default function AboutPage() {
 
         <Link
           href={routes.shop}
-          className="mt-10 inline-block select-none font-sans text-xs uppercase tracking-wide underline underline-offset-4 transition-opacity hover:opacity-60 md:mt-12"
+          className={`${ctaLinkClassName} mt-10 inline-block font-sans md:mt-12`}
         >
           Explorer la boutique
         </Link>

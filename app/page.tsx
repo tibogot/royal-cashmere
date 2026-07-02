@@ -1,5 +1,6 @@
 import { createPageMetadata } from "@/lib/seo";
 import { routes } from "@/lib/routes";
+import { ctaLinkClassName } from "@/lib/ui";
 import CategoryShowcase from "@/components/CategoryShowcase";
 import FeaturedProducts from "@/components/FeaturedProducts";
 import Faq from "@/components/Faq";
@@ -8,7 +9,10 @@ import HomeHeroBackground from "@/components/HomeHeroBackground";
 import MouseDrivenGallery from "@/components/MouseDrivenGallery";
 import ProductImageBanner from "@/components/ProductImageBanner";
 import ProductShowcase from "@/components/ProductShowcase";
-import { getFeaturedProducts } from "@/lib/shopify/products";
+import {
+  getFeaturedProducts,
+  getProductByHandle,
+} from "@/lib/shopify/products";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -19,8 +23,10 @@ export const metadata = createPageMetadata({
 });
 
 export default async function Home() {
-  const products = await getFeaturedProducts(8);
-  const heroProduct = products[0];
+  const [products, heroProduct] = await Promise.all([
+    getFeaturedProducts(8),
+    getProductByHandle("pull-col-v"),
+  ]);
   const bannerProduct = products[6] ?? products[0];
 
   return (
@@ -46,10 +52,10 @@ export default async function Home() {
         {heroProduct ? <HeroProductGlass product={heroProduct} /> : null}
       </section>
 
-      <section className="bg-white px-4 pt-6 pb-20 text-center text-black md:px-8 md:pt-10 md:pb-32">
+      <section className="bg-white px-4 pt-6 pb-6 text-center text-black md:px-8 md:pt-10 md:pb-10">
         <Link
           href={routes.shop}
-          className="inline-block select-none text-xs uppercase tracking-wide underline underline-offset-4 transition-opacity hover:opacity-60"
+          className={`${ctaLinkClassName} inline-block`}
         >
           Voir les nouveautés
         </Link>
@@ -71,15 +77,49 @@ export default async function Home() {
             sizes="(max-width: 767px) 100vw, 50vw"
           />
         </div>
-        <div className="relative h-[40svh] w-full md:h-full md:w-1/2">
-          <Image
+        <div className="relative flex min-h-[40svh] w-full flex-col items-center justify-center gap-5 px-4 py-12 md:h-full md:w-1/2 md:gap-6 md:py-0">
+          {/* <Image
             src="/images/Frame 64.png"
             alt="Cachemire Royal Cashmere"
             fill
             className="object-cover"
             sizes="(max-width: 767px) 100vw, 50vw"
-          />
+          /> */}
+          <p className="px-4 text-center font-serif text-3xl uppercase leading-[1.1] tracking-wide md:text-5xl">
+            Made in
+            <br />
+            Mongolia
+          </p>
+          <div className="relative aspect-4/5 w-44 overflow-hidden md:w-56">
+            <Image
+              src="/images/red.png"
+              alt="Cachemire Royal Cashmere"
+              fill
+              className="object-cover"
+              sizes="(max-width: 768px) 176px, 224px"
+            />
+          </div>
+          <p className="max-w-xs px-4 text-center text-sm leading-relaxed text-black">
+            Pur cachemire des hauts plateaux de Mongolie, sélectionné pour sa
+            douceur et sa pureté exceptionnelles.
+          </p>
+          <Link
+            href={routes.about}
+            className={`${ctaLinkClassName} font-sans`}
+          >
+            Découvrir notre histoire
+          </Link>
         </div>
+      </section>
+
+      <section className="relative h-svh w-full">
+        <Image
+          src="/images/red.png"
+          alt="Cachemire Royal Cashmere"
+          fill
+          className="object-cover"
+          sizes="100vw"
+        />
       </section>
 
       <section className="bg-white px-4 py-32 text-center text-black md:px-8">
@@ -100,7 +140,7 @@ export default async function Home() {
 
         <Link
           href={routes.about}
-          className="mt-10 inline-block select-none font-sans text-xs uppercase tracking-wide underline underline-offset-4 transition-opacity hover:opacity-60 md:mt-12"
+          className={`${ctaLinkClassName} mt-10 inline-block font-sans md:mt-12`}
         >
           Découvrir notre histoire
         </Link>
@@ -143,7 +183,7 @@ export default async function Home() {
 
         <Link
           href={routes.contact}
-          className="mt-10 inline-block select-none font-sans text-xs uppercase tracking-wide underline underline-offset-4 transition-opacity hover:opacity-60 md:mt-12"
+          className={`${ctaLinkClassName} mt-10 inline-block font-sans md:mt-12`}
         >
           Nous rendre visite
         </Link>

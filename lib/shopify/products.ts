@@ -16,7 +16,7 @@ import {
   type ShopifyProductDetailNode,
   type ShopifyProductNode,
 } from "./queries";
-import { getColorCount } from "./variants";
+import { getColorCount, buildColorSwatches } from "./variants";
 
 const PRODUCTS_PAGE_SIZE = 100;
 
@@ -42,15 +42,18 @@ function mapProductNode(node: ShopifyProductNode): ShopifyProduct | null {
   if (!node.featuredImage?.url) return null;
 
   const { amount, currencyCode } = node.priceRange.minVariantPrice;
+  const imageUrl = node.featuredImage.url;
+  const imageAlt = node.featuredImage.altText ?? node.title;
 
   return {
     id: node.id,
     title: node.title,
     handle: node.handle,
-    imageUrl: node.featuredImage.url,
-    imageAlt: node.featuredImage.altText ?? node.title,
+    imageUrl,
+    imageAlt,
     price: formatPrice(amount, currencyCode),
     colorCount: getColorCount(node.options),
+    colorSwatches: buildColorSwatches(node.options),
     productType: node.productType,
     tags: node.tags,
   };
@@ -112,6 +115,7 @@ function mapProductDetailNode(
     imageAlt: node.featuredImage.altText ?? node.title,
     price: formatPrice(amount, currencyCode),
     colorCount: getColorCount(node.options),
+    colorSwatches: buildColorSwatches(node.options),
     productType: node.productType,
     tags: node.tags,
     description: node.description,
@@ -318,6 +322,7 @@ export async function getProductsByHandles(
         imageAlt,
         price,
         colorCount,
+        colorSwatches,
         productType,
         tags,
       }) => ({
@@ -328,6 +333,7 @@ export async function getProductsByHandles(
         imageAlt,
         price,
         colorCount,
+        colorSwatches,
         productType,
         tags,
       }),

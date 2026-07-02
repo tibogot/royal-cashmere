@@ -1,3 +1,8 @@
+export type ProductColorSwatch = {
+  value: string;
+  color: string;
+};
+
 export type ShopifyProduct = {
   id: string;
   title: string;
@@ -6,6 +11,7 @@ export type ShopifyProduct = {
   imageAlt: string;
   price: string;
   colorCount: number;
+  colorSwatches: ProductColorSwatch[];
   productType: string;
   tags: string[];
 };
@@ -26,9 +32,17 @@ type ShopifyProductNode = {
     url: string;
     altText: string | null;
   } | null;
-  options: {
+  options: ShopifyProductOptionNode[];
+};
+
+export type ShopifyProductOptionNode = {
+  name: string;
+  values: string[];
+  optionValues: {
     name: string;
-    values: string[];
+    swatch: {
+      color: string | null;
+    } | null;
   }[];
 };
 
@@ -66,6 +80,12 @@ const PRODUCT_FIELDS = `
   options {
     name
     values
+    optionValues {
+      name
+      swatch {
+        color
+      }
+    }
   }
 `;
 
@@ -122,7 +142,8 @@ export type ShopifyProductDetail = ShopifyProduct & {
   variants: ProductVariant[];
 };
 
-type ShopifyProductDetailNode = ShopifyProductNode & {
+type ShopifyProductDetailNode = Omit<ShopifyProductNode, "options"> & {
+  options: ShopifyProductOptionNode[];
   description: string;
   descriptionHtml: string;
   variants: {

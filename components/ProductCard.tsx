@@ -1,4 +1,6 @@
+import ProductColorSwatches from "@/components/ProductColorSwatches";
 import ShopifyProductImage from "@/components/ShopifyProductImage";
+import { routes } from "@/lib/routes";
 import { Draggable } from "gsap/Draggable";
 import Link from "next/link";
 import type { ShopifyProduct } from "@/lib/shopify/queries";
@@ -15,7 +17,7 @@ export default function ProductCard({
   preventClickAfterDrag = false,
 }: ProductCardProps) {
   const colorLabel =
-    product.colorCount > 0
+    layout === "grid" && product.colorCount > 0
       ? product.colorCount === 1
         ? "1 couleur"
         : `${product.colorCount} couleurs`
@@ -31,20 +33,20 @@ export default function ProductCard({
       ? "(max-width: 1024px) 50vw, 25vw"
       : "(max-width: 768px) 72vw, (max-width: 1024px) 50vw, 25vw";
 
+  const handleLinkClick = preventClickAfterDrag
+    ? (event: React.MouseEvent<HTMLAnchorElement>) => {
+        if (Draggable.timeSinceDrag() < 0.15) {
+          event.preventDefault();
+        }
+      }
+    : undefined;
+
   return (
     <article className={articleClassName}>
       <Link
-        href={`/products/${product.handle}`}
+        href={routes.product(product.handle)}
         className="group block"
-        onClick={
-          preventClickAfterDrag
-            ? (event) => {
-                if (Draggable.timeSinceDrag() < 0.15) {
-                  event.preventDefault();
-                }
-              }
-            : undefined
-        }
+        onClick={handleLinkClick}
       >
         <ShopifyProductImage
           src={product.imageUrl}
@@ -55,7 +57,11 @@ export default function ProductCard({
         />
 
         <div className="mt-4 space-y-1 text-left">
-          <h3 className="font-serif text-base font-medium text-black">
+          <h3
+            className={`text-base font-medium text-black ${
+              layout === "carousel" ? "font-sans" : "font-serif"
+            }`}
+          >
             {product.title}
           </h3>
           <p className="text-sm font-normal text-neutral-800">{product.price}</p>
@@ -64,6 +70,13 @@ export default function ProductCard({
           ) : null}
         </div>
       </Link>
+
+      {layout === "carousel" ? (
+        <ProductColorSwatches
+          swatches={product.colorSwatches}
+          productHandle={product.handle}
+        />
+      ) : null}
     </article>
   );
 }

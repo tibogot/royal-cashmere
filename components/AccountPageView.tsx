@@ -1,6 +1,7 @@
 import type { CustomerOrder, CustomerProfile } from "@/lib/shopify/customer-account/customer";
 import { getCustomerDisplayName } from "@/lib/shopify/customer-account/display-name";
 import { routes } from "@/lib/routes";
+import { ctaLinkClassName } from "@/lib/ui";
 import Link from "next/link";
 
 type AccountPageViewProps = {
@@ -68,7 +69,7 @@ export default function AccountPageView({
             <p>Vous n&apos;avez pas encore passé de commande.</p>
             <Link
               href={routes.shop}
-              className="mt-4 inline-block text-xs uppercase tracking-wide underline underline-offset-4 transition-opacity hover:opacity-60"
+              className={`${ctaLinkClassName} mt-4 inline-block`}
             >
               Découvrir la boutique
             </Link>

@@ -1,6 +1,7 @@
 "use client";
 
 import { showcaseCategories } from "@/lib/categories";
+import { ctaLinkClassName } from "@/lib/ui";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
@@ -67,7 +68,7 @@ export default function CategoryShowcase() {
 
           <Link
             href={current.href}
-            className="mt-8 select-none text-xs uppercase tracking-wide underline underline-offset-4 transition-opacity hover:opacity-60 md:mt-10"
+            className={`${ctaLinkClassName} mt-8 md:mt-10`}
           >
             Découvrir
           </Link>
