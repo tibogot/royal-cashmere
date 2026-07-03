@@ -96,7 +96,7 @@ export default async function Home() {
               sizes="(max-width: 768px) 176px, 224px"
             />
           </div>
-          <p className="max-w-xs px-4 text-center text-sm leading-relaxed text-black">
+          <p className="max-w-sm px-4 text-center font-serif text-base  text-black">
             Pur cachemire des hauts plateaux de Mongolie, sélectionné pour sa
             douceur et sa pureté exceptionnelles.
           </p>
