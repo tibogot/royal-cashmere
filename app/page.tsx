@@ -53,13 +53,12 @@ export default async function Home() {
       </section>
 
       <section className="bg-white px-4 pt-6 pb-6 text-center text-black md:px-8 md:pt-10 md:pb-10">
+        <h2 className="mx-auto mt-8 max-w-5xl font-serif mb-10 text-5xl uppercase leading-[1.12] md:mt-10 md:max-w-6xl md:text-8xl md:leading-[1.08]">
+          Le cachemire d&apos;exception venu de Mongolie
+        </h2>
         <Link href={routes.shop} className={`${ctaLinkClassName} inline-block`}>
           Voir les nouveautés
         </Link>
-
-        <h2 className="mx-auto mt-8 max-w-5xl font-serif text-5xl uppercase leading-[1.12] md:mt-10 md:max-w-6xl md:text-8xl md:leading-[1.08]">
-          Le cachemire d&apos;exception venu de Mongolie
-        </h2>
       </section>
 
       <FeaturedProducts />
@@ -106,7 +105,7 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="relative h-svh w-full">
+      <section className="relative h-svh w-full mt-20 mb-20">
         <Image
           src="/images/red.png"
           alt="Cachemire Royal Cashmere"
@@ -115,7 +114,7 @@ export default async function Home() {
           sizes="100vw"
         />
         <div className="relative z-10 h-full">
-          <h2 className="sticky top-0 px-4 py-10 text-left font-serif text-5xl uppercase leading-[1.1] text-white md:px-8 md:text-7xl ">
+          <h2 className="sticky top-20 px-4 py-10 text-left font-serif text-5xl  leading-[1.1] text-white md:px-8 md:text-5xl ">
             Collection
             <br />
             2026
@@ -123,7 +122,7 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="bg-white px-4 py-32 text-center text-black md:px-8">
+      {/* <section className="bg-white px-4 py-32 text-center text-black md:px-8">
         <h2 className="mx-auto max-w-4xl font-serif text-2xl uppercase leading-snug md:max-w-3xl md:text-3xl">
           Nous vous présentons Royal Cashmere, où le luxe rencontre la raison
           d&apos;être, où la durabilité s&apos;entrelace avec le style, et où
@@ -145,7 +144,7 @@ export default async function Home() {
         >
           Découvrir notre histoire
         </Link>
-      </section>
+      </section> */}
 
       <ProductShowcase />
 
