@@ -163,7 +163,7 @@ export default async function Home() {
 
       {/* <CategoryShowcase /> */}
 
-      <MouseDrivenGallery />
+      {/* <MouseDrivenGallery /> */}
 
       <Faq />
 

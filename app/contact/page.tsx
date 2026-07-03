@@ -13,7 +13,7 @@ export default function ContactPage() {
   return (
     <main className="w-full">
       <section className="bg-white px-4 pt-32 pb-20 text-black md:px-8 md:pt-40 md:pb-32">
-        <div className="mx-auto max-w-5xl">
+        <div className="">
           <div className="text-center">
             <h1 className="font-serif text-5xl uppercase leading-[1.12] md:text-7xl">
               Contact
@@ -26,8 +26,6 @@ export default function ContactPage() {
           </div>
 
           <div className="mt-16 grid gap-16 md:mt-20 md:grid-cols-2 md:gap-20">
-            <ContactForm />
-
             <div className="space-y-8 text-left">
               <div>
                 <p className="text-xs uppercase tracking-wide text-black/50">
@@ -75,6 +73,8 @@ export default function ContactPage() {
                 </p>
               </div>
             </div>
+
+            <ContactForm />
           </div>
         </div>
       </section>

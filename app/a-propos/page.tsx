@@ -59,15 +59,15 @@ export default function AboutPage() {
         </div>
       </section>
       <div className="flex flex-col gap-12 md:gap-20">
-        <section className="flex w-full flex-col md:h-[80svh] md:flex-row">
+        <section className="flex w-full flex-col md:h-[50svh] md:flex-row">
           <div
             className="hidden md:block md:h-full md:w-1/2"
             aria-hidden="true"
           />
-          <div className="relative h-[50svh] w-full md:h-full md:w-1/2">
+          <div className="relative h-[32svh] w-full md:h-full md:w-1/2">
             <Image
-              src="/images/fadhil-abhimantra.jpg"
-              alt="Cachemire Royal Cashmere"
+              src="/images/chu-william-DQkDC6-3vnQ-unsplash.jpg"
+              alt="Paysages de Mongolie"
               fill
               className="object-cover"
               sizes="(max-width: 767px) 100vw, 50vw"
@@ -85,7 +85,7 @@ export default function AboutPage() {
               sizes="(max-width: 767px) 100vw, 50vw"
             />
           </div>
-          <div className="flex w-full  bg-white px-4 py-4 text-left text-black md:w-1/2 md:px-8 md:py-8">
+          <div className="flex w-full  bg-white px-4 py-4 text-left text-black md:w-1/2 md:px-8 md:pt-0 ">
             <div className="max-w-xl">
               {/* <h2 className={sectionHeadingClassName}>
               Cachemire mongol, héritage nomade
