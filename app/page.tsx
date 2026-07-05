@@ -107,7 +107,7 @@ export default async function Home() {
 
       <section className="relative h-svh w-full mt-20 mb-20">
         <Image
-          src="/images/red.png"
+          src="/images/ekaterina-grosheva-optimized.jpg"
           alt="Cachemire Royal Cashmere"
           fill
           className="object-cover"

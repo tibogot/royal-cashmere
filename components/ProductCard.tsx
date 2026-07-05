@@ -9,14 +9,12 @@ type ProductCardProps = {
   product: ShopifyProduct;
   layout?: "carousel" | "grid";
   preventClickAfterDrag?: boolean;
-  uppercaseSerifTitle?: boolean;
 };
 
 export default function ProductCard({
   product,
   layout = "carousel",
   preventClickAfterDrag = false,
-  uppercaseSerifTitle = layout === "grid",
 }: ProductCardProps) {
   const colorLabel =
     layout === "grid" && product.colorCount > 0
@@ -58,15 +56,19 @@ export default function ProductCard({
           imageClassName="transition-opacity group-hover:opacity-90"
         />
 
-        <div className="mt-4 space-y-1 text-left">
+        <div
+          className={`space-y-1 text-left ${layout === "carousel" ? "mt-2" : "mt-4"}`}
+        >
           <h3
-            className={`text-base font-medium text-black ${
-              uppercaseSerifTitle ? "font-serif uppercase" : "font-sans"
+            className={`text-sm font-medium uppercase text-black ${
+              layout === "carousel" ? "font-sans" : "font-serif"
             }`}
           >
             {product.title}
           </h3>
-          <p className="text-sm font-normal text-neutral-800">{product.price}</p>
+          <p className="text-sm font-normal text-neutral-800">
+            {product.price}
+          </p>
           {colorLabel ? (
             <p className="text-sm font-normal text-neutral-600">{colorLabel}</p>
           ) : null}
