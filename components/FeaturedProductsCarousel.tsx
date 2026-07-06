@@ -1,8 +1,10 @@
 "use client";
 
+import CartQuickAddCard from "@/components/CartQuickAddCard";
 import ProductCard from "@/components/ProductCard";
 import { routes } from "@/lib/routes";
 import { ctaLinkClassName } from "@/lib/ui";
+import type { CartCarouselProduct } from "@/lib/shopify/products";
 import type { ShopifyProduct } from "@/lib/shopify/queries";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
@@ -14,13 +16,23 @@ import { useRef } from "react";
 gsap.registerPlugin(Draggable, InertiaPlugin, useGSAP);
 
 type FeaturedProductsCarouselProps = {
-  products: ShopifyProduct[];
+  products: ShopifyProduct[] | CartCarouselProduct[];
   showViewAll?: boolean;
+  compact?: boolean;
+  quickAdd?: boolean;
 };
+
+function isQuickAddProduct(
+  product: ShopifyProduct | CartCarouselProduct,
+): product is CartCarouselProduct {
+  return "defaultVariantId" in product;
+}
 
 export default function FeaturedProductsCarousel({
   products,
   showViewAll = true,
+  compact = false,
+  quickAdd = false,
 }: FeaturedProductsCarouselProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const viewportRef = useRef<HTMLDivElement>(null);
@@ -89,7 +101,7 @@ export default function FeaturedProductsCarousel({
     if (!track || !viewport) return;
 
     const firstCard = track.querySelector<HTMLElement>("article");
-    const gap = 24;
+    const gap = compact ? 16 : 24;
     const distance = (firstCard?.offsetWidth ?? viewport.clientWidth) + gap;
     const overflow = track.scrollWidth - viewport.clientWidth;
     const minX = overflow > 0 ? -overflow : 0;
@@ -111,7 +123,7 @@ export default function FeaturedProductsCarousel({
     <div ref={containerRef}>
       <div
         className={`flex items-start justify-between gap-6 ${
-          showViewAll ? "mb-10 md:mb-12" : "mb-0"
+          compact ? "mb-4" : showViewAll ? "mb-10 md:mb-12" : "mb-0"
         }`}
       >
         {showViewAll ? (
@@ -175,14 +187,27 @@ export default function FeaturedProductsCarousel({
         className="overflow-hidden"
         style={{ touchAction: "pan-y" }}
       >
-        <div ref={trackRef} className="flex w-max gap-6">
-          {products.map((product) => (
-            <ProductCard
-              key={product.id}
-              product={product}
-              preventClickAfterDrag
-            />
-          ))}
+        <div
+          ref={trackRef}
+          className={`flex w-max items-stretch ${compact ? "gap-4" : "gap-6"}`}
+        >
+          {products.map((product) =>
+            quickAdd && isQuickAddProduct(product) ? (
+              <CartQuickAddCard
+                key={product.id}
+                product={product}
+                layout={compact ? "compact" : "carousel"}
+                preventClickAfterDrag
+              />
+            ) : (
+              <ProductCard
+                key={product.id}
+                product={product}
+                layout={compact ? "compact" : "carousel"}
+                preventClickAfterDrag
+              />
+            ),
+          )}
         </div>
       </div>
     </div>

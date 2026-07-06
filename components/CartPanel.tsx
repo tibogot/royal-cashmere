@@ -1,6 +1,7 @@
 "use client";
 
 import CartPageView from "@/components/CartPageView";
+import PanelCloseButton from "@/components/PanelCloseButton";
 import type { Cart } from "@/lib/shopify/cart";
 import gsap from "gsap";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
@@ -56,6 +57,15 @@ export default function CartPanel({ open, onClose }: CartPanelProps) {
       refreshCart(true);
     }
   }, [open, refreshCart]);
+
+  useEffect(() => {
+    const handleCartUpdated = () => {
+      refreshCart();
+    };
+
+    window.addEventListener("cart-updated", handleCartUpdated);
+    return () => window.removeEventListener("cart-updated", handleCartUpdated);
+  }, [refreshCart]);
 
   useEffect(() => {
     if (!isVisible) return;
@@ -124,6 +134,20 @@ export default function CartPanel({ open, onClose }: CartPanelProps) {
   useEffect(() => {
     if (!isVisible) return;
 
+    const previousBodyOverflow = document.body.style.overflow;
+    const previousHtmlOverflow = document.documentElement.style.overflow;
+    document.body.style.overflow = "hidden";
+    document.documentElement.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = previousBodyOverflow;
+      document.documentElement.style.overflow = previousHtmlOverflow;
+    };
+  }, [isVisible]);
+
+  useEffect(() => {
+    if (!isVisible) return;
+
     const blockBackgroundScroll = (event: Event) => {
       const panel = panelRef.current;
       if (panel?.contains(event.target as Node)) return;
@@ -172,27 +196,25 @@ export default function CartPanel({ open, onClose }: CartPanelProps) {
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
-        className="absolute inset-y-0 right-0 flex w-full max-w-md flex-col overflow-y-auto bg-white px-6 py-8 text-black shadow-2xl md:px-8 md:py-10"
+        className="absolute inset-y-0 right-0 flex h-dvh max-h-dvh w-full max-w-md flex-col overflow-hidden bg-white px-4 py-4 text-black shadow-2xl"
         data-lenis-prevent
       >
-        <div className="flex items-center justify-between gap-4">
+        <div className="flex shrink-0 items-center justify-between gap-4">
           <h2 id={titleId} className="text-sm uppercase tracking-wide">
             Panier
+            {cart && cart.totalQuantity > 0 ? (
+              <span className="text-black/50"> ({cart.totalQuantity})</span>
+            ) : null}
           </h2>
-          <button
-            type="button"
-            onClick={onClose}
-            aria-label="Fermer"
-            className="text-xs uppercase tracking-wide transition-opacity hover:opacity-60"
-          >
-            Fermer
-          </button>
+          <PanelCloseButton onClose={onClose} />
         </div>
 
         {isLoading ? (
-          <p className="mt-10 text-sm text-black/50">Chargement…</p>
+          <p className="mt-6 text-sm text-black/50">Chargement…</p>
         ) : (
-          <CartPageView cart={cart} variant="panel" onClose={onClose} />
+          <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
+            <CartPageView cart={cart} variant="panel" onClose={onClose} />
+          </div>
         )}
       </div>
     </div>,

@@ -7,7 +7,7 @@ import type { ShopifyProduct } from "@/lib/shopify/queries";
 
 type ProductCardProps = {
   product: ShopifyProduct;
-  layout?: "carousel" | "grid";
+  layout?: "carousel" | "grid" | "compact";
   preventClickAfterDrag?: boolean;
 };
 
@@ -26,12 +26,16 @@ export default function ProductCard({
   const articleClassName =
     layout === "grid"
       ? "w-full"
-      : "w-[72vw] shrink-0 md:w-[calc((100vw-4rem)/2-0.75rem)] lg:w-[calc((100vw-4rem)/4-1.125rem)]";
+      : layout === "compact"
+        ? "w-48 shrink-0"
+        : "w-[72vw] shrink-0 md:w-[calc((100vw-4rem)/2-0.75rem)] lg:w-[calc((100vw-4rem)/4-1.125rem)]";
 
   const imageSizes =
     layout === "grid"
       ? "(max-width: 1024px) 50vw, 25vw"
-      : "(max-width: 768px) 72vw, (max-width: 1024px) 50vw, 25vw";
+      : layout === "compact"
+        ? "192px"
+        : "(max-width: 768px) 72vw, (max-width: 1024px) 50vw, 25vw";
 
   const handleLinkClick = preventClickAfterDrag
     ? (event: React.MouseEvent<HTMLAnchorElement>) => {
@@ -57,11 +61,13 @@ export default function ProductCard({
         />
 
         <div
-          className={`space-y-1 text-left ${layout === "carousel" ? "mt-2" : "mt-4"}`}
+          className={`space-y-1 text-left ${
+            layout === "grid" ? "mt-4" : "mt-2"
+          }`}
         >
           <h3
             className={`text-sm font-medium uppercase text-black ${
-              layout === "carousel" ? "font-sans" : "font-serif"
+              layout === "grid" ? "font-serif" : "font-sans"
             }`}
           >
             {product.title}
@@ -75,7 +81,7 @@ export default function ProductCard({
         </div>
       </Link>
 
-      {layout === "carousel" ? (
+      {layout === "carousel" || layout === "compact" ? (
         <ProductColorSwatches
           swatches={product.colorSwatches}
           productHandle={product.handle}

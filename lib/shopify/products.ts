@@ -266,6 +266,47 @@ async function getRecommendedProducts(
     .slice(0, limit);
 }
 
+export type CartCarouselProduct = ShopifyProduct & {
+  defaultVariantId: string;
+  availableForSale: boolean;
+};
+
+export async function enrichProductsForQuickAdd(
+  products: ShopifyProduct[],
+): Promise<CartCarouselProduct[]> {
+  return Promise.all(
+    products.map(async (product) => {
+      const detail = await getProductByHandle(product.handle);
+      const variant =
+        detail?.variants.find((item) => item.availableForSale) ??
+        detail?.variants[0];
+
+      return {
+        ...product,
+        defaultVariantId: variant?.id ?? "",
+        availableForSale: variant?.availableForSale ?? false,
+      };
+    }),
+  );
+}
+
+export async function getSimilarProductsByHandle(
+  handle: string,
+  options?: { limit?: number; excludeHandles?: string[] },
+): Promise<ShopifyProduct[]> {
+  const limit = options?.limit ?? 4;
+  const exclude = new Set(options?.excludeHandles ?? []);
+  const product = await getProductByHandle(handle);
+
+  if (!product) return [];
+
+  const similar = await getSimilarProducts(product, limit + exclude.size);
+
+  return similar
+    .filter((item) => !exclude.has(item.handle))
+    .slice(0, limit);
+}
+
 export async function getSimilarProducts(
   product: ShopifyProduct,
   limit = 4,

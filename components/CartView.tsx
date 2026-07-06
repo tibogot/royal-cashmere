@@ -2,6 +2,7 @@
 
 import { removeFromCart, updateCartLine } from "@/app/actions/cart";
 import CartLineItem from "@/components/CartLineItem";
+import CartSimilarProducts from "@/components/CartSimilarProducts";
 import { routes } from "@/lib/routes";
 import { ctaLinkClassName } from "@/lib/ui";
 import type { Cart } from "@/lib/shopify/cart";
@@ -141,8 +142,28 @@ export default function CartView({
   const isPanel = variant === "panel";
 
   if (!cart || cart.lines.length === 0) {
+    if (isPanel) {
+      return (
+        <div className="mt-4 flex min-h-0 flex-1 flex-col overflow-hidden">
+          <div className="text-center">
+            <p className="text-sm text-black/70">Votre panier est vide.</p>
+            <Link
+              href={routes.shop}
+              onClick={onClose}
+              className={`${ctaLinkClassName} mt-6 inline-block`}
+            >
+              Continuer vos achats
+            </Link>
+          </div>
+          <div className="mt-6 min-h-0 flex-1 overflow-y-auto overscroll-contain">
+            <CartSimilarProducts productHandles={[]} />
+          </div>
+        </div>
+      );
+    }
+
     return (
-      <div className={isPanel ? "mt-8 text-center" : "mt-12 text-center"}>
+      <div className="mt-12 text-center">
         <p className="text-sm text-black/70">Votre panier est vide.</p>
         <Link
           href={routes.shop}
@@ -155,45 +176,71 @@ export default function CartView({
     );
   }
 
-  return (
-    <div className={isPanel ? "mt-8" : "mt-12"}>
-      <ul className="divide-y divide-black/10 border-t border-black/10">
-        {cart.lines.map((line) => (
-          <CartLineItem
-            key={line.id}
-            line={line}
-            quantity={line.quantity}
-            variant={variant}
-            onClose={onClose}
-            onDecrease={() => handleDecrease(line.id)}
-            onIncrease={() => handleIncrease(line.id)}
-            onRemove={() => handleRemove(line.id)}
-          />
-        ))}
-      </ul>
+  const cartLines = (
+    <ul className="divide-y divide-black/10 border-t border-black/10">
+      {cart.lines.map((line) => (
+        <CartLineItem
+          key={line.id}
+          line={line}
+          quantity={line.quantity}
+          variant={variant}
+          onClose={onClose}
+          onDecrease={() => handleDecrease(line.id)}
+          onIncrease={() => handleIncrease(line.id)}
+          onRemove={() => handleRemove(line.id)}
+        />
+      ))}
+    </ul>
+  );
 
-      <div
+  const checkoutFooter = (
+    <div
+      className={
+        isPanel
+          ? "flex shrink-0 flex-col gap-3 border-t border-black/10 bg-white pt-3"
+          : "mt-10 flex flex-col gap-6 border-t border-black/10 pt-8"
+      }
+    >
+      <p
+        className={`flex items-center justify-between uppercase tracking-wide ${
+          isPanel ? "text-sm" : "text-base"
+        }`}
+      >
+        <span>Total</span>
+        <span className="font-medium">{cart.totalPrice}</span>
+      </p>
+
+      <a
+        href={cart.checkoutUrl}
         className={
           isPanel
-            ? "mt-8 flex flex-col gap-6 border-t border-black/10 pt-6"
-            : "mt-10 flex flex-col items-end gap-6 border-t border-black/10 pt-8"
+            ? "w-full select-none bg-black px-6 py-3.5 text-center text-sm uppercase tracking-wide text-white transition-opacity hover:opacity-80"
+            : "ml-auto select-none bg-black px-10 py-4 text-sm uppercase tracking-wide text-white transition-opacity hover:opacity-80"
         }
       >
-        <p className={isPanel ? "text-base" : "text-lg"}>
-          Total <span className="font-medium">{cart.totalPrice}</span>
-        </p>
+        Passer commande
+      </a>
+    </div>
+  );
 
-        <a
-          href={cart.checkoutUrl}
-          className={
-            isPanel
-              ? "w-full select-none bg-black px-8 py-4 text-center text-sm uppercase tracking-wide text-white transition-opacity hover:opacity-80"
-              : "select-none bg-black px-10 py-4 text-sm uppercase tracking-wide text-white transition-opacity hover:opacity-80"
-          }
-        >
-          Passer commande
-        </a>
+  if (isPanel) {
+    return (
+      <div className="mt-4 flex min-h-0 flex-1 flex-col overflow-hidden">
+        <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain">
+          {cartLines}
+          <CartSimilarProducts
+            productHandles={cart.lines.map((line) => line.productHandle)}
+          />
+        </div>
+        {checkoutFooter}
       </div>
+    );
+  }
+
+  return (
+    <div className="mt-12">
+      {cartLines}
+      {checkoutFooter}
     </div>
   );
 }

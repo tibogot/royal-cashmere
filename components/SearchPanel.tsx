@@ -1,5 +1,6 @@
 "use client";
 
+import PanelCloseButton from "@/components/PanelCloseButton";
 import { popularSearches } from "@/lib/categories";
 import { routes } from "@/lib/routes";
 import gsap from "gsap";
@@ -180,14 +181,7 @@ export default function SearchPanel({ open, onClose }: SearchPanelProps) {
           >
             Rechercher
           </h2>
-          <button
-            type="button"
-            onClick={onClose}
-            aria-label="Fermer"
-            className="text-xs uppercase tracking-wide transition-opacity hover:opacity-60"
-          >
-            Fermer
-          </button>
+          <PanelCloseButton onClose={onClose} />
         </div>
 
         <form onSubmit={handleSubmit} className="mt-10">

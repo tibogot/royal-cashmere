@@ -12,7 +12,13 @@ export default function CartPageView({
   variant = "page",
   onClose,
 }: CartPageViewProps) {
-  return (
-    <CartView initialCart={cart} variant={variant} onClose={onClose} />
-  );
+  if (variant === "panel") {
+    return (
+      <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
+        <CartView initialCart={cart} variant={variant} onClose={onClose} />
+      </div>
+    );
+  }
+
+  return <CartView initialCart={cart} variant={variant} onClose={onClose} />;
 }

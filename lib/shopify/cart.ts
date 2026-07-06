@@ -1,4 +1,5 @@
 import { getShopifyClient, isShopifyConfigured } from "./client";
+import { isColorOption, isSizeOption } from "./variants";
 
 export const CART_COOKIE_NAME = "shopify_cart_id";
 const CART_COOKIE_MAX_AGE = 60 * 60 * 24 * 14;
@@ -9,9 +10,12 @@ export type CartLine = {
   title: string;
   productHandle: string;
   variantTitle: string;
+  colorValue: string;
+  sizeValue: string;
   imageUrl: string;
   imageAlt: string;
   price: string;
+  lineTotal: string;
   variantId: string;
 };
 
@@ -62,9 +66,19 @@ type CartQueryResponse = {
           node: {
             id: string;
             quantity: number;
+            cost: {
+              totalAmount: {
+                amount: string;
+                currencyCode: string;
+              };
+            };
             merchandise: {
               id: string;
               title: string;
+              selectedOptions: {
+                name: string;
+                value: string;
+              }[];
               image: {
                 url: string;
                 altText: string | null;
@@ -167,10 +181,20 @@ const CART_QUERY = `
           node {
             id
             quantity
+            cost {
+              totalAmount {
+                amount
+                currencyCode
+              }
+            }
             merchandise {
               ... on ProductVariant {
                 id
                 title
+                selectedOptions {
+                  name
+                  value
+                }
                 image {
                   url
                   altText
@@ -221,6 +245,15 @@ function mapCartNode(
 
       const variantTitle =
         merchandise.title === "Default Title" ? "" : merchandise.title;
+      const colorValue =
+        merchandise.selectedOptions?.find((option) =>
+          isColorOption(option.name),
+        )?.value ?? "";
+      const sizeValue =
+        merchandise.selectedOptions?.find((option) =>
+          isSizeOption(option.name),
+        )?.value ?? "";
+      const lineCost = line.cost.totalAmount;
 
       return {
         id: line.id,
@@ -228,6 +261,8 @@ function mapCartNode(
         title: merchandise.product.title,
         productHandle: merchandise.product.handle,
         variantTitle,
+        colorValue,
+        sizeValue,
         imageUrl: merchandise.image?.url ?? "/images/unsplash_mjtLS0CDuIQ.png",
         imageAlt:
           merchandise.image?.altText ?? merchandise.product.title,
@@ -235,6 +270,7 @@ function mapCartNode(
           merchandise.price.amount,
           merchandise.price.currencyCode,
         ),
+        lineTotal: formatPrice(lineCost.amount, lineCost.currencyCode),
         variantId: merchandise.id,
       } satisfies CartLine;
     })
