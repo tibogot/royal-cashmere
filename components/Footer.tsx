@@ -51,7 +51,7 @@ const socialLinks: SocialLink[] = [
 
 export default function Footer() {
   return (
-    <footer className="w-full select-none bg-white p-4 text-black md:p-8">
+    <footer className="w-full select-none bg-primary p-4 text-black md:p-8">
       <div className="flex flex-col gap-10 md:flex-row md:items-start md:justify-between md:gap-8">
         <div className="grid grid-cols-2 gap-x-6 md:flex md:gap-x-12">
           <nav className="flex flex-col gap-1">
