@@ -17,9 +17,9 @@ export default function HeroProductGlass({
   return (
     <Link
       href={routes.product(product.handle)}
-      className="group absolute right-4 bottom-6 z-10 block w-56 md:right-8 md:bottom-10 md:w-64 lg:w-72"
+      className="group absolute right-4 bottom-6 z-10 block w-56 md:right-8 md:bottom-10 md:w-84 "
     >
-      <div className="flex flex-col overflow-hidden border border-white/10 bg-gradient-to-b from-black/20 via-black/15 to-black/10 shadow-lg backdrop-blur-xl">
+      <div className="flex flex-col overflow-hidden  bg-linear-to-b from-black/20 via-black/15 to-black/10 backdrop-blur-xl">
         <div className="relative aspect-4/5 w-full">
           <Image
             src={imageSrc}

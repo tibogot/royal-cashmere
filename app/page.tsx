@@ -63,7 +63,7 @@ export default async function Home() {
 
       <FeaturedProducts />
 
-      <section className="flex w-full flex-col md:h-[80svh] md:flex-row">
+      <section className="flex w-full flex-col md:h-svh md:flex-row">
         <div className="relative h-[40svh] w-full md:h-full md:w-1/2">
           <Image
             src="/images/Frame 63.png"
