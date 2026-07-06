@@ -7,6 +7,7 @@ import CartPanel from "@/components/CartPanel";
 import MobileNavMenu from "@/components/MobileNavMenu";
 import SearchIcon from "@/components/SearchIcon";
 import SearchPanel from "@/components/SearchPanel";
+import WishlistNavLink from "@/components/WishlistNavLink";
 import { routes } from "@/lib/routes";
 import type { ShopifyCollection } from "@/lib/shopify/queries";
 import { useGSAP } from "@gsap/react";
@@ -491,6 +492,12 @@ export default function Navbar() {
                 </li>
               ))}
               <li>
+                <WishlistNavLink
+                  className={navLinkClassName}
+                  data-nav-link
+                />
+              </li>
+              <li>
                 <CartNavLink
                   className={navLinkClassName}
                   data-nav-link
@@ -499,7 +506,11 @@ export default function Navbar() {
               </li>
             </ul>
 
-            <div className="md:hidden">
+            <div className="flex items-center gap-6 md:hidden">
+              <WishlistNavLink
+                className={navLinkClassName}
+                data-nav-link
+              />
               <CartNavLink
                 className={navLinkClassName}
                 data-nav-link

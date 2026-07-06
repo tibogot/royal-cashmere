@@ -1,4 +1,5 @@
 import ProductColorSwatches from "@/components/ProductColorSwatches";
+import ProductImageWishlist from "@/components/ProductImageWishlist";
 import ShopifyProductImage from "@/components/ShopifyProductImage";
 import { routes } from "@/lib/routes";
 import { Draggable } from "gsap/Draggable";
@@ -16,13 +17,6 @@ export default function ProductCard({
   layout = "carousel",
   preventClickAfterDrag = false,
 }: ProductCardProps) {
-  const colorLabel =
-    layout === "grid" && product.colorCount > 0
-      ? product.colorCount === 1
-        ? "1 couleur"
-        : `${product.colorCount} couleurs`
-      : null;
-
   const articleClassName =
     layout === "grid"
       ? "w-full"
@@ -52,41 +46,30 @@ export default function ProductCard({
         className="group block"
         onClick={handleLinkClick}
       >
-        <ShopifyProductImage
-          src={product.imageUrl}
-          alt={product.imageAlt}
-          sizes={imageSizes}
-          className="aspect-4/5"
-          imageClassName="transition-opacity group-hover:opacity-90"
-        />
+        <ProductImageWishlist product={product}>
+          <ShopifyProductImage
+            src={product.imageUrl}
+            alt={product.imageAlt}
+            sizes={imageSizes}
+            className="aspect-4/5"
+            imageClassName="transition-opacity group-hover:opacity-90"
+          />
+        </ProductImageWishlist>
 
-        <div
-          className={`space-y-1 text-left ${
-            layout === "grid" ? "mt-4" : "mt-2"
-          }`}
-        >
-          <h3
-            className={`text-sm font-medium uppercase text-black ${
-              layout === "grid" ? "font-serif" : "font-sans"
-            }`}
-          >
+        <div className="mt-2 space-y-1 text-left">
+          <h3 className="font-sans text-sm font-medium uppercase text-black">
             {product.title}
           </h3>
           <p className="text-sm font-normal text-neutral-800">
             {product.price}
           </p>
-          {colorLabel ? (
-            <p className="text-sm font-normal text-neutral-600">{colorLabel}</p>
-          ) : null}
         </div>
       </Link>
 
-      {layout === "carousel" || layout === "compact" ? (
-        <ProductColorSwatches
-          swatches={product.colorSwatches}
-          productHandle={product.handle}
-        />
-      ) : null}
+      <ProductColorSwatches
+        swatches={product.colorSwatches}
+        productHandle={product.handle}
+      />
     </article>
   );
 }

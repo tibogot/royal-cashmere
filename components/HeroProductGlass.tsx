@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import ProductImageWishlist from "@/components/ProductImageWishlist";
 import { routes } from "@/lib/routes";
 import type { ShopifyProduct } from "@/lib/shopify/queries";
 
@@ -20,7 +21,12 @@ export default function HeroProductGlass({
       className="group absolute right-4 bottom-6 z-10 block w-56 md:right-8 md:bottom-10 md:w-84 "
     >
       <div className="flex flex-col overflow-hidden  bg-linear-to-b from-black/20 via-black/15 to-black/10 backdrop-blur-xl">
-        <div className="relative aspect-4/5 w-full">
+        <ProductImageWishlist
+          product={product}
+          className="relative aspect-4/5 w-full"
+          heartClassName="absolute top-2 right-2 z-10"
+          tone="light"
+        >
           <Image
             src={imageSrc}
             alt={product.imageAlt}
@@ -28,7 +34,7 @@ export default function HeroProductGlass({
             className="box-border object-contain object-center p-3 transition-opacity group-hover:opacity-90"
             sizes="(max-width: 768px) 224px, (max-width: 1024px) 256px, 288px"
           />
-        </div>
+        </ProductImageWishlist>
 
         <div className="space-y-1 px-3.5 pb-3.5 text-left text-white md:px-4 md:pb-4">
           <h2 className="line-clamp-2 text-base font-medium font-sans">

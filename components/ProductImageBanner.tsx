@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import ProductImageWishlist from "@/components/ProductImageWishlist";
 import type { ShopifyProduct } from "@/lib/shopify/queries";
 
 type ProductImageBannerProps = {
@@ -18,13 +19,20 @@ export default function ProductImageBanner({
       href={`/products/${product.handle}`}
       className="group relative block h-svh w-full"
     >
-      <Image
-        src={imageSrc}
-        alt={imageAlt ?? product.imageAlt}
-        fill
-        className="object-cover transition-opacity group-hover:opacity-95"
-        sizes="100vw"
-      />
+      <ProductImageWishlist
+        product={product}
+        className="absolute inset-0"
+        heartClassName="absolute top-4 right-4 z-10 md:top-6 md:right-6"
+        tone="light"
+      >
+        <Image
+          src={imageSrc}
+          alt={imageAlt ?? product.imageAlt}
+          fill
+          className="object-cover transition-opacity group-hover:opacity-95"
+          sizes="100vw"
+        />
+      </ProductImageWishlist>
 
       <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/50 to-transparent p-6 text-left text-white md:p-8">
         <h3 className="font-serif text-base font-medium md:text-lg">{product.title}</h3>

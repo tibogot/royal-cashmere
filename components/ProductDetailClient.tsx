@@ -1,5 +1,6 @@
 "use client";
 
+import ProductImageWishlist from "@/components/ProductImageWishlist";
 import ProductPurchasePanel from "@/components/ProductPurchasePanel";
 import ShopifyProductImage from "@/components/ShopifyProductImage";
 import {
@@ -54,15 +55,21 @@ export default function ProductDetailClient({
 
   return (
     <section className="flex min-h-svh flex-col overflow-x-hidden bg-white text-black md:flex-row">
-      <ShopifyProductImage
-        src={displayImage.imageUrl}
-        alt={displayImage.imageAlt}
-        priority
-        padding="lg"
-        width={SHOPIFY_IMAGE_WIDTH.detail}
-        className="h-[55svh] w-full shrink-0 md:min-h-svh md:w-1/2 md:self-stretch"
-        sizes="(max-width: 768px) 100vw, 50vw"
-      />
+      <ProductImageWishlist
+        product={product}
+        className="relative h-[55svh] w-full shrink-0 md:min-h-svh md:w-1/2 md:self-stretch"
+        heartClassName="absolute top-4 right-4 z-10 md:top-8 md:right-8"
+      >
+        <ShopifyProductImage
+          src={displayImage.imageUrl}
+          alt={displayImage.imageAlt}
+          priority
+          padding="lg"
+          width={SHOPIFY_IMAGE_WIDTH.detail}
+          className="h-full w-full"
+          sizes="(max-width: 768px) 100vw, 50vw"
+        />
+      </ProductImageWishlist>
 
       <div className="flex min-w-0 w-full flex-col justify-center overflow-x-hidden px-4 py-12 md:w-1/2 md:px-12 md:py-24 lg:px-20">
         <ProductPurchasePanel

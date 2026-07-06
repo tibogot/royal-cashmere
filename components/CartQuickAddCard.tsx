@@ -2,6 +2,7 @@
 
 import { addToCart } from "@/app/actions/cart";
 import ProductColorSwatches from "@/components/ProductColorSwatches";
+import ProductImageWishlist from "@/components/ProductImageWishlist";
 import ShopifyProductImage from "@/components/ShopifyProductImage";
 import { routes } from "@/lib/routes";
 import type { CartCarouselProduct } from "@/lib/shopify/products";
@@ -69,19 +70,21 @@ export default function CartQuickAddCard({
   return (
     <article className={articleClassName}>
       <div className="relative">
-        <Link
-          href={routes.product(product.handle)}
-          className="block"
-          onClick={handleLinkClick}
-        >
-          <ShopifyProductImage
-            src={product.imageUrl}
-            alt={product.imageAlt}
-            sizes={imageSizes}
-            className="aspect-4/5"
-            imageClassName="transition-opacity group-hover:opacity-90"
-          />
-        </Link>
+        <ProductImageWishlist product={product}>
+          <Link
+            href={routes.product(product.handle)}
+            className="block"
+            onClick={handleLinkClick}
+          >
+            <ShopifyProductImage
+              src={product.imageUrl}
+              alt={product.imageAlt}
+              sizes={imageSizes}
+              className="aspect-4/5"
+              imageClassName="transition-opacity group-hover:opacity-90"
+            />
+          </Link>
+        </ProductImageWishlist>
 
         <div className="pointer-events-none absolute inset-x-0 bottom-0 p-2 opacity-100 transition-opacity md:opacity-0 md:group-hover:opacity-100">
           <button

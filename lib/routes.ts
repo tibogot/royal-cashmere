@@ -10,6 +10,7 @@ export const routes = {
   authLogin: "/api/auth/login",
   authLogout: "/api/auth/logout",
   cart: "/panier",
+  wishlist: "/wishlist",
   legal: "/mentions-legales",
   privacy: "/politique-de-confidentialite",
   terms: "/cgv",
