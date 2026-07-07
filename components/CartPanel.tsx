@@ -185,7 +185,7 @@ export default function CartPanel({ open, onClose }: CartPanelProps) {
         </div>
 
         {isLoading ? (
-          <p className="mt-6 text-sm text-black/50">Chargement…</p>
+          <p className="mt-6 px-4 text-sm text-black/50 md:px-8">Chargement…</p>
         ) : (
           <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
             <CartPageView cart={cart} variant="panel" onClose={onClose} />
