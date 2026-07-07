@@ -1,9 +1,6 @@
+import HeroBottomLogo from "@/components/HeroBottomLogo";
 import { createPageMetadata } from "@/lib/seo";
-import { routes } from "@/lib/routes";
-import { ctaLinkClassName } from "@/lib/ui";
-import aboutHeroImage from "@/public/images/ekaterina-grosheva.jpg";
 import Image from "next/image";
-import Link from "next/link";
 
 export const metadata = createPageMetadata({
   title: "À propos",
@@ -12,28 +9,31 @@ export const metadata = createPageMetadata({
   path: "/a-propos",
 });
 
-const sectionHeadingClassName = "font-serif text-2xl leading-snug md:text-4xl";
-
 export default function AboutPage() {
   return (
     <main className="w-full">
-      <section className="bg-white px-4 pt-32 pb-20 text-center text-black md:px-8 md:pt-40 md:pb-32">
-        <h1 className="mx-auto max-w-5xl font-serif text-5xl uppercase leading-[1.12] md:max-w-6xl md:text-8xl md:leading-[1.08]">
+      <section
+        data-transparent-nav
+        className="relative h-svh w-full"
+      >
+        <h1 className="sr-only">
           Une maison de cachemire d&apos;exception, ancrée à Bruxelles
         </h1>
-      </section>
-
-      <section className="relative h-[80svh] w-full">
         <Image
-          src={aboutHeroImage}
+          src="/images/antonio-verdin-fvH0Konesh8-unsplash.jpg"
           alt="Atelier Royal Cashmere à Uccle"
           fill
+          priority
           className="object-cover"
           sizes="100vw"
-          quality={70}
-          placeholder="blur"
-          priority
         />
+        <HeroBottomLogo />
+      </section>
+
+      <section className="bg-white px-4 pt-6 pb-20 text-center text-black md:px-8 md:pt-10 md:pb-32">
+        <h2 className="mx-auto mt-8 max-w-5xl font-serif text-5xl uppercase leading-[1.12] md:mt-10 md:max-w-6xl md:text-8xl md:leading-[1.08]">
+          Une maison de cachemire d&apos;exception, ancrée à Bruxelles
+        </h2>
       </section>
 
       <section className="bg-white px-4 py-16 text-left text-black md:px-8">

@@ -25,7 +25,8 @@ const EASE = "power2.out";
 const CLOSE_EASE = "power2.inOut";
 const MENU_CONTENT_OFFSET = 6;
 const CONTENT_REVEAL_AT = 0.22;
-const TRANSPARENT_NAV_SECTION_ID = "home-hero";
+const TRANSPARENT_NAV_SELECTOR = "[data-transparent-nav]";
+const TRANSPARENT_NAV_PATHS = new Set([routes.home, routes.about]);
 
 type NavAppearance = {
   white: boolean;
@@ -35,14 +36,14 @@ type NavAppearance = {
 
 export default function Navbar() {
   const pathname = usePathname();
-  const isHome = pathname === routes.home;
+  const hasTransparentHero = TRANSPARENT_NAV_PATHS.has(pathname);
   const [searchOpen, setSearchOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [shopMenuOpen, setShopMenuOpen] = useState(false);
   const [navHovered, setNavHovered] = useState(false);
   const [collections, setCollections] = useState<ShopifyCollection[]>([]);
-  const [navSolid, setNavSolid] = useState(pathname !== routes.home);
+  const [navSolid, setNavSolid] = useState(!hasTransparentHero);
   const headerRef = useRef<HTMLElement>(null);
   const shellRef = useRef<HTMLDivElement>(null);
   const bgRef = useRef<HTMLDivElement>(null);
@@ -53,17 +54,19 @@ export default function Navbar() {
   const navTweenRef = useRef<gsap.core.Timeline | null>(null);
   const menuMeasureAttemptsRef = useRef(0);
   const navExpandedRef = useRef(false);
-  const isHomeRef = useRef(isHome);
+  const hasTransparentHeroRef = useRef(hasTransparentHero);
 
   const overlayOpen = cartOpen || searchOpen;
-  const isNavWhite = isHome ? navSolid || navHovered || overlayOpen : true;
+  const isNavWhite = hasTransparentHero
+    ? navSolid || navHovered || overlayOpen
+    : true;
   const navExpanded = shopMenuOpen && !overlayOpen;
 
   // Mirror the latest values into refs for the ScrollTrigger and ResizeObserver
   // callbacks below (which read them asynchronously), without writing to refs
   // during render.
   useEffect(() => {
-    isHomeRef.current = isHome;
+    hasTransparentHeroRef.current = hasTransparentHero;
     navExpandedRef.current = navExpanded;
   });
 
@@ -200,7 +203,7 @@ export default function Navbar() {
 
       const navHeight = nav.offsetHeight;
 
-      if (!isHome) {
+      if (!hasTransparentHero) {
         setNavSolid(true);
         return;
       }
@@ -214,7 +217,7 @@ export default function Navbar() {
         });
       }
 
-      const transparentSection = document.getElementById(TRANSPARENT_NAV_SECTION_ID);
+      const transparentSection = document.querySelector(TRANSPARENT_NAV_SELECTOR);
       if (!transparentSection) {
         setNavSolid(true);
         return;
@@ -226,16 +229,16 @@ export default function Navbar() {
         trigger: transparentSection,
         start: "bottom top",
         onEnter: () => {
-          if (isHomeRef.current) setNavSolid(true);
+          if (hasTransparentHeroRef.current) setNavSolid(true);
         },
         onLeaveBack: () => {
-          if (isHomeRef.current) setNavSolid(false);
+          if (hasTransparentHeroRef.current) setNavSolid(false);
         },
       });
 
       return () => transparentSectionTrigger.kill();
     },
-    { scope: headerRef, dependencies: [isHome, pathname] },
+    { scope: headerRef, dependencies: [hasTransparentHero, pathname] },
   );
 
   useGSAP(
@@ -268,7 +271,7 @@ export default function Navbar() {
         isNavWhite,
         navExpanded,
         collections.length,
-        isHome,
+        hasTransparentHero,
         overlayOpen,
       ],
     },
@@ -312,7 +315,7 @@ export default function Navbar() {
   );
 
   const navLinkClassName = `animated-underline w-fit text-xs uppercase tracking-wide ${
-    isHome && !isNavWhite ? "text-white" : "text-black"
+    hasTransparentHero && !isNavWhite ? "text-white" : "text-black"
   }`;
 
   const navIconButtonClassName =
@@ -356,11 +359,11 @@ export default function Navbar() {
     menuMeasureAttemptsRef.current = 0;
 
     runNavAnimation({
-      white: isHome ? navSolid || navHovered || overlayOpen : true,
+      white: hasTransparentHero ? navSolid || navHovered || overlayOpen : true,
       expanded: false,
       immediate: true,
     });
-  }, [overlayOpen, isHome, navSolid, navHovered]);
+  }, [overlayOpen, hasTransparentHero, navSolid, navHovered]);
 
   useLayoutEffect(() => {
     if (navExpanded) return;
@@ -377,18 +380,18 @@ export default function Navbar() {
     if (menuCurrentH <= 1 && bgHeight <= navHeight + 1) return;
 
     runNavAnimation({
-      white: isHome ? navSolid || navHovered || overlayOpen : true,
+      white: hasTransparentHero ? navSolid || navHovered || overlayOpen : true,
       expanded: false,
       immediate: true,
     });
-  }, [navExpanded, isHome, navSolid, navHovered, overlayOpen]);
+  }, [navExpanded, hasTransparentHero, navSolid, navHovered, overlayOpen]);
 
   // Reset nav UI state on navigation. The navbar is mounted once and persists
   // across routes, so it can't be reset via a `key` remount; these resets
   // legitimately run in an effect (they also depend on reading the hovered DOM
   // state below, which isn't available during render).
   useLayoutEffect(() => {
-    if (!isHome) {
+    if (!hasTransparentHero) {
       // eslint-disable-next-line react-hooks/set-state-in-effect -- see note above
       setNavSolid(true);
     }
@@ -405,11 +408,11 @@ export default function Navbar() {
     ).matches;
 
     runNavAnimation({
-      white: !isHome || isHovered,
+      white: !hasTransparentHero || isHovered,
       expanded: false,
-      immediate: reduceMotion || !isHome,
+      immediate: reduceMotion || !hasTransparentHero,
     });
-  }, [pathname, isHome]);
+  }, [pathname, hasTransparentHero]);
 
   useEffect(() => {
     let cancelled = false;
