@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import CookieConsent from "@/components/CookieConsent";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import OrganizationJsonLd from "@/components/OrganizationJsonLd";
@@ -26,6 +27,7 @@ export default function RootLayout({
           {children}
           <Footer />
         </SmoothScroll>
+        <CookieConsent />
       </body>
     </html>
   );

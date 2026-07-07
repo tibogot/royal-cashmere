@@ -17,10 +17,13 @@ export default function CookiesContent() {
   const { email } = siteConfig.contact;
 
   return (
-    <LegalPage title="Politique relative aux cookies" lastUpdated={legalLastUpdated}>
+    <LegalPage
+      title="Politique relative aux cookies"
+      lastUpdated={legalLastUpdated}
+    >
       <LegalParagraph>
-        La présente politique explique comment {companyName} utilise des
-        cookies et technologies similaires sur le site{" "}
+        La présente politique explique comment {companyName} utilise des cookies
+        et technologies similaires sur le site{" "}
         <Link
           href={siteConfig.url}
           className="underline underline-offset-2 transition-opacity hover:opacity-60"
@@ -49,7 +52,7 @@ export default function CookiesContent() {
         </LegalParagraph>
 
         <div className="mt-6 overflow-x-auto">
-          <table className="w-full min-w-[32rem] border-collapse text-left font-serif text-sm text-black/80 md:text-base">
+          <table className="w-full min-w-lg border-collapse text-left font-serif text-sm text-black/80 md:text-base">
             <thead>
               <tr className="border-b border-black/20">
                 <th className="py-3 pr-4 font-serif uppercase tracking-wide text-xs text-black/50">
@@ -142,8 +145,7 @@ export default function CookiesContent() {
         <LegalParagraph>
           Le refus des cookies strictement nécessaires peut empêcher
           l&apos;utilisation de certaines fonctionnalités du site, notamment
-          l&apos;ajout d&apos;articles au panier ou la connexion à votre
-          compte.
+          l&apos;ajout d&apos;articles au panier ou la connexion à votre compte.
         </LegalParagraph>
       </LegalSection>
 
