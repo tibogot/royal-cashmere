@@ -34,7 +34,7 @@ export default function ProductImageBanner({
         />
       </ProductImageWishlist>
 
-      <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/50 to-transparent p-6 text-left text-white md:p-8">
+      <div className="absolute inset-x-0 bottom-0 bg-linear-to-t from-black/50 to-transparent p-6 text-left text-white md:p-8">
         <h3 className="font-serif text-base font-medium md:text-lg">{product.title}</h3>
         <p className="mt-1 text-sm text-white/80">{product.price}</p>
       </div>
