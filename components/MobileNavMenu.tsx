@@ -28,11 +28,14 @@ const otherLinks = [
   { label: "Mon compte", href: routes.account },
 ] as const;
 
-const linkClassName =
+const closeButtonClassName =
   "text-xs uppercase tracking-wide transition-opacity hover:opacity-60";
 
+const linkClassName =
+  "font-serif text-2xl uppercase tracking-wide transition-opacity hover:opacity-60";
+
 const subLinkClassName =
-  "text-[11px] uppercase tracking-wide transition-opacity hover:opacity-60";
+  "font-serif text-lg uppercase tracking-wide transition-opacity hover:opacity-60";
 
 function subscribeNoop() {
   return () => {};
@@ -139,7 +142,7 @@ export default function MobileNavMenu({
           type="button"
           onClick={handleClose}
           aria-label="Fermer le menu"
-          className={`flex h-8 w-fit items-center ${linkClassName}`}
+          className={`flex h-8 w-fit items-center ${closeButtonClassName}`}
         >
           Fermer
         </button>
