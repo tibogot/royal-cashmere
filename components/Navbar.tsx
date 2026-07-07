@@ -478,9 +478,9 @@ export default function Navbar() {
 
         <nav
           ref={navRef}
-          className="relative grid grid-cols-[1fr_auto_1fr] select-none items-center px-4 py-4 md:px-8 md:py-5"
+          className="relative flex select-none items-center justify-between px-4 py-4 md:px-8 md:py-5"
         >
-          <div className="flex items-center gap-4 md:gap-8">
+          <div className="relative z-10 flex items-center gap-4 md:gap-8">
             <div
               className="flex items-center gap-3 md:hidden"
               onMouseEnter={closeShopMenu}
@@ -527,7 +527,7 @@ export default function Navbar() {
 
           <Link
             href={routes.home}
-            className="justify-self-center"
+            className="absolute top-1/2 left-1/2 z-10 -translate-x-1/2 -translate-y-1/2"
             aria-label="Royal Cashmere accueil"
             onMouseEnter={closeShopMenu}
           >
@@ -544,7 +544,7 @@ export default function Navbar() {
           </Link>
 
           <div
-            className="flex items-center justify-end gap-6 md:gap-8"
+            className="relative z-10 flex items-center justify-end gap-6 md:gap-8"
             onMouseEnter={closeShopMenu}
           >
             <ul className="hidden items-center gap-6 md:flex md:gap-8">
@@ -580,13 +580,10 @@ export default function Navbar() {
               </li>
             </ul>
 
-            <div className="flex items-center gap-6 md:hidden">
-              <WishlistNavLink
-                className={navLinkClassName}
-                data-nav-link
-              />
+            <div className="flex items-center md:hidden">
               <CartNavLink
-                className={navLinkClassName}
+                variant="icon"
+                className={navIconButtonClassName}
                 data-nav-link
                 onClick={handleCartOpen}
                 onMouseEnter={closeShopMenu}
