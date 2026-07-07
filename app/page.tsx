@@ -29,12 +29,25 @@ export default async function Home() {
 
   return (
     <main className="w-full">
-      <section id="home-hero" className="relative h-svh w-full overflow-hidden">
+      <section id="home-hero" className="relative h-svh w-full">
         <h1 className="sr-only">
           Royal Cashmere — Boutique de cachemire d&apos;exception à Uccle,
           Bruxelles
         </h1>
         <HomeHeroBackground />
+        <Link
+          href={routes.home}
+          aria-label="Royal Cashmere"
+          className="absolute inset-x-0 bottom-0 z-10 translate-y-[6%] px-4 md:px-8"
+        >
+          <Image
+            src="/brand/logo-nav.svg"
+            alt=""
+            width={224}
+            height={18}
+            className="block h-auto w-full brightness-0 invert"
+          />
+        </Link>
         {/* <Image
           src="/images/nick-karvounis.jpg"
           alt="Boutique Royal Cashmere — cachemire d'exception à Bruxelles"
