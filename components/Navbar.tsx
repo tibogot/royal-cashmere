@@ -605,6 +605,7 @@ export default function Navbar() {
 
 const leftLinks = [
   { label: "Collection", href: routes.collection },
+  { label: "Journal", href: routes.journal },
   { label: "À propos", href: routes.about },
   { label: "Contact", href: routes.contact },
 ] as const;

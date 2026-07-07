@@ -21,6 +21,7 @@ const MENU_ANIM_DURATION = 0.45;
 
 const otherLinks = [
   { label: "Collection", href: routes.collection },
+  { label: "Journal", href: routes.journal },
   { label: "À propos", href: routes.about },
   { label: "Contact", href: routes.contact },
   { label: "Mon compte", href: routes.account },
