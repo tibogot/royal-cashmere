@@ -128,7 +128,7 @@ export default function MobileNavMenu({
   if (!mounted || !shouldRender) return null;
 
   return createPortal(
-    <div className={`fixed inset-0 z-60 md:hidden ${open ? "" : "pointer-events-none"}`}>
+    <div className={`fixed inset-0 z-60 nav:hidden ${open ? "" : "pointer-events-none"}`}>
       <div
         ref={panelRef}
         className="absolute inset-0 flex flex-col bg-white px-4 pb-6 pt-4 text-black"

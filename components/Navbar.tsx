@@ -92,9 +92,10 @@ export default function Navbar() {
 
     const links = nav.querySelectorAll<HTMLElement>("[data-nav-link]");
     const navHeight = nav.offsetHeight;
-    const menuHeight = expanded && menuInner
-      ? Math.max(menuInner.offsetHeight, menuInner.scrollHeight)
-      : 0;
+    const menuHeight =
+      expanded && menuInner
+        ? Math.max(menuInner.offsetHeight, menuInner.scrollHeight)
+        : 0;
     const duration = immediate ? 0 : DURATION;
     const colorAt = duration * 0.52;
 
@@ -107,14 +108,17 @@ export default function Navbar() {
 
     const bgScaleY = Number(gsap.getProperty(bg, "scaleY") ?? 0);
     const bgVisible = bgScaleY > 0.01;
-    const menuCurrentH = menu ? Number(gsap.getProperty(menu, "height") ?? 0) : 0;
+    const menuCurrentH = menu
+      ? Number(gsap.getProperty(menu, "height") ?? 0)
+      : 0;
     const menuIsOpen = menuCurrentH > 1;
 
     if (white) {
       tl.set(links, { color: "#000000" }, 0);
       tl.set(logo, { filter: "brightness(0)" }, 0);
 
-      const showMenu = expanded && menu != null && menuInner != null && menuHeight > 0;
+      const showMenu =
+        expanded && menu != null && menuInner != null && menuHeight > 0;
 
       if (showMenu) {
         if (!menuIsOpen) {
@@ -155,8 +159,13 @@ export default function Navbar() {
         tl.to(bg, { scaleY: 1, height: navHeight, ease: CLOSE_EASE }, 0);
       } else {
         if (menu) tl.set(menu, { height: 0 });
-        if (menuInner) tl.set(menuInner, { autoAlpha: 0, y: MENU_CONTENT_OFFSET });
-        tl.to(bg, { scaleY: 1, height: navHeight, duration: duration * 0.75 }, 0);
+        if (menuInner)
+          tl.set(menuInner, { autoAlpha: 0, y: MENU_CONTENT_OFFSET });
+        tl.to(
+          bg,
+          { scaleY: 1, height: navHeight, duration: duration * 0.75 },
+          0,
+        );
       }
     } else {
       if (menuIsOpen && menu && menuInner) {
@@ -174,18 +183,28 @@ export default function Navbar() {
         tl.to(bg, { scaleY: 0, height: navHeight, ease: CLOSE_EASE }, 0);
       } else {
         if (menu) tl.set(menu, { height: 0 });
-        if (menuInner) tl.set(menuInner, { autoAlpha: 0, y: MENU_CONTENT_OFFSET });
+        if (menuInner)
+          tl.set(menuInner, { autoAlpha: 0, y: MENU_CONTENT_OFFSET });
         tl.to(bg, { scaleY: 0, height: navHeight, ease: CLOSE_EASE }, 0);
       }
       tl.to(links, { color: "#ffffff", duration: duration * 0.35 }, colorAt);
-      tl.to(logo, { filter: "brightness(1)", duration: duration * 0.35 }, colorAt);
+      tl.to(
+        logo,
+        { filter: "brightness(1)", duration: duration * 0.35 },
+        colorAt,
+      );
     }
 
     if (immediate) {
       tl.progress(1, false);
     }
 
-    if (expanded && menuInner && menuHeight === 0 && menuMeasureAttemptsRef.current < 2) {
+    if (
+      expanded &&
+      menuInner &&
+      menuHeight === 0 &&
+      menuMeasureAttemptsRef.current < 2
+    ) {
       menuMeasureAttemptsRef.current += 1;
       requestAnimationFrame(() => {
         runNavAnimation({ white, expanded, immediate });
@@ -220,7 +239,9 @@ export default function Navbar() {
         });
       }
 
-      const transparentSection = document.querySelector(TRANSPARENT_NAV_SELECTOR);
+      const transparentSection = document.querySelector(
+        TRANSPARENT_NAV_SELECTOR,
+      );
       if (!transparentSection) {
         setNavSolid(true);
         return;
@@ -478,11 +499,11 @@ export default function Navbar() {
 
         <nav
           ref={navRef}
-          className="relative flex select-none items-center justify-between px-4 py-4 md:px-8 md:py-5"
+          className="relative flex select-none items-center justify-between px-4 py-4 nav:px-8 nav:py-5"
         >
-          <div className="relative z-10 flex items-center gap-4 md:gap-8">
+          <div className="relative z-10 flex items-center gap-4">
             <div
-              className="flex items-center gap-1 md:hidden"
+              className="flex items-center gap-1 nav:hidden"
               onMouseEnter={closeShopMenu}
             >
               {!menuOpen ? (
@@ -504,15 +525,19 @@ export default function Navbar() {
               </button>
             </div>
 
-            <ul className="hidden items-center md:flex">
+            <ul className="hidden items-center nav:flex">
               <li onMouseEnter={openShopMenu} onFocus={openShopMenu}>
-                <Link href={routes.shop} className={navLinkClassName} data-nav-link>
+                <Link
+                  href={routes.shop}
+                  className={navLinkClassName}
+                  data-nav-link
+                >
                   Boutique
                 </Link>
               </li>
             </ul>
             <ul
-              className="hidden items-center gap-6 md:flex md:gap-8"
+              className="hidden items-center nav:flex nav:gap-4"
               onMouseEnter={closeShopMenu}
             >
               {leftLinks.map(({ label, href }) => (
@@ -538,16 +563,16 @@ export default function Navbar() {
                 width={224}
                 height={18}
                 preload
-                className="h-3.5 w-auto md:h-4"
+                className="h-3.5 w-auto nav:h-4"
               />
             </span>
           </Link>
 
           <div
-            className="relative z-10 flex items-center justify-end gap-6 md:gap-8"
+            className="relative z-10 flex items-center justify-end gap-4"
             onMouseEnter={closeShopMenu}
           >
-            <ul className="hidden items-center gap-6 md:flex md:gap-8">
+            <ul className="hidden items-center nav:flex nav:gap-4">
               <li>
                 <button
                   type="button"
@@ -566,10 +591,7 @@ export default function Navbar() {
                 </li>
               ))}
               <li>
-                <WishlistNavLink
-                  className={navLinkClassName}
-                  data-nav-link
-                />
+                <WishlistNavLink className={navLinkClassName} data-nav-link />
               </li>
               <li onMouseEnter={closeShopMenu}>
                 <CartNavLink
@@ -580,7 +602,7 @@ export default function Navbar() {
               </li>
             </ul>
 
-            <div className="flex items-center gap-1 md:hidden">
+            <div className="flex items-center gap-1 nav:hidden">
               <WishlistNavLink
                 variant="icon"
                 className={navIconButtonClassName}
@@ -600,7 +622,7 @@ export default function Navbar() {
 
         <div
           ref={menuRef}
-          className={`relative hidden h-0 overflow-hidden md:block ${
+          className={`relative hidden h-0 overflow-hidden nav:block ${
             navExpanded ? "" : "pointer-events-none"
           }`}
           aria-hidden={!navExpanded}
