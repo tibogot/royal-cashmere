@@ -1,4 +1,4 @@
-import LegalPage from "@/components/LegalPage";
+import PolitiqueConfidentialiteContent from "@/components/legal/PolitiqueConfidentialiteContent";
 import { createPageMetadata } from "@/lib/seo";
 
 export const metadata = createPageMetadata({
@@ -8,5 +8,5 @@ export const metadata = createPageMetadata({
 });
 
 export default function PrivacyPolicyPage() {
-  return <LegalPage title="Politique de confidentialité" />;
+  return <PolitiqueConfidentialiteContent />;
 }

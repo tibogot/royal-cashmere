@@ -1,4 +1,4 @@
-import LegalPage from "@/components/LegalPage";
+import MentionsLegalesContent from "@/components/legal/MentionsLegalesContent";
 import { createPageMetadata } from "@/lib/seo";
 
 export const metadata = createPageMetadata({
@@ -8,5 +8,5 @@ export const metadata = createPageMetadata({
 });
 
 export default function LegalNoticePage() {
-  return <LegalPage title="Mentions légales" />;
+  return <MentionsLegalesContent />;
 }

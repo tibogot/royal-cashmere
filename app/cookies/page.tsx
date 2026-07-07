@@ -1,4 +1,4 @@
-import LegalPage from "@/components/LegalPage";
+import CookiesContent from "@/components/legal/CookiesContent";
 import { createPageMetadata } from "@/lib/seo";
 
 export const metadata = createPageMetadata({
@@ -8,5 +8,5 @@ export const metadata = createPageMetadata({
 });
 
 export default function CookiesPage() {
-  return <LegalPage title="Cookies" />;
+  return <CookiesContent />;
 }
