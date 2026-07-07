@@ -1,12 +1,12 @@
+import { refreshAndPersistCustomerSession } from "@/lib/shopify/customer-account/auth";
 import { getCustomerProfile } from "@/lib/shopify/customer-account/customer";
 import { getCustomerDisplayName } from "@/lib/shopify/customer-account/display-name";
-import { isCustomerLoggedIn } from "@/lib/shopify/customer-account/session";
 import { NextResponse } from "next/server";
 
 export async function GET() {
-  const loggedIn = await isCustomerLoggedIn();
+  const session = await refreshAndPersistCustomerSession();
 
-  if (!loggedIn) {
+  if (!session) {
     return NextResponse.json({ loggedIn: false });
   }
 

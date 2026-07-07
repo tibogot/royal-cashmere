@@ -66,24 +66,28 @@ async function exchangeAuthorizationCode(code: string, codeVerifier: string) {
 }
 
 async function refreshAccessToken(refreshToken: string) {
-  const config = await getOpenIdConfiguration();
-  const body = new URLSearchParams();
+  try {
+    const config = await getOpenIdConfiguration();
+    const body = new URLSearchParams();
 
-  body.set("grant_type", "refresh_token");
-  body.set("client_id", getCustomerAccountClientId());
-  body.set("refresh_token", refreshToken);
+    body.set("grant_type", "refresh_token");
+    body.set("client_id", getCustomerAccountClientId());
+    body.set("refresh_token", refreshToken);
 
-  const response = await fetch(config.token_endpoint, {
-    method: "POST",
-    headers: getTokenRequestHeaders(),
-    body,
-  });
+    const response = await fetch(config.token_endpoint, {
+      method: "POST",
+      headers: getTokenRequestHeaders(),
+      body,
+    });
 
-  if (!response.ok) {
+    if (!response.ok) {
+      return null;
+    }
+
+    return (await response.json()) as TokenResponse;
+  } catch {
     return null;
   }
-
-  return (await response.json()) as TokenResponse;
 }
 
 function toCustomerSession(tokens: TokenResponse): CustomerSession {
@@ -96,6 +100,21 @@ function toCustomerSession(tokens: TokenResponse): CustomerSession {
 }
 
 export async function getValidCustomerSession() {
+  const session = await getCustomerSession();
+  if (!session) return null;
+
+  const expiresSoon = session.expiresAt - Date.now() < 60_000;
+  if (!expiresSoon) return session;
+
+  const refreshed = await refreshAccessToken(session.refreshToken);
+  if (!refreshed) {
+    return null;
+  }
+
+  return toCustomerSession(refreshed);
+}
+
+export async function refreshAndPersistCustomerSession() {
   const session = await getCustomerSession();
   if (!session) return null;
 
@@ -213,7 +232,13 @@ export async function customerAccountQuery<TData>(
     return { ok: false as const, error: "not_authenticated" as const };
   }
 
-  const apiConfig = await getCustomerAccountApiConfiguration();
+  let apiConfig;
+  try {
+    apiConfig = await getCustomerAccountApiConfiguration();
+  } catch {
+    return { ok: false as const, error: "config_unavailable" as const };
+  }
+
   const response = await fetch(apiConfig.graphql_api, {
     method: "POST",
     headers: {

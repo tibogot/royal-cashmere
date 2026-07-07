@@ -1,6 +1,6 @@
 import SignInView from "@/components/SignInView";
+import { getValidCustomerSession } from "@/lib/shopify/customer-account/auth";
 import { isCustomerAccountConfigured } from "@/lib/shopify/customer-account/config";
-import { isCustomerLoggedIn } from "@/lib/shopify/customer-account/session";
 import { createPageMetadata } from "@/lib/seo";
 import { routes } from "@/lib/routes";
 import { redirect } from "next/navigation";
@@ -21,7 +21,7 @@ type SignInPageProps = {
 export default async function SignInPage({ searchParams }: SignInPageProps) {
   const params = await searchParams;
 
-  if (isCustomerAccountConfigured() && (await isCustomerLoggedIn())) {
+  if (isCustomerAccountConfigured() && (await getValidCustomerSession())) {
     redirect(routes.account);
   }
 

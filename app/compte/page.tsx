@@ -1,7 +1,7 @@
 import AccountPageView from "@/components/AccountPageView";
+import { getValidCustomerSession } from "@/lib/shopify/customer-account/auth";
 import { getCustomerAccountSummary } from "@/lib/shopify/customer-account/customer";
 import { isCustomerAccountConfigured } from "@/lib/shopify/customer-account/config";
-import { isCustomerLoggedIn } from "@/lib/shopify/customer-account/session";
 import { createPageMetadata } from "@/lib/seo";
 import { routes } from "@/lib/routes";
 import { redirect } from "next/navigation";
@@ -18,8 +18,8 @@ export default async function AccountPage() {
     redirect(routes.signIn);
   }
 
-  const loggedIn = await isCustomerLoggedIn();
-  if (!loggedIn) {
+  const session = await getValidCustomerSession();
+  if (!session) {
     redirect(routes.signIn);
   }
 
