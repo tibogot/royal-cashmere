@@ -1,13 +1,13 @@
 import { urlFor } from "@/lib/sanity/image";
 import type { SanityImage } from "@/lib/sanity/types";
-import Image from "next/image";
+import FadeInImage from "@/components/FadeInImage";
 
 type SanityImageProps = {
   image: SanityImage;
   alt?: string;
   sizes?: string;
   className?: string;
-  priority?: boolean;
+  preload?: boolean;
 };
 
 export default function SanityImage({
@@ -15,21 +15,21 @@ export default function SanityImage({
   alt,
   sizes = "100vw",
   className = "object-cover",
-  priority = false,
+  preload = false,
 }: SanityImageProps) {
   if (!image.asset) return null;
 
   const imageUrl = urlFor(image).width(1600).auto("format").url();
 
   return (
-    <Image
+    <FadeInImage
       src={imageUrl}
       alt={alt ?? image.alt ?? ""}
       fill
       className={className}
       sizes={sizes}
       quality={75}
-      priority={priority}
+      preload={preload}
     />
   );
 }

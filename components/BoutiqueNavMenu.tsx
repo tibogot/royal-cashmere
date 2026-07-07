@@ -2,7 +2,7 @@
 
 import { routes } from "@/lib/routes";
 import type { ShopifyCollection } from "@/lib/shopify/queries";
-import Image from "next/image";
+import FadeInImage from "@/components/FadeInImage";
 import Link from "next/link";
 
 type BoutiqueNavMenuProps = {
@@ -40,7 +40,7 @@ function FeaturedCard({ href, title, imageSrc, imageAlt }: FeaturedCardProps) {
       className="group flex w-56 shrink-0 flex-col gap-3 sm:w-64 md:w-72 lg:w-80"
     >
       <div className="relative aspect-3/4 overflow-hidden bg-black/5">
-        <Image
+        <FadeInImage
           src={imageSrc}
           alt={imageAlt}
           fill

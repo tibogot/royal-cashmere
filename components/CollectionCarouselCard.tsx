@@ -6,7 +6,7 @@ import {
 import { routes } from "@/lib/routes";
 import type { ShopifyCollection } from "@/lib/shopify/queries";
 import { Draggable } from "gsap/Draggable";
-import Image from "next/image";
+import FadeInImage from "@/components/FadeInImage";
 import Link from "next/link";
 
 type CollectionCarouselCardProps = {
@@ -36,12 +36,12 @@ export default function CollectionCarouselCard({
         className="group relative block aspect-3/4 overflow-hidden"
         onClick={handleLinkClick}
       >
-        <Image
+        <FadeInImage
           src={resolvedSrc}
           alt={collection.imageAlt ?? collection.title}
           fill
           unoptimized={isShopifyCdnUrl(imageUrl)}
-          className="object-cover transition-opacity group-hover:opacity-95"
+          className="object-cover group-hover:opacity-95"
           sizes="(max-width: 640px) 78vw, (max-width: 1024px) 352px, 512px"
         />
 

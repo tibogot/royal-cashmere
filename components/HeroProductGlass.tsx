@@ -1,4 +1,4 @@
-import Image from "next/image";
+import FadeInImage from "@/components/FadeInImage";
 import Link from "next/link";
 import ProductImageWishlist from "@/components/ProductImageWishlist";
 import { routes } from "@/lib/routes";
@@ -27,11 +27,11 @@ export default function HeroProductGlass({
           heartClassName="absolute top-2 right-2 z-10"
           tone="light"
         >
-          <Image
+          <FadeInImage
             src={imageSrc}
             alt={product.imageAlt}
             fill
-            className="box-border object-contain object-center p-3 transition-opacity group-hover:opacity-90"
+            className="box-border object-contain object-center p-3 group-hover:opacity-90"
             sizes="(max-width: 768px) 224px, (max-width: 1024px) 256px, 288px"
           />
         </ProductImageWishlist>

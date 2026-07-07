@@ -1,4 +1,4 @@
-import Image from "next/image";
+import FadeInImage from "@/components/FadeInImage";
 import Link from "next/link";
 import ProductImageWishlist from "@/components/ProductImageWishlist";
 import type { ShopifyProduct } from "@/lib/shopify/queries";
@@ -25,11 +25,11 @@ export default function ProductImageBanner({
         heartClassName="absolute top-4 right-4 z-10 md:top-6 md:right-6"
         tone="light"
       >
-        <Image
+        <FadeInImage
           src={imageSrc}
           alt={imageAlt ?? product.imageAlt}
           fill
-          className="object-cover transition-opacity group-hover:opacity-95"
+          className="object-cover group-hover:opacity-95"
           sizes="100vw"
         />
       </ProductImageWishlist>

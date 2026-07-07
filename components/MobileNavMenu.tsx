@@ -4,6 +4,7 @@ import CartNavLink from "@/components/CartNavLink";
 import WishlistNavLink from "@/components/WishlistNavLink";
 import { routes } from "@/lib/routes";
 import type { ShopifyCollection } from "@/lib/shopify/queries";
+import { useOverlayScrollLock } from "@/lib/useOverlayScrollLock";
 import gsap from "gsap";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -65,6 +66,10 @@ export default function MobileNavMenu({
 
   const shouldRender = open || isClosing;
 
+  // Lock background scroll (body/html overflow + Lenis) while the menu is open,
+  // matching the cart and search overlays via the shared hook.
+  useOverlayScrollLock(open);
+
   const handleClose = useCallback(() => {
     setIsClosing(true);
     setBoutiqueOpen(false);
@@ -80,27 +85,6 @@ export default function MobileNavMenu({
     setBoutiqueOpen(false);
     onClose();
   }, [pathname, onClose]);
-
-  useEffect(() => {
-    if (!open) return;
-
-    const blockBackgroundScroll = (event: Event) => {
-      const panel = panelRef.current;
-      if (panel?.contains(event.target as Node)) return;
-
-      event.preventDefault();
-    };
-
-    window.addEventListener("wheel", blockBackgroundScroll, { passive: false });
-    window.addEventListener("touchmove", blockBackgroundScroll, {
-      passive: false,
-    });
-
-    return () => {
-      window.removeEventListener("wheel", blockBackgroundScroll);
-      window.removeEventListener("touchmove", blockBackgroundScroll);
-    };
-  }, [open]);
 
   useEffect(() => {
     if (!shouldRender) return;

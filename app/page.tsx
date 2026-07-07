@@ -11,7 +11,7 @@ import HomeHeroBackground from "@/components/HomeHeroBackground";
 import ProductImageBanner from "@/components/ProductImageBanner";
 import ProductShowcase from "@/components/ProductShowcase";
 import { getFeaturedProducts } from "@/lib/shopify/products";
-import Image from "next/image";
+import FadeInImage from "@/components/FadeInImage";
 import Link from "next/link";
 
 export const metadata = createPageMetadata({
@@ -69,7 +69,7 @@ export default async function Home() {
 
       <section className="flex w-full flex-col md:h-svh md:flex-row">
         <div className="relative h-[40svh] w-full md:h-full md:w-1/2">
-          <Image
+          <FadeInImage
             src="/images/Frame 63.png"
             alt="Cachemire Royal Cashmere"
             fill
@@ -91,7 +91,7 @@ export default async function Home() {
             Mongolie
           </p>
           <div className="relative aspect-4/5 w-44 overflow-hidden md:w-56">
-            <Image
+            <FadeInImage
               src="/images/degleex-ganzorig-SQoH2ZQd80E-unsplash.jpg"
               alt="Cachemire Royal Cashmere"
               fill
@@ -110,7 +110,7 @@ export default async function Home() {
       </section>
 
       <section className="relative h-svh w-full mt-20 mb-20">
-        <Image
+        <FadeInImage
           src="/images/ekaterina-grosheva-optimized.jpg"
           alt="Cachemire Royal Cashmere"
           fill

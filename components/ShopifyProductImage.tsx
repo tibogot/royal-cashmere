@@ -3,7 +3,7 @@ import {
   shopifyImageUrl,
   SHOPIFY_IMAGE_WIDTH,
 } from "@/lib/shopify/image";
-import Image from "next/image";
+import FadeInImage from "@/components/FadeInImage";
 
 type ShopifyProductImageProps = {
   src: string;
@@ -12,7 +12,7 @@ type ShopifyProductImageProps = {
   className?: string;
   imageClassName?: string;
   padding?: "sm" | "md" | "lg";
-  priority?: boolean;
+  preload?: boolean;
   width?: number;
 };
 
@@ -29,7 +29,7 @@ export default function ShopifyProductImage({
   className = "",
   imageClassName = "",
   padding = "md",
-  priority,
+  preload,
   width = SHOPIFY_IMAGE_WIDTH.card,
 }: ShopifyProductImageProps) {
   const resolvedSrc = shopifyImageUrl(src, width);
@@ -37,11 +37,11 @@ export default function ShopifyProductImage({
 
   return (
     <div className={`relative w-full overflow-hidden bg-white ${className}`}>
-      <Image
+      <FadeInImage
         src={resolvedSrc}
         alt={alt}
         fill
-        priority={priority}
+        preload={preload}
         unoptimized={useShopifyCdn}
         className={`box-border object-contain ${paddingClassName[padding]} ${imageClassName}`}
         sizes={sizes}

@@ -5,7 +5,7 @@ import {
 } from "@/lib/shopify/image";
 import { routes } from "@/lib/routes";
 import type { ShopifyCollection } from "@/lib/shopify/queries";
-import Image from "next/image";
+import FadeInImage from "@/components/FadeInImage";
 import Link from "next/link";
 
 type CollectionShowcaseCardProps = {
@@ -23,12 +23,12 @@ export default function CollectionShowcaseCard({
       href={routes.collectionByHandle(collection.handle)}
       className="group relative block h-[60svh] w-full md:h-[80svh]"
     >
-      <Image
+      <FadeInImage
         src={resolvedSrc}
         alt={collection.imageAlt ?? collection.title}
         fill
         unoptimized={isShopifyCdnUrl(imageUrl)}
-        className="object-cover transition-opacity group-hover:opacity-95"
+        className="object-cover group-hover:opacity-95"
         sizes="(max-width: 768px) 100vw, 33vw"
       />
 

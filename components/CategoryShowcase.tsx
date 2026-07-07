@@ -2,7 +2,7 @@
 
 import { showcaseCategories } from "@/lib/categories";
 import { ctaLinkClassName } from "@/lib/ui";
-import Image from "next/image";
+import FadeInImage from "@/components/FadeInImage";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -36,7 +36,7 @@ export default function CategoryShowcase() {
 
         <div className="flex min-w-0 flex-1 flex-col items-center">
           <div className="relative aspect-3/4 w-full max-w-[280px] md:max-w-[360px]">
-            <Image
+            <FadeInImage
               key={current.image}
               src={current.image}
               alt={current.imageAlt}

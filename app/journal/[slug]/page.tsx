@@ -92,7 +92,7 @@ export default async function JournalArticlePage({
               image={article.mainImage}
               alt={article.mainImage.alt ?? article.title}
               sizes="(max-width: 896px) 100vw, 896px"
-              priority
+              preload
             />
           </div>
         ) : null}

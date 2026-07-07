@@ -68,7 +68,7 @@ export default function ProductDetailClient({
         <ShopifyProductImage
           src={displayImage.imageUrl}
           alt={displayImage.imageAlt}
-          priority
+          preload
           padding="lg"
           width={SHOPIFY_IMAGE_WIDTH.detail}
           className="h-full w-full"

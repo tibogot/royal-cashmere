@@ -1,6 +1,6 @@
 import HeroBottomLogo from "@/components/HeroBottomLogo";
 import { createPageMetadata } from "@/lib/seo";
-import Image from "next/image";
+import FadeInImage from "@/components/FadeInImage";
 
 export const metadata = createPageMetadata({
   title: "À propos",
@@ -19,11 +19,11 @@ export default function AboutPage() {
         <h1 className="sr-only">
           Une maison de cachemire d&apos;exception, ancrée à Bruxelles
         </h1>
-        <Image
+        <FadeInImage
           src="/images/antonio-verdin-fvH0Konesh8-unsplash.jpg"
           alt="Atelier Royal Cashmere à Uccle"
           fill
-          priority
+          preload
           className="object-cover"
           sizes="100vw"
         />
@@ -65,7 +65,7 @@ export default function AboutPage() {
             aria-hidden="true"
           />
           <div className="relative h-[32svh] w-full md:h-full md:w-1/2">
-            <Image
+            <FadeInImage
               src="/images/chu-william-DQkDC6-3vnQ-unsplash.jpg"
               alt="Paysages de Mongolie"
               fill
@@ -77,7 +77,7 @@ export default function AboutPage() {
 
         <section className="flex w-full flex-col md:min-h-[80svh] md:flex-row pb-20">
           <div className="relative h-[50svh] w-full md:h-auto md:min-h-[80svh] md:w-1/2">
-            <Image
+            <FadeInImage
               src="/images/fadhil-abhimantra.jpg"
               alt="Cachemire Royal Cashmere"
               fill
@@ -111,7 +111,7 @@ export default function AboutPage() {
       </div>
 
       <section className="relative h-svh w-full">
-        <Image
+        <FadeInImage
           src="/images/Frame 49.jpg"
           alt="Collections Royal Cashmere"
           fill

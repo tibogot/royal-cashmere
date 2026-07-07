@@ -537,7 +537,7 @@ export default function Navbar() {
                 alt="Royal Cashmere"
                 width={224}
                 height={18}
-                priority
+                preload
                 className="h-3.5 w-auto md:h-4"
               />
             </span>
