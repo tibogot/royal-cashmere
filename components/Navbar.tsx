@@ -52,10 +52,14 @@ export default function Navbar() {
   const logoRef = useRef<HTMLSpanElement>(null);
   const navTweenRef = useRef<gsap.core.Timeline | null>(null);
   const menuMeasureAttemptsRef = useRef(0);
+  const navExpandedRef = useRef(false);
   const isHomeRef = useRef(isHome);
   isHomeRef.current = isHome;
 
-  const isNavWhite = isHome ? navSolid || navHovered : true;
+  const overlayOpen = cartOpen || searchOpen;
+  const isNavWhite = isHome ? navSolid || navHovered || overlayOpen : true;
+  const navExpanded = shopMenuOpen && !overlayOpen;
+  navExpandedRef.current = navExpanded;
 
   const runNavAnimation = ({
     white,
@@ -69,6 +73,11 @@ export default function Navbar() {
     const logo = logoRef.current;
     if (!nav || !bg || !logo) return;
 
+    navTweenRef.current?.kill();
+    if (menu) gsap.killTweensOf(menu);
+    if (menuInner) gsap.killTweensOf(menuInner);
+    gsap.killTweensOf(bg);
+
     const links = nav.querySelectorAll<HTMLElement>("[data-nav-link]");
     const navHeight = nav.offsetHeight;
     const menuHeight = expanded && menuInner
@@ -77,7 +86,6 @@ export default function Navbar() {
     const duration = immediate ? 0 : DURATION;
     const colorAt = duration * 0.52;
 
-    navTweenRef.current?.kill();
     gsap.set(bg, { transformOrigin: "top center" });
 
     const tl = gsap.timeline({
@@ -246,13 +254,19 @@ export default function Navbar() {
 
       runNavAnimation({
         white: isNavWhite,
-        expanded: shopMenuOpen,
-        immediate: reduceMotion,
+        expanded: navExpanded,
+        immediate: reduceMotion || overlayOpen,
       });
     },
     {
       scope: headerRef,
-      dependencies: [isNavWhite, shopMenuOpen, collections.length, isHome],
+      dependencies: [
+        isNavWhite,
+        navExpanded,
+        collections.length,
+        isHome,
+        overlayOpen,
+      ],
     },
   );
 
@@ -262,9 +276,11 @@ export default function Navbar() {
       const menu = menuRef.current;
       const bg = bgRef.current;
       const nav = navRef.current;
-      if (!menuInner || !menu || !bg || !nav || !shopMenuOpen) return;
+      if (!menuInner || !menu || !bg || !nav || !navExpanded) return;
 
       const observer = new ResizeObserver(() => {
+        if (!navExpandedRef.current) return;
+
         const navHeight = nav.offsetHeight;
         const menuHeight = menuInner.offsetHeight;
 
@@ -287,7 +303,7 @@ export default function Navbar() {
     },
     {
       scope: headerRef,
-      dependencies: [shopMenuOpen],
+      dependencies: [navExpanded],
     },
   );
 
@@ -307,22 +323,59 @@ export default function Navbar() {
   const handleSearchOpen = () => {
     setMenuOpen(false);
     setCartOpen(false);
+    setShopMenuOpen(false);
     setSearchOpen(true);
   };
 
   const handleCartOpen = () => {
     setMenuOpen(false);
     setSearchOpen(false);
+    setShopMenuOpen(false);
     setCartOpen(true);
   };
 
   const openShopMenu = () => {
+    if (cartOpen || searchOpen || menuOpen) return;
     setShopMenuOpen(true);
   };
 
   const closeShopMenu = () => {
     setShopMenuOpen(false);
   };
+
+  useLayoutEffect(() => {
+    if (!overlayOpen) return;
+
+    setShopMenuOpen(false);
+    menuMeasureAttemptsRef.current = 0;
+
+    runNavAnimation({
+      white: isHome ? navSolid || navHovered || overlayOpen : true,
+      expanded: false,
+      immediate: true,
+    });
+  }, [overlayOpen, isHome, navSolid, navHovered]);
+
+  useLayoutEffect(() => {
+    if (navExpanded) return;
+
+    const menu = menuRef.current;
+    const bg = bgRef.current;
+    const nav = navRef.current;
+    if (!menu || !bg || !nav) return;
+
+    const menuCurrentH = Number(gsap.getProperty(menu, "height") ?? 0);
+    const navHeight = nav.offsetHeight;
+    const bgHeight = Number(gsap.getProperty(bg, "height") ?? 0);
+
+    if (menuCurrentH <= 1 && bgHeight <= navHeight + 1) return;
+
+    runNavAnimation({
+      white: isHome ? navSolid || navHovered || overlayOpen : true,
+      expanded: false,
+      immediate: true,
+    });
+  }, [navExpanded, isHome, navSolid, navHovered, overlayOpen]);
 
   useLayoutEffect(() => {
     if (!isHome) {
@@ -368,12 +421,14 @@ export default function Navbar() {
     const handleCartOpenEvent = () => {
       setMenuOpen(false);
       setSearchOpen(false);
+      setShopMenuOpen(false);
       setCartOpen(true);
     };
 
     const handleSearchOpenEvent = () => {
       setMenuOpen(false);
       setCartOpen(false);
+      setShopMenuOpen(false);
       setSearchOpen(true);
     };
 
@@ -393,7 +448,9 @@ export default function Navbar() {
         onMouseEnter={() => setNavHovered(true)}
         onMouseLeave={() => {
           setNavHovered(false);
-          setShopMenuOpen(false);
+          if (!cartOpen && !searchOpen) {
+            setShopMenuOpen(false);
+          }
         }}
       >
         <div
@@ -497,7 +554,7 @@ export default function Navbar() {
                   data-nav-link
                 />
               </li>
-              <li>
+              <li onMouseEnter={closeShopMenu}>
                 <CartNavLink
                   className={navLinkClassName}
                   data-nav-link
@@ -515,6 +572,7 @@ export default function Navbar() {
                 className={navLinkClassName}
                 data-nav-link
                 onClick={handleCartOpen}
+                onMouseEnter={closeShopMenu}
               />
             </div>
           </div>
@@ -522,9 +580,10 @@ export default function Navbar() {
 
         <div
           ref={menuRef}
-          className="relative hidden h-0 overflow-hidden md:block"
-          aria-hidden={!shopMenuOpen}
-          onMouseEnter={openShopMenu}
+          className={`relative hidden h-0 overflow-hidden md:block ${
+            navExpanded ? "" : "pointer-events-none"
+          }`}
+          aria-hidden={!navExpanded}
         >
           <div ref={menuInnerRef}>
             <BoutiqueNavMenu collections={collections} />

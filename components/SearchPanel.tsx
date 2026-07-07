@@ -3,6 +3,7 @@
 import PanelCloseButton from "@/components/PanelCloseButton";
 import { popularSearches } from "@/lib/categories";
 import { routes } from "@/lib/routes";
+import { useOverlayScrollLock } from "@/lib/useOverlayScrollLock";
 import gsap from "gsap";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -26,6 +27,8 @@ export default function SearchPanel({ open, onClose }: SearchPanelProps) {
   const [query, setQuery] = useState("");
   const [isVisible, setIsVisible] = useState(false);
   const [mounted, setMounted] = useState(false);
+
+  useOverlayScrollLock(isVisible);
 
   useEffect(() => {
     setMounted(true);
@@ -105,27 +108,6 @@ export default function SearchPanel({ open, onClose }: SearchPanelProps) {
       tweenRef.current?.kill();
     };
   }, [open, isVisible]);
-
-  useEffect(() => {
-    if (!isVisible) return;
-
-    const blockBackgroundScroll = (event: Event) => {
-      const panel = panelRef.current;
-      if (panel?.contains(event.target as Node)) return;
-
-      event.preventDefault();
-    };
-
-    window.addEventListener("wheel", blockBackgroundScroll, { passive: false });
-    window.addEventListener("touchmove", blockBackgroundScroll, {
-      passive: false,
-    });
-
-    return () => {
-      window.removeEventListener("wheel", blockBackgroundScroll);
-      window.removeEventListener("touchmove", blockBackgroundScroll);
-    };
-  }, [isVisible]);
 
   useEffect(() => {
     if (!isVisible) return;

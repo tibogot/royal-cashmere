@@ -3,6 +3,7 @@
 import CartPageView from "@/components/CartPageView";
 import PanelCloseButton from "@/components/PanelCloseButton";
 import type { Cart } from "@/lib/shopify/cart";
+import { useOverlayScrollLock } from "@/lib/useOverlayScrollLock";
 import gsap from "gsap";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -23,6 +24,8 @@ export default function CartPanel({ open, onClose }: CartPanelProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [mounted, setMounted] = useState(false);
+
+  useOverlayScrollLock(isVisible);
 
   const refreshCart = useCallback(async (showLoading = false) => {
     if (showLoading) {
@@ -130,41 +133,6 @@ export default function CartPanel({ open, onClose }: CartPanelProps) {
       tweenRef.current?.kill();
     };
   }, [open, isVisible]);
-
-  useEffect(() => {
-    if (!isVisible) return;
-
-    const previousBodyOverflow = document.body.style.overflow;
-    const previousHtmlOverflow = document.documentElement.style.overflow;
-    document.body.style.overflow = "hidden";
-    document.documentElement.style.overflow = "hidden";
-
-    return () => {
-      document.body.style.overflow = previousBodyOverflow;
-      document.documentElement.style.overflow = previousHtmlOverflow;
-    };
-  }, [isVisible]);
-
-  useEffect(() => {
-    if (!isVisible) return;
-
-    const blockBackgroundScroll = (event: Event) => {
-      const panel = panelRef.current;
-      if (panel?.contains(event.target as Node)) return;
-
-      event.preventDefault();
-    };
-
-    window.addEventListener("wheel", blockBackgroundScroll, { passive: false });
-    window.addEventListener("touchmove", blockBackgroundScroll, {
-      passive: false,
-    });
-
-    return () => {
-      window.removeEventListener("wheel", blockBackgroundScroll);
-      window.removeEventListener("touchmove", blockBackgroundScroll);
-    };
-  }, [isVisible]);
 
   useEffect(() => {
     if (!isVisible) return;
