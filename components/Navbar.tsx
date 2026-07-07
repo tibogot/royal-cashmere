@@ -482,7 +482,7 @@ export default function Navbar() {
         >
           <div className="relative z-10 flex items-center gap-4 md:gap-8">
             <div
-              className="flex items-center gap-3 md:hidden"
+              className="flex items-center gap-1 md:hidden"
               onMouseEnter={closeShopMenu}
             >
               {!menuOpen ? (
@@ -580,7 +580,13 @@ export default function Navbar() {
               </li>
             </ul>
 
-            <div className="flex items-center md:hidden">
+            <div className="flex items-center gap-1 md:hidden">
+              <WishlistNavLink
+                variant="icon"
+                className={navIconButtonClassName}
+                data-nav-link
+                onMouseEnter={closeShopMenu}
+              />
               <CartNavLink
                 variant="icon"
                 className={navIconButtonClassName}
@@ -608,7 +614,6 @@ export default function Navbar() {
       <MobileNavMenu
         open={menuOpen}
         onClose={() => setMenuOpen(false)}
-        onCartOpen={handleCartOpen}
         collections={collections}
       />
       <SearchPanel open={searchOpen} onClose={() => setSearchOpen(false)} />

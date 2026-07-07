@@ -1,7 +1,5 @@
 "use client";
 
-import CartNavLink from "@/components/CartNavLink";
-import WishlistNavLink from "@/components/WishlistNavLink";
 import { routes } from "@/lib/routes";
 import type { ShopifyCollection } from "@/lib/shopify/queries";
 import { useOverlayScrollLock } from "@/lib/useOverlayScrollLock";
@@ -14,7 +12,6 @@ import { createPortal } from "react-dom";
 type MobileNavMenuProps = {
   open: boolean;
   onClose: () => void;
-  onCartOpen: () => void;
   collections?: ShopifyCollection[];
 };
 
@@ -52,7 +49,6 @@ function getServerSnapshot() {
 export default function MobileNavMenu({
   open,
   onClose,
-  onCartOpen,
   collections = [],
 }: MobileNavMenuProps) {
   const pathname = usePathname();
@@ -196,21 +192,6 @@ export default function MobileNavMenu({
                 </Link>
               </li>
             ))}
-            <li>
-              <WishlistNavLink
-                className={linkClassName}
-                onClick={handleClose}
-              />
-            </li>
-            <li>
-              <CartNavLink
-                className={linkClassName}
-                onClick={() => {
-                  handleClose();
-                  onCartOpen();
-                }}
-              />
-            </li>
           </ul>
         </nav>
       </div>

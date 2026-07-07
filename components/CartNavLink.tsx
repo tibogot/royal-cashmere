@@ -43,15 +43,17 @@ export default function CartNavLink({
         type="button"
         onClick={handleClick}
         aria-label={label}
-        className={`relative ${className}`}
+        className={className}
         {...props}
       >
-        <CartIcon />
-        {count > 0 ? (
-          <span className="absolute -top-1 -right-1 flex h-3.5 min-w-3.5 items-center justify-center rounded-full bg-black px-0.5 text-[9px] leading-none text-white">
-            {count}
-          </span>
-        ) : null}
+        <span className="relative inline-flex shrink-0">
+          <CartIcon />
+          {count > 0 ? (
+            <span className="absolute top-0 right-0 translate-x-1/3 -translate-y-1/3 text-[9px] leading-none tabular-nums">
+              {count}
+            </span>
+          ) : null}
+        </span>
       </button>
     );
   }
