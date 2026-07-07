@@ -1,6 +1,8 @@
 "use client";
 
-import CollectionCarouselCard from "@/components/CollectionCarouselCard";
+import CollectionCarouselCard, {
+  collectionCarouselCardWidthClass,
+} from "@/components/CollectionCarouselCard";
 import type { ShopifyCollection } from "@/lib/shopify/queries";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
@@ -105,23 +107,9 @@ export default function CollectionsSection({
   if (collections.length === 0) return null;
 
   return (
-    <div
-      ref={containerRef}
-      className="flex flex-col gap-10 md:flex-row md:items-start md:gap-12 lg:gap-20"
-    >
-      <div className="flex shrink-0 flex-col md:w-[min(100%,22rem)] lg:w-[min(100%,26rem)]">
-        <h1 className="font-serif text-5xl uppercase leading-[1.12] md:text-6xl md:leading-[1.1] lg:text-7xl">
-          Nos
-          <br />
-          collections
-        </h1>
-
-        <p className="mt-6 max-w-md font-sans text-sm font-light leading-relaxed text-neutral-800 md:mt-8 md:text-base">
-          Robes, pulls, pantalons et écharpes — chaque collection révèle la
-          douceur du pur cachemire mongol, pensée pour accompagner vos saisons.
-        </p>
-
-        <div className="mt-8 flex flex-col items-start gap-2 md:mt-12">
+    <div ref={containerRef}>
+      <div className="mb-10 flex items-start justify-end gap-6 md:mb-12">
+        <div className="flex flex-col items-end gap-2">
           <button
             type="button"
             onClick={() => scroll("next")}
@@ -168,10 +156,31 @@ export default function CollectionsSection({
 
       <div
         ref={viewportRef}
-        className="min-w-0 flex-1 overflow-hidden md:-mr-8 md:pr-8 lg:-mr-8 lg:pr-8"
+        className="overflow-hidden"
         style={{ touchAction: "pan-y" }}
       >
         <div ref={trackRef} className="flex w-max items-stretch gap-6">
+          <article className="relative w-[88vw] shrink-0  sm:w-104 md:w-lg lg:w-152 xl:w-2xl">
+            <div
+              className={`invisible aspect-3/4 ${collectionCarouselCardWidthClass}`}
+              aria-hidden="true"
+            />
+
+            <div className="absolute inset-0 flex items-center justify-center px-8 md:px-12">
+              <div className="flex max-w-md flex-col items-center text-center md:max-w-lg">
+                <h1 className="font-serif text-3xl uppercase leading-[1.12] sm:text-4xl md:text-5xl md:leading-[1.1] lg:text-6xl">
+                  Royal Cashmere Collections
+                </h1>
+
+                <p className="mt-6 font-sans text-sm font-light leading-relaxed text-neutral-800 md:mt-8 md:text-base">
+                  Robes, pulls, pantalons et écharpes — chaque collection révèle
+                  la douceur du pur cachemire mongol, pensée pour accompagner
+                  vos saisons.
+                </p>
+              </div>
+            </div>
+          </article>
+
           {collections.map((collection) => (
             <CollectionCarouselCard
               key={collection.id}

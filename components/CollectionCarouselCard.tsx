@@ -9,6 +9,9 @@ import { Draggable } from "gsap/Draggable";
 import FadeInImage from "@/components/FadeInImage";
 import Link from "next/link";
 
+export const collectionCarouselCardWidthClass =
+  "w-[78vw] shrink-0 sm:w-88 md:w-96 lg:w-md xl:w-lg";
+
 type CollectionCarouselCardProps = {
   collection: ShopifyCollection;
   preventClickAfterDrag?: boolean;
@@ -30,7 +33,7 @@ export default function CollectionCarouselCard({
     : undefined;
 
   return (
-    <article className="w-[78vw] shrink-0 sm:w-88 md:w-96 lg:w-md xl:w-lg">
+    <article className={collectionCarouselCardWidthClass}>
       <Link
         href={routes.collectionByHandle(collection.handle)}
         className="group relative block aspect-3/4 overflow-hidden"
