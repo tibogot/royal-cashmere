@@ -3,9 +3,10 @@
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 
 const VIDEO_DESKTOP =
-  "https://dymcnsx6f7jgtkqa.public.blob.vercel-storage.com/royal-cashmere/hero-desktop.mp4";
+  "https://dymcnsx6f7jgtkqa.public.blob.vercel-storage.com/royal-cashmere/9784260-desktop.mp4";
 const VIDEO_MOBILE =
-  "https://dymcnsx6f7jgtkqa.public.blob.vercel-storage.com/royal-cashmere/hero-mobile.mp4";
+  "https://dymcnsx6f7jgtkqa.public.blob.vercel-storage.com/royal-cashmere/9784260-mobile.mp4";
+const POSTER = "/images/9784260-poster.jpg";
 
 const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)";
 
@@ -71,7 +72,7 @@ export default function HomeHeroBackground() {
     return (
       <div
         className="absolute inset-0 z-0 bg-cover bg-center"
-        style={{ backgroundImage: "url(/images/hero-poster.jpg)" }}
+        style={{ backgroundImage: `url(${POSTER})` }}
         aria-hidden="true"
       />
     );
@@ -86,7 +87,7 @@ export default function HomeHeroBackground() {
         muted
         playsInline
         preload="auto"
-        poster="/images/hero-poster.jpg"
+        poster={POSTER}
         className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-500 ${
           ready ? "opacity-100" : "opacity-0"
         }`}
