@@ -20,11 +20,11 @@ export default function RootLayout({
       lang="fr"
       className={`${neueHaasDisplay.variable} ${ivyPrestoHeadline.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col font-sans font-light">
+      <body className="min-h-svh flex flex-col font-sans font-light">
         <OrganizationJsonLd />
         <SmoothScroll>
           <Navbar />
-          {children}
+          <div className="flex flex-1 flex-col">{children}</div>
           <Footer />
         </SmoothScroll>
         <CookieConsent />

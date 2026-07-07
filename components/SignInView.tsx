@@ -1,5 +1,4 @@
 import { routes } from "@/lib/routes";
-import Link from "next/link";
 
 type SignInViewProps = {
   configured: boolean;
@@ -33,12 +32,15 @@ export default function SignInView({ configured, hasError }: SignInViewProps) {
         </p>
       ) : null}
 
-      <Link
+      {/* Plain <a>: hits an API route that 302-redirects to Shopify's
+          external OAuth endpoint. A Next <Link> would fetch it as an RSC
+          request and try to follow the cross-origin redirect → CORS error. */}
+      <a
         href={`${routes.authLogin}?return_to=${encodeURIComponent(routes.account)}`}
         className="mt-10 inline-flex items-center justify-center border border-black px-8 py-3 text-sm uppercase tracking-wide transition-opacity hover:opacity-60"
       >
         Se connecter
-      </Link>
+      </a>
 
       <p className="mt-8 text-xs leading-relaxed text-black/50">
         Vous serez redirigé vers la page de connexion sécurisée Shopify.

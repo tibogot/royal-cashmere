@@ -51,12 +51,14 @@ export default function AccountPageView({
           <p className="mt-3 text-sm text-black/70 md:text-base">{email}</p>
         ) : null}
 
-        <Link
+        {/* Plain <a>: /api/auth/logout 302-redirects to Shopify's external
+            end-session endpoint, which a Next <Link> RSC fetch can't follow. */}
+        <a
           href={routes.authLogout}
           className="mt-8 inline-flex items-center justify-center border border-black px-6 py-2.5 text-sm uppercase tracking-wide transition-opacity hover:opacity-60"
         >
           Se déconnecter
-        </Link>
+        </a>
       </div>
 
       <div className="pt-10">

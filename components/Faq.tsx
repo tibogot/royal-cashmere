@@ -64,9 +64,9 @@ export default function Faq() {
           })}
         </div>
 
-        <p className="mt-8 max-w-md text-xs leading-relaxed text-black/50">
+        {/* <p className="mt-8 max-w-md text-xs leading-relaxed text-black/50">
           {faqFooterText}
-        </p>
+        </p> */}
       </div>
     </section>
   );
