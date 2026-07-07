@@ -28,11 +28,16 @@ export default function ProductDetailClient({
     getInitialSelections(product.options, product.variants, initialColor),
   );
 
-  useEffect(() => {
+  // Reset the selected variant when the product or requested colour changes,
+  // during render rather than in a sync effect.
+  const selectionKey = `${product.id}|${initialColor ?? ""}`;
+  const [prevSelectionKey, setPrevSelectionKey] = useState(selectionKey);
+  if (selectionKey !== prevSelectionKey) {
+    setPrevSelectionKey(selectionKey);
     setSelections(
       getInitialSelections(product.options, product.variants, initialColor),
     );
-  }, [product, initialColor]);
+  }
 
   const displayImage = useMemo(
     () => getProductImageForSelections(product, selections),

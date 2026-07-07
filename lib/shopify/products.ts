@@ -1,3 +1,4 @@
+import { unstable_cache } from "next/cache";
 import { getShopifyClient, isShopifyConfigured } from "./client";
 import {
   getPlaceholderProductByHandle,
@@ -19,6 +20,12 @@ import {
 import { getColorCount, buildColorSwatches } from "./variants";
 
 const PRODUCTS_PAGE_SIZE = 100;
+
+// Shopify catalog data changes infrequently; cache it so pages aren't fully
+// dynamic (re-fetching from the Storefront API on every request). Invalidate
+// on-demand with `revalidateTag(SHOPIFY_CACHE_TAG)` from a webhook/route.
+const SHOPIFY_REVALIDATE = 3600;
+export const SHOPIFY_CACHE_TAG = "shopify-products";
 
 function formatPrice(amount: string, currencyCode: string) {
   return new Intl.NumberFormat("fr-BE", {
@@ -128,9 +135,8 @@ function mapProductDetailNode(
   };
 }
 
-export async function getProductByHandle(
-  handle: string,
-): Promise<ShopifyProductDetail | null> {
+export const getProductByHandle = unstable_cache(
+  async (handle: string): Promise<ShopifyProductDetail | null> => {
   if (!isShopifyConfigured()) {
     return getPlaceholderProductByHandle(handle);
   }
@@ -155,9 +161,13 @@ export async function getProductByHandle(
     console.error("Failed to fetch Shopify product:", error);
     return getPlaceholderProductByHandle(handle);
   }
-}
+  },
+  ["shopify-product-by-handle"],
+  { revalidate: SHOPIFY_REVALIDATE, tags: [SHOPIFY_CACHE_TAG] },
+);
 
-export async function getAllProducts(): Promise<ShopifyProduct[]> {
+export const getAllProducts = unstable_cache(
+  async (): Promise<ShopifyProduct[]> => {
   if (!isShopifyConfigured()) {
     return getPlaceholderProducts();
   }
@@ -177,11 +187,13 @@ export async function getAllProducts(): Promise<ShopifyProduct[]> {
     console.error("Failed to fetch Shopify products:", error);
     return getPlaceholderProducts();
   }
-}
+  },
+  ["shopify-all-products"],
+  { revalidate: SHOPIFY_REVALIDATE, tags: [SHOPIFY_CACHE_TAG] },
+);
 
-export async function getFeaturedProducts(
-  limit = 12,
-): Promise<ShopifyProduct[]> {
+export const getFeaturedProducts = unstable_cache(
+  async (limit = 12): Promise<ShopifyProduct[]> => {
   if (!isShopifyConfigured()) {
     return getPlaceholderProducts(limit);
   }
@@ -204,7 +216,10 @@ export async function getFeaturedProducts(
     console.error("Failed to fetch Shopify products:", error);
     return getPlaceholderProducts(limit);
   }
-}
+  },
+  ["shopify-featured-products"],
+  { revalidate: SHOPIFY_REVALIDATE, tags: [SHOPIFY_CACHE_TAG] },
+);
 
 function getSimilarityScore(reference: ShopifyProduct, candidate: ShopifyProduct) {
   let score = 0;

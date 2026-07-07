@@ -54,12 +54,18 @@ export default function Navbar() {
   const menuMeasureAttemptsRef = useRef(0);
   const navExpandedRef = useRef(false);
   const isHomeRef = useRef(isHome);
-  isHomeRef.current = isHome;
 
   const overlayOpen = cartOpen || searchOpen;
   const isNavWhite = isHome ? navSolid || navHovered || overlayOpen : true;
   const navExpanded = shopMenuOpen && !overlayOpen;
-  navExpandedRef.current = navExpanded;
+
+  // Mirror the latest values into refs for the ScrollTrigger and ResizeObserver
+  // callbacks below (which read them asynchronously), without writing to refs
+  // during render.
+  useEffect(() => {
+    isHomeRef.current = isHome;
+    navExpandedRef.current = navExpanded;
+  });
 
   const runNavAnimation = ({
     white,
@@ -227,8 +233,6 @@ export default function Navbar() {
         },
       });
 
-      ScrollTrigger.refresh();
-
       return () => transparentSectionTrigger.kill();
     },
     { scope: headerRef, dependencies: [isHome, pathname] },
@@ -346,7 +350,9 @@ export default function Navbar() {
   useLayoutEffect(() => {
     if (!overlayOpen) return;
 
-    setShopMenuOpen(false);
+    // Note: shopMenuOpen is already reset to false by every path that opens an
+    // overlay (handleCartOpen / handleSearchOpen and the window-event
+    // handlers), so this effect only needs to run the appearance animation.
     menuMeasureAttemptsRef.current = 0;
 
     runNavAnimation({
@@ -377,8 +383,13 @@ export default function Navbar() {
     });
   }, [navExpanded, isHome, navSolid, navHovered, overlayOpen]);
 
+  // Reset nav UI state on navigation. The navbar is mounted once and persists
+  // across routes, so it can't be reset via a `key` remount; these resets
+  // legitimately run in an effect (they also depend on reading the hovered DOM
+  // state below, which isn't available during render).
   useLayoutEffect(() => {
     if (!isHome) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- see note above
       setNavSolid(true);
     }
     setShopMenuOpen(false);

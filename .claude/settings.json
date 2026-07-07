@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/Users/tibog/Documents/VSCODE/consulting/app/components/**)"
+    ]
+  }
+}

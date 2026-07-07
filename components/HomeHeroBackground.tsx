@@ -1,68 +1,59 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useSyncExternalStore } from "react";
 
 const VIDEO_DESKTOP =
   "https://dymcnsx6f7jgtkqa.public.blob.vercel-storage.com/royal-cashmere/hero-desktop.mp4";
 const VIDEO_MOBILE =
   "https://dymcnsx6f7jgtkqa.public.blob.vercel-storage.com/royal-cashmere/hero-mobile.mp4";
 
-function useHeroVideoState() {
-  const [state, setState] = useState({
-    isMobile: false,
-    shouldLoadVideo: false,
-  });
+const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)";
 
-  useEffect(() => {
-    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const connection = (
-      navigator as Navigator & { connection?: { effectiveType?: string } }
-    ).connection;
-    const isSlowConnection = connection?.effectiveType === "2g";
+function isMobileClient() {
+  return (
+    /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent) ||
+    window.innerWidth < 768
+  );
+}
 
-    setState({
-      isMobile:
-        /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent) ||
-        window.innerWidth < 768,
-      shouldLoadVideo: !mediaQuery.matches && !isSlowConnection,
-    });
+function isSlowConnection() {
+  const connection = (
+    navigator as Navigator & { connection?: { effectiveType?: string } }
+  ).connection;
+  return connection?.effectiveType === "2g";
+}
 
-    const handleChange = (event: MediaQueryListEvent) => {
-      const conn = (
-        navigator as Navigator & { connection?: { effectiveType?: string } }
-      ).connection;
-      setState((prev) => ({
-        ...prev,
-        shouldLoadVideo: !event.matches && !(conn?.effectiveType === "2g"),
-      }));
-    };
+function subscribeReducedMotion(callback: () => void) {
+  if (typeof window === "undefined") return () => {};
+  const mediaQuery = window.matchMedia(REDUCED_MOTION_QUERY);
+  mediaQuery.addEventListener("change", callback);
+  return () => mediaQuery.removeEventListener("change", callback);
+}
 
-    mediaQuery.addEventListener("change", handleChange);
-    return () => mediaQuery.removeEventListener("change", handleChange);
-  }, []);
+// Detects, on the client only, whether the heavy hero video should load.
+// `useSyncExternalStore` keeps this in sync (and reacts to reduced-motion
+// changes) without a setState-in-effect and renders the poster during SSR.
+function useShouldLoadVideo() {
+  return useSyncExternalStore(
+    subscribeReducedMotion,
+    () =>
+      !window.matchMedia(REDUCED_MOTION_QUERY).matches && !isSlowConnection(),
+    () => false,
+  );
+}
 
-  return state;
+function useIsMobile() {
+  return useSyncExternalStore(
+    () => () => {},
+    isMobileClient,
+    () => false,
+  );
 }
 
 export default function HomeHeroBackground() {
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const { isMobile, shouldLoadVideo } = useHeroVideoState();
+  const isMobile = useIsMobile();
+  const shouldLoadVideo = useShouldLoadVideo();
   const videoSrc = isMobile ? VIDEO_MOBILE : VIDEO_DESKTOP;
-
-  useEffect(() => {
-    if (!shouldLoadVideo || !videoRef.current) return;
-
-    const video = videoRef.current;
-    video.loop = true;
-
-    const handleEnded = () => {
-      video.currentTime = 0;
-      video.play().catch(() => {});
-    };
-
-    video.addEventListener("ended", handleEnded);
-    return () => video.removeEventListener("ended", handleEnded);
-  }, [shouldLoadVideo, videoSrc]);
 
   if (!shouldLoadVideo) {
     return (
@@ -75,18 +66,25 @@ export default function HomeHeroBackground() {
   }
 
   return (
-    <video
-      ref={videoRef}
-      autoPlay
-      loop
-      muted
-      playsInline
-      preload="auto"
-      poster="/images/hero-poster.jpg"
-      className="absolute inset-0 z-0 h-full w-full object-cover"
-      aria-hidden="true"
-    >
-      <source src={videoSrc} type="video/mp4" />
-    </video>
+    <div className="absolute inset-0 z-0" aria-hidden="true">
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        preload="auto"
+        poster="/images/hero-poster.jpg"
+        className="absolute inset-0 h-full w-full object-cover opacity-0"
+        // Keep this: forces the video off Chrome's GPU overlay plane (which
+        // desyncs from Lenis's scroll and causes jitter). The filter is
+        // imperceptible but required — translateZ/clip-path don't work.
+        style={{ filter: "brightness(1.0001)" }}
+        onCanPlay={(event) => {
+          event.currentTarget.style.opacity = "1";
+        }}
+      >
+        <source src={videoSrc} type="video/mp4" />
+      </video>
+    </div>
   );
 }

@@ -41,11 +41,19 @@ export default function CartView({
   const cartRef = useRef(cart);
   const mutationQueueRef = useRef(Promise.resolve());
 
-  cartRef.current = cart;
-
-  useEffect(() => {
+  // Reset to the latest server cart when it changes (e.g. after a route-level
+  // revalidation), during render rather than in a sync effect.
+  const [prevInitialCart, setPrevInitialCart] = useState(initialCart);
+  if (initialCart !== prevInitialCart) {
+    setPrevInitialCart(initialCart);
     setCart(initialCart);
-  }, [initialCart]);
+  }
+
+  // Mirror the latest cart into a ref so async mutation callbacks read a fresh
+  // value without writing to the ref during render.
+  useEffect(() => {
+    cartRef.current = cart;
+  }, [cart]);
 
   const syncCartFromServer = useCallback(async () => {
     try {

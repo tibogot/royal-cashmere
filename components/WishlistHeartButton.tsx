@@ -3,10 +3,10 @@
 import HeartIcon from "@/components/HeartIcon";
 import {
   isInWishlist,
+  subscribeToWishlist,
   toggleWishlist,
-  WISHLIST_UPDATED_EVENT,
 } from "@/lib/wishlist";
-import { useCallback, useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 
 type WishlistHeartButtonProps = {
   handle: string;
@@ -19,28 +19,18 @@ export default function WishlistHeartButton({
   className = "absolute top-2 right-2 z-10",
   tone = "dark",
 }: WishlistHeartButtonProps) {
-  const [active, setActive] = useState(false);
-
-  const syncState = useCallback(() => {
-    setActive(isInWishlist(handle));
-  }, [handle]);
-
-  useEffect(() => {
-    syncState();
-
-    const handleWishlistUpdated = () => {
-      syncState();
-    };
-
-    window.addEventListener(WISHLIST_UPDATED_EVENT, handleWishlistUpdated);
-    return () =>
-      window.removeEventListener(WISHLIST_UPDATED_EVENT, handleWishlistUpdated);
-  }, [syncState]);
+  const active = useSyncExternalStore(
+    subscribeToWishlist,
+    () => isInWishlist(handle),
+    () => false,
+  );
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     event.stopPropagation();
-    setActive(toggleWishlist(handle));
+    // toggleWishlist writes to storage and dispatches the update event, which
+    // the store subscription above picks up to re-render `active`.
+    toggleWishlist(handle);
   };
 
   const toneClassName =

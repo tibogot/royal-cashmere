@@ -1,5 +1,7 @@
+import { unstable_cache } from "next/cache";
 import { collectionHandles, getCollectionLabel, getCollectionNavCardImage } from "@/lib/categories";
 import { getShopifyClient, isShopifyConfigured } from "./client";
+import { SHOPIFY_CACHE_TAG } from "./products";
 import {
   COLLECTION_BY_HANDLE_QUERY,
   COLLECTIONS_QUERY,
@@ -14,6 +16,7 @@ import { buildColorSwatches, getColorCount } from "./variants";
 
 const COLLECTIONS_PAGE_SIZE = 50;
 const COLLECTION_PRODUCTS_PAGE_SIZE = 100;
+const SHOPIFY_REVALIDATE = 3600;
 
 function formatPrice(amount: string, currencyCode: string) {
   return new Intl.NumberFormat("fr-BE", {
@@ -77,7 +80,8 @@ function getPlaceholderCollections(): ShopifyCollection[] {
   });
 }
 
-export async function getCollections(): Promise<ShopifyCollection[]> {
+export const getCollections = unstable_cache(
+  async (): Promise<ShopifyCollection[]> => {
   if (!isShopifyConfigured()) {
     return getPlaceholderCollections();
   }
@@ -105,15 +109,19 @@ export async function getCollections(): Promise<ShopifyCollection[]> {
     console.error("Failed to fetch Shopify collections:", error);
     return getPlaceholderCollections();
   }
-}
+  },
+  ["shopify-collections"],
+  { revalidate: SHOPIFY_REVALIDATE, tags: [SHOPIFY_CACHE_TAG] },
+);
 
 export type ShopifyCollectionWithProducts = ShopifyCollection & {
   products: ShopifyProduct[];
 };
 
-export async function getCollectionByHandle(
-  handle: string,
-): Promise<ShopifyCollectionWithProducts | null> {
+export const getCollectionByHandle = unstable_cache(
+  async (
+    handle: string,
+  ): Promise<ShopifyCollectionWithProducts | null> => {
   if (!isShopifyConfigured()) {
     const title = getCollectionLabel(handle);
     if (!title) return null;
@@ -185,4 +193,7 @@ export async function getCollectionByHandle(
     console.error("Failed to fetch Shopify collection:", error);
     return null;
   }
-}
+  },
+  ["shopify-collection-by-handle"],
+  { revalidate: SHOPIFY_REVALIDATE, tags: [SHOPIFY_CACHE_TAG] },
+);

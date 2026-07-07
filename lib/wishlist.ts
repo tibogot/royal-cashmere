@@ -50,3 +50,19 @@ export function toggleWishlist(handle: string): boolean {
 export function getWishlistCount(): number {
   return getWishlistHandles().length;
 }
+
+/**
+ * Subscribe to wishlist changes (same-tab via the custom event, cross-tab via
+ * the native `storage` event). Designed for `useSyncExternalStore`.
+ */
+export function subscribeToWishlist(callback: () => void): () => void {
+  if (typeof window === "undefined") return () => {};
+
+  window.addEventListener(WISHLIST_UPDATED_EVENT, callback);
+  window.addEventListener("storage", callback);
+
+  return () => {
+    window.removeEventListener(WISHLIST_UPDATED_EVENT, callback);
+    window.removeEventListener("storage", callback);
+  };
+}

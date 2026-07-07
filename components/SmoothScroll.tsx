@@ -2,31 +2,52 @@
 
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { usePrefersReducedMotion } from "@/lib/usePrefersReducedMotion";
 import { ReactLenis, useLenis } from "lenis/react";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
-import "lenis/dist/lenis.css";
+import { useEffect, useRef } from "react";
 
 gsap.registerPlugin(ScrollTrigger);
 
-function LenisScrollTriggerSync() {
+function LenisGSAPSync() {
   const lenis = useLenis();
 
   useEffect(() => {
     if (!lenis) return;
 
-    lenis.on("scroll", ScrollTrigger.update);
+    ScrollTrigger.scrollerProxy(document.body, {
+      scrollTop(value) {
+        if (arguments.length && value !== undefined) {
+          lenis.scrollTo(value, { immediate: true });
+        }
+        return lenis.scroll;
+      },
+      getBoundingClientRect() {
+        return {
+          top: 0,
+          left: 0,
+          width: window.innerWidth,
+          height: window.innerHeight,
+        };
+      },
+      pinType: "fixed",
+    });
 
-    const update = (time: number) => {
+    const handleScroll = () => ScrollTrigger.update();
+    lenis.on("scroll", handleScroll);
+
+    const tickerCallback = (time: number) => {
       lenis.raf(time * 1000);
     };
-
-    gsap.ticker.add(update);
+    gsap.ticker.add(tickerCallback);
     gsap.ticker.lagSmoothing(0);
 
+    ScrollTrigger.refresh();
+
     return () => {
-      lenis.off("scroll", ScrollTrigger.update);
-      gsap.ticker.remove(update);
+      lenis.off("scroll", handleScroll);
+      gsap.ticker.remove(tickerCallback);
+      ScrollTrigger.scrollerProxy(document.body, {});
     };
   }, [lenis]);
 
@@ -36,13 +57,30 @@ function LenisScrollTriggerSync() {
 function ScrollToTopOnNavigate() {
   const pathname = usePathname();
   const lenis = useLenis();
+  const isInitialMount = useRef(true);
 
   useEffect(() => {
-    if (lenis) {
-      lenis.scrollTo(0, { immediate: true });
-    } else {
-      window.scrollTo(0, 0);
+    if ("scrollRestoration" in window.history) {
+      window.history.scrollRestoration = "manual";
     }
+  }, []);
+
+  useEffect(() => {
+    const scrollToTop = () => {
+      if (lenis) {
+        lenis.scrollTo(0, { immediate: true });
+      } else {
+        window.scrollTo(0, 0);
+      }
+    };
+
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      const timeoutId = setTimeout(scrollToTop, 100);
+      return () => clearTimeout(timeoutId);
+    }
+
+    scrollToTop();
   }, [pathname, lenis]);
 
   return null;
@@ -53,13 +91,7 @@ type SmoothScrollProps = {
 };
 
 export default function SmoothScroll({ children }: SmoothScrollProps) {
-  const [reduceMotion, setReduceMotion] = useState(false);
-
-  useEffect(() => {
-    setReduceMotion(
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches,
-    );
-  }, []);
+  const reduceMotion = usePrefersReducedMotion();
 
   if (reduceMotion) {
     return (
@@ -71,19 +103,19 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
   }
 
   return (
-    <>
-      <ReactLenis
-        root
-        options={{
-          autoRaf: false,
-          lerp: 0.08,
-          smoothWheel: true,
-        }}
-      />
-      <LenisScrollTriggerSync />
+    <ReactLenis
+      root
+      options={{
+        lerp: 0.1,
+        smoothWheel: true,
+        touchMultiplier: 2,
+      }}
+      autoRaf={false}
+    >
+      <LenisGSAPSync />
       <ScrollToTopOnNavigate />
       {children}
-    </>
+    </ReactLenis>
   );
 }
 

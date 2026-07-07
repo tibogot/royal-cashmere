@@ -3,6 +3,7 @@
 import PanelCloseButton from "@/components/PanelCloseButton";
 import { popularSearches } from "@/lib/categories";
 import { routes } from "@/lib/routes";
+import { useMounted } from "@/lib/useMounted";
 import { useOverlayScrollLock } from "@/lib/useOverlayScrollLock";
 import gsap from "gsap";
 import Link from "next/link";
@@ -26,19 +27,16 @@ export default function SearchPanel({ open, onClose }: SearchPanelProps) {
   const tweenRef = useRef<gsap.core.Timeline | null>(null);
   const [query, setQuery] = useState("");
   const [isVisible, setIsVisible] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const mounted = useMounted();
+
+  // Keep the panel mounted while open (and during the close animation, which
+  // resets isVisible on completion). Adjusting state during render is preferred
+  // over a sync effect.
+  if (open && !isVisible) {
+    setIsVisible(true);
+  }
 
   useOverlayScrollLock(isVisible);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  useEffect(() => {
-    if (open) {
-      setIsVisible(true);
-    }
-  }, [open]);
 
   useEffect(() => {
     if (!isVisible) return;

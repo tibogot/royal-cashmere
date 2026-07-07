@@ -4,15 +4,12 @@ import { ctaLinkClassName } from "@/lib/ui";
 // import CategoryShowcase from "@/components/CategoryShowcase";
 import FeaturedProducts from "@/components/FeaturedProducts";
 import Faq from "@/components/Faq";
-import HeroProductGlass from "@/components/HeroProductGlass";
+// import HeroProductGlass from "@/components/HeroProductGlass";
 import HomeHeroBackground from "@/components/HomeHeroBackground";
-import MouseDrivenGallery from "@/components/MouseDrivenGallery";
+// import MouseDrivenGallery from "@/components/MouseDrivenGallery";
 import ProductImageBanner from "@/components/ProductImageBanner";
 import ProductShowcase from "@/components/ProductShowcase";
-import {
-  getFeaturedProducts,
-  getProductByHandle,
-} from "@/lib/shopify/products";
+import { getFeaturedProducts } from "@/lib/shopify/products";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -23,11 +20,12 @@ export const metadata = createPageMetadata({
 });
 
 export default async function Home() {
-  const [products, heroProduct] = await Promise.all([
-    getFeaturedProducts(8),
-    getProductByHandle("pull-col-v"),
-  ]);
+  // Fetch the featured products once and slice them for each section below,
+  // instead of issuing a separate Shopify request per <FeaturedProducts />.
+  const products = await getFeaturedProducts(12);
   const bannerProduct = products[6] ?? products[0];
+  // If you re-enable <HeroProductGlass /> below, fetch its product here:
+  // const heroProduct = await getProductByHandle("pull-col-v");
 
   return (
     <main className="w-full">
@@ -61,7 +59,7 @@ export default async function Home() {
         </Link>
       </section>
 
-      <FeaturedProducts />
+      <FeaturedProducts products={products} />
 
       <section className="flex w-full flex-col md:h-svh md:flex-row">
         <div className="relative h-[40svh] w-full md:h-full md:w-1/2">
@@ -148,7 +146,7 @@ export default async function Home() {
 
       <ProductShowcase />
 
-      <FeaturedProducts limit={4} offset={4} />
+      <FeaturedProducts products={products} limit={4} offset={4} />
 
       <section className="w-full">
         {bannerProduct ? (

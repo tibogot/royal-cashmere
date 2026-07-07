@@ -1,6 +1,11 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import {
+  getCartCount,
+  getServerCartCount,
+  subscribeCartCount,
+} from "@/lib/cart-count-store";
+import { useSyncExternalStore } from "react";
 
 type CartNavLinkProps = {
   className: string;
@@ -12,30 +17,11 @@ export default function CartNavLink({
   onClick,
   ...props
 }: CartNavLinkProps) {
-  const [count, setCount] = useState(0);
-
-  const refreshCount = useCallback(async () => {
-    try {
-      const response = await fetch("/api/cart", { cache: "no-store" });
-      if (!response.ok) return;
-
-      const data = (await response.json()) as { totalQuantity: number };
-      setCount(data.totalQuantity ?? 0);
-    } catch {
-      setCount(0);
-    }
-  }, []);
-
-  useEffect(() => {
-    refreshCount();
-
-    const handleCartUpdated = () => {
-      refreshCount();
-    };
-
-    window.addEventListener("cart-updated", handleCartUpdated);
-    return () => window.removeEventListener("cart-updated", handleCartUpdated);
-  }, [refreshCount]);
+  const count = useSyncExternalStore(
+    subscribeCartCount,
+    getCartCount,
+    getServerCartCount,
+  );
 
   const handleClick = () => {
     if (onClick) {

@@ -3,6 +3,7 @@
 import CartPageView from "@/components/CartPageView";
 import PanelCloseButton from "@/components/PanelCloseButton";
 import type { Cart } from "@/lib/shopify/cart";
+import { useMounted } from "@/lib/useMounted";
 import { useOverlayScrollLock } from "@/lib/useOverlayScrollLock";
 import gsap from "gsap";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
@@ -23,15 +24,19 @@ export default function CartPanel({ open, onClose }: CartPanelProps) {
   const [cart, setCart] = useState<Cart | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const mounted = useMounted();
+
+  // Keep the panel mounted while it's open (and during the close animation,
+  // which flips isVisible back to false on completion). Adjusting state during
+  // render is preferred over a sync effect.
+  if (open && !isVisible) {
+    setIsVisible(true);
+  }
 
   useOverlayScrollLock(isVisible);
 
-  const refreshCart = useCallback(async (showLoading = false) => {
-    if (showLoading) {
-      setIsLoading(true);
-    }
-
+  // Silent refresh (no loading indicator) used for background cart updates.
+  const refreshCart = useCallback(async () => {
     try {
       const response = await fetch("/api/cart", { cache: "no-store" });
       if (!response.ok) {
@@ -43,22 +48,24 @@ export default function CartPanel({ open, onClose }: CartPanelProps) {
       setCart(data.cart);
     } catch {
       setCart(null);
-    } finally {
-      if (showLoading) {
-        setIsLoading(false);
-      }
     }
   }, []);
 
   useEffect(() => {
-    setMounted(true);
-  }, []);
+    if (!open) return;
 
-  useEffect(() => {
-    if (open) {
-      setIsVisible(true);
-      refreshCart(true);
+    let cancelled = false;
+
+    async function loadOnOpen() {
+      setIsLoading(true);
+      await refreshCart();
+      if (!cancelled) setIsLoading(false);
     }
+
+    loadOnOpen();
+    return () => {
+      cancelled = true;
+    };
   }, [open, refreshCart]);
 
   useEffect(() => {

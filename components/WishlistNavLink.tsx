@@ -1,12 +1,9 @@
 "use client";
 
 import { routes } from "@/lib/routes";
-import {
-  getWishlistCount,
-  WISHLIST_UPDATED_EVENT,
-} from "@/lib/wishlist";
+import { getWishlistCount, subscribeToWishlist } from "@/lib/wishlist";
 import Link from "next/link";
-import { useCallback, useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 
 type WishlistNavLinkProps = {
   className: string;
@@ -18,23 +15,11 @@ export default function WishlistNavLink({
   onClick,
   ...props
 }: WishlistNavLinkProps) {
-  const [count, setCount] = useState(0);
-
-  const refreshCount = useCallback(() => {
-    setCount(getWishlistCount());
-  }, []);
-
-  useEffect(() => {
-    refreshCount();
-
-    const handleWishlistUpdated = () => {
-      refreshCount();
-    };
-
-    window.addEventListener(WISHLIST_UPDATED_EVENT, handleWishlistUpdated);
-    return () =>
-      window.removeEventListener(WISHLIST_UPDATED_EVENT, handleWishlistUpdated);
-  }, [refreshCount]);
+  const count = useSyncExternalStore(
+    subscribeToWishlist,
+    getWishlistCount,
+    () => 0,
+  );
 
   const label = count > 0 ? `WISHLIST (${count})` : "WISHLIST";
 

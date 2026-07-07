@@ -8,7 +8,7 @@ import {
 } from "@/lib/boutique-filters";
 import type { ShopifyProduct } from "@/lib/shopify/queries";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 
 type ShopCatalogProps = {
   products: ShopifyProduct[];
@@ -24,10 +24,14 @@ export default function ShopCatalog({
   const searchParams = useSearchParams();
   const query = searchParams.get("q") ?? "";
   const [activeFilterId, setActiveFilterId] = useState(initialFilterId);
-
-  useEffect(() => {
+  // Reset the active filter when the incoming prop changes (e.g. navigating
+  // between category pages). Adjusting state during render is preferred over a
+  // sync effect. https://react.dev/reference/react/useState#storing-information-from-previous-renders
+  const [prevInitialFilterId, setPrevInitialFilterId] = useState(initialFilterId);
+  if (initialFilterId !== prevInitialFilterId) {
+    setPrevInitialFilterId(initialFilterId);
     setActiveFilterId(initialFilterId);
-  }, [initialFilterId]);
+  }
 
   const filteredProducts = useMemo(() => {
     const categoryProducts = filterProducts(products, activeFilterId);

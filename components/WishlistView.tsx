@@ -4,59 +4,66 @@ import ProductCard from "@/components/ProductCard";
 import { routes } from "@/lib/routes";
 import { ctaLinkClassName } from "@/lib/ui";
 import type { ShopifyProduct } from "@/lib/shopify/queries";
-import {
-  getWishlistHandles,
-  WISHLIST_UPDATED_EVENT,
-} from "@/lib/wishlist";
+import { getWishlistHandles, subscribeToWishlist } from "@/lib/wishlist";
 import Link from "next/link";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 
 export default function WishlistView() {
   const [products, setProducts] = useState<ShopifyProduct[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const refreshWishlist = useCallback(async () => {
-    const handles = getWishlistHandles();
+  // A stable, primitive snapshot of the wishlist that changes whenever handles
+  // are added/removed (same-tab or cross-tab). The product fetch keys off it.
+  const handlesKey = useSyncExternalStore(
+    subscribeToWishlist,
+    () => getWishlistHandles().join(","),
+    () => "",
+  );
 
-    if (handles.length === 0) {
-      setProducts([]);
-      setIsLoading(false);
-      return;
-    }
+  useEffect(() => {
+    const handles = handlesKey ? handlesKey.split(",") : [];
+    let cancelled = false;
 
-    setIsLoading(true);
-
-    try {
-      const params = new URLSearchParams({ handles: handles.join(",") });
-      const response = await fetch(`/api/products?${params.toString()}`, {
-        cache: "no-store",
-      });
-
-      if (!response.ok) {
-        setProducts([]);
+    async function loadProducts() {
+      if (handles.length === 0) {
+        if (!cancelled) {
+          setProducts([]);
+          setIsLoading(false);
+        }
         return;
       }
 
-      const data = (await response.json()) as { products?: ShopifyProduct[] };
-      setProducts(data.products ?? []);
-    } catch {
-      setProducts([]);
-    } finally {
-      setIsLoading(false);
+      if (!cancelled) setIsLoading(true);
+
+      try {
+        const params = new URLSearchParams({ handles: handles.join(",") });
+        const response = await fetch(`/api/products?${params.toString()}`, {
+          cache: "no-store",
+        });
+
+        if (cancelled) return;
+
+        if (!response.ok) {
+          setProducts([]);
+          return;
+        }
+
+        const data = (await response.json()) as {
+          products?: ShopifyProduct[];
+        };
+        if (!cancelled) setProducts(data.products ?? []);
+      } catch {
+        if (!cancelled) setProducts([]);
+      } finally {
+        if (!cancelled) setIsLoading(false);
+      }
     }
-  }, []);
 
-  useEffect(() => {
-    refreshWishlist();
-
-    const handleWishlistUpdated = () => {
-      refreshWishlist();
+    loadProducts();
+    return () => {
+      cancelled = true;
     };
-
-    window.addEventListener(WISHLIST_UPDATED_EVENT, handleWishlistUpdated);
-    return () =>
-      window.removeEventListener(WISHLIST_UPDATED_EVENT, handleWishlistUpdated);
-  }, [refreshWishlist]);
+  }, [handlesKey]);
 
   if (isLoading) {
     return <p className="mt-12 text-center text-sm text-black/50">Chargement…</p>;
