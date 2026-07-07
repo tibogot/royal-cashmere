@@ -26,7 +26,10 @@ const CLOSE_EASE = "power2.inOut";
 const MENU_CONTENT_OFFSET = 6;
 const CONTENT_REVEAL_AT = 0.22;
 const TRANSPARENT_NAV_SELECTOR = "[data-transparent-nav]";
-const TRANSPARENT_NAV_PATHS = new Set([routes.home, routes.about]);
+const TRANSPARENT_NAV_PATHS: ReadonlySet<string> = new Set([
+  routes.home,
+  routes.about,
+]);
 
 type NavAppearance = {
   white: boolean;
