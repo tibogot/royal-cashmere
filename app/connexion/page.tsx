@@ -8,7 +8,7 @@ import { redirect } from "next/navigation";
 export const metadata = createPageMetadata({
   title: "Connexion",
   description:
-    "Connectez-vous à votre compte Royal Cashmere pour suivre vos commandes.",
+    "Connectez-vous Ã  votre compte Royal Cashmere pour suivre vos commandes.",
   path: "/connexion",
 });
 
@@ -27,7 +27,7 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
 
   return (
     <main className="flex w-full flex-1 flex-col">
-      <section className="flex-1 bg-white px-4 pt-32 pb-20 text-black md:px-8 md:pt-40 md:pb-32">
+      <section className="flex-1 bg-white px-4 pt-24 pb-20 text-black md:px-8 md:pt-28 md:pb-32">
         <h1 className="text-center font-serif text-5xl uppercase leading-[1.12] md:text-7xl">
           Se connecter
         </h1>

@@ -108,52 +108,6 @@ export default function CollectionsSection({
 
   return (
     <div ref={containerRef}>
-      <div className="mb-10 flex items-start justify-end gap-6 md:mb-12">
-        <div className="flex flex-col items-end gap-2">
-          <button
-            type="button"
-            onClick={() => scroll("next")}
-            aria-label="Collection suivante"
-            className="flex size-8 select-none items-center justify-center transition-opacity hover:opacity-60"
-          >
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 16 16"
-              fill="none"
-              aria-hidden="true"
-            >
-              <path
-                d="M3 8H13M13 8L9 4M13 8L9 12"
-                stroke="currentColor"
-                strokeWidth="1.25"
-              />
-            </svg>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => scroll("prev")}
-            aria-label="Collection précédente"
-            className="flex size-8 select-none items-center justify-center bg-black text-white transition-opacity hover:opacity-80"
-          >
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 16 16"
-              fill="none"
-              aria-hidden="true"
-            >
-              <path
-                d="M13 8H3M3 8L7 4M3 8L7 12"
-                stroke="currentColor"
-                strokeWidth="1.25"
-              />
-            </svg>
-          </button>
-        </div>
-      </div>
-
       <div
         ref={viewportRef}
         className="overflow-hidden"
@@ -189,6 +143,50 @@ export default function CollectionsSection({
             />
           ))}
         </div>
+      </div>
+
+      <div className="mt-6 flex justify-end gap-2 md:mt-8">
+        <button
+          type="button"
+          onClick={() => scroll("prev")}
+          aria-label="Collection précédente"
+          className="flex size-8 select-none items-center justify-center bg-black text-white transition-opacity hover:opacity-80"
+        >
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 16 16"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              d="M13 8H3M3 8L7 4M3 8L7 12"
+              stroke="currentColor"
+              strokeWidth="1.25"
+            />
+          </svg>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => scroll("next")}
+          aria-label="Collection suivante"
+          className="flex size-8 select-none items-center justify-center transition-opacity hover:opacity-60"
+        >
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 16 16"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              d="M3 8H13M13 8L9 4M13 8L9 12"
+              stroke="currentColor"
+              strokeWidth="1.25"
+            />
+          </svg>
+        </button>
       </div>
     </div>
   );

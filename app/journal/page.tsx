@@ -14,7 +14,7 @@ export default async function JournalPage() {
 
   return (
     <main className="w-full">
-      <section className="bg-white px-4 pt-32 pb-16 text-black md:px-8 md:pt-40 md:pb-20">
+      <section className="bg-white px-4 pt-24 pb-16 text-black md:px-8 md:pt-28 md:pb-20">
         <div className="mx-auto max-w-3xl text-center">
           <h1 className="font-serif text-5xl uppercase leading-[1.12] md:text-7xl">
             Journal
@@ -34,7 +34,7 @@ export default async function JournalPage() {
           </div>
         ) : (
           <p className="mx-auto max-w-xl text-center font-serif text-sm text-black/70 md:text-base">
-            Aucun article pour le moment. Revenez bientôt.
+            Aucun article pour le moment. Revenez bientÃ´t.
           </p>
         )}
       </section>

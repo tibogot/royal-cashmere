@@ -54,7 +54,7 @@ export default async function JournalArticlePage({
   return (
     <main className="w-full">
       <article>
-        <header className="bg-white px-4 pt-32 pb-12 text-black md:px-8 md:pt-40 md:pb-16">
+        <header className="bg-white px-4 pt-24 pb-12 text-black md:px-8 md:pt-28 md:pb-16">
           <div className="mx-auto max-w-3xl">
             <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] uppercase tracking-wide text-black/50">
               {category ? <span>{category}</span> : null}

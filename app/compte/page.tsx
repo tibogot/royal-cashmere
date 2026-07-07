@@ -9,7 +9,7 @@ import { redirect } from "next/navigation";
 export const metadata = createPageMetadata({
   title: "Mon compte",
   description:
-    "Consultez vos commandes et gérez votre compte client Royal Cashmere.",
+    "Consultez vos commandes et gÃ©rez votre compte client Royal Cashmere.",
   path: "/compte",
 });
 
@@ -31,7 +31,7 @@ export default async function AccountPage() {
 
   return (
     <main className="flex w-full flex-1 flex-col">
-      <section className="flex-1 bg-white px-4 pt-32 pb-20 text-black md:px-8 md:pt-40 md:pb-32">
+      <section className="flex-1 bg-white px-4 pt-24 pb-20 text-black md:px-8 md:pt-28 md:pb-32">
         <h1 className="text-center font-serif text-5xl uppercase leading-[1.12] md:text-7xl">
           Mon compte
         </h1>

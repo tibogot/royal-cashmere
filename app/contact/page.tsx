@@ -5,14 +5,14 @@ import { siteConfig } from "@/lib/site";
 export const metadata = createPageMetadata({
   title: "Contact",
   description:
-    "Contactez Royal Cashmere à Uccle, Bruxelles. Boutique de cachemire d'exception — adresse, horaires et téléphone.",
+    "Contactez Royal Cashmere Ã  Uccle, Bruxelles. Boutique de cachemire d'exception â€” adresse, horaires et tÃ©lÃ©phone.",
   path: "/contact",
 });
 
 export default function ContactPage() {
   return (
     <main className="w-full">
-      <section className="bg-white px-4 pt-32 pb-20 text-black md:px-8 md:pt-40 md:pb-32">
+      <section className="bg-white px-4 pt-24 pb-20 text-black md:px-8 md:pt-28 md:pb-32">
         <div className="">
           <div className="text-center">
             <h1 className="font-serif text-5xl uppercase leading-[1.12] md:text-7xl">
@@ -20,8 +20,8 @@ export default function ContactPage() {
             </h1>
 
             <p className="mx-auto mt-8 max-w-lg text-sm text-black/70 md:mt-10 md:text-base">
-              Notre équipe vous accueille en boutique pour vous conseiller et
-              vous faire découvrir nos collections en cachemire et soie.
+              Notre Ã©quipe vous accueille en boutique pour vous conseiller et
+              vous faire dÃ©couvrir nos collections en cachemire et soie.
             </p>
           </div>
 
@@ -40,7 +40,7 @@ export default function ContactPage() {
 
               <div>
                 <p className="text-xs uppercase tracking-wide text-black/50">
-                  Téléphone
+                  TÃ©lÃ©phone
                 </p>
                 <a
                   href={`tel:${siteConfig.contact.phone.replace(/\s/g, "")}`}
@@ -69,7 +69,7 @@ export default function ContactPage() {
                   Horaires d&apos;ouverture
                 </p>
                 <p className="mt-2 font-serif text-sm md:text-base">
-                  Du lundi au vendredi de 10 h à 18 h
+                  Du lundi au vendredi de 10 h Ã  18 h
                 </p>
               </div>
             </div>
