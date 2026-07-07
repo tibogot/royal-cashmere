@@ -164,10 +164,10 @@ export default function CartPanel({ open, onClose }: CartPanelProps) {
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
-        className="absolute inset-y-0 right-0 flex h-dvh max-h-dvh w-full max-w-md flex-col overflow-hidden bg-white px-4 py-4 text-black shadow-2xl"
+        className="absolute inset-y-0 right-0 flex h-dvh max-h-dvh w-full max-w-md flex-col overflow-hidden bg-white text-black shadow-2xl"
         data-lenis-prevent
       >
-        <div className="flex shrink-0 items-center justify-between gap-4">
+        <div className="flex shrink-0 items-center justify-between gap-4 px-4 py-4 md:px-8">
           <h2 id={titleId} className="text-sm uppercase tracking-wide">
             Panier
             {cart && cart.totalQuantity > 0 ? (

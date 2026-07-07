@@ -144,19 +144,23 @@ export default function CartView({
   if (!cart || cart.lines.length === 0) {
     if (isPanel) {
       return (
-        <div className="mt-4 flex min-h-0 flex-1 flex-col overflow-hidden">
-          <div className="text-center">
-            <p className="text-sm text-black/70">Votre panier est vide.</p>
-            <Link
-              href={routes.shop}
-              onClick={onClose}
-              className={`${ctaLinkClassName} mt-6 inline-block`}
-            >
-              Continuer vos achats
-            </Link>
-          </div>
-          <div className="mt-6 min-h-0 flex-1 overflow-y-auto overscroll-contain">
-            <CartSimilarProducts productHandles={[]} />
+        <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
+          <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain">
+            <div className="px-4 pb-4 md:px-8">
+              <div className="pt-4 text-center">
+                <p className="text-sm text-black/70">Votre panier est vide.</p>
+                <Link
+                  href={routes.shop}
+                  onClick={onClose}
+                  className={`${ctaLinkClassName} mt-6 inline-block`}
+                >
+                  Continuer vos achats
+                </Link>
+              </div>
+              <div className="mt-6">
+                <CartSimilarProducts productHandles={[]} />
+              </div>
+            </div>
           </div>
         </div>
       );
@@ -197,7 +201,7 @@ export default function CartView({
     <div
       className={
         isPanel
-          ? "flex shrink-0 flex-col gap-3 border-t border-black/10 bg-white pt-3"
+          ? "flex shrink-0 flex-col gap-3 border-t border-black/10 bg-white px-4 py-4 pt-3 md:px-8"
           : "mt-10 flex flex-col gap-6 border-t border-black/10 pt-8"
       }
     >
@@ -225,12 +229,14 @@ export default function CartView({
 
   if (isPanel) {
     return (
-      <div className="mt-4 flex min-h-0 flex-1 flex-col overflow-hidden">
+      <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
         <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain">
-          {cartLines}
-          <CartSimilarProducts
-            productHandles={cart.lines.map((line) => line.productHandle)}
-          />
+          <div className="px-4 pb-4 md:px-8">
+            <div className="pt-4">{cartLines}</div>
+            <CartSimilarProducts
+              productHandles={cart.lines.map((line) => line.productHandle)}
+            />
+          </div>
         </div>
         {checkoutFooter}
       </div>

@@ -49,7 +49,7 @@ export default async function Home() {
           className="pointer-events-none absolute inset-0 z-1 bg-linear-to-b from-black/50 via-black/20 to-transparent"
           aria-hidden="true"
         /> */}
-        {heroProduct ? <HeroProductGlass product={heroProduct} /> : null}
+        {/* {heroProduct ? <HeroProductGlass product={heroProduct} /> : null} */}
       </section>
 
       <section className="bg-white px-4 pt-6 pb-6 text-center text-black md:px-8 md:pt-10 md:pb-10">
