@@ -10,13 +10,6 @@ const POSTER = "/images/9784260-poster.jpg";
 
 const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)";
 
-function isMobileClient() {
-  return (
-    /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent) ||
-    window.innerWidth < 768
-  );
-}
-
 function isSlowConnection() {
   const connection = (
     navigator as Navigator & { connection?: { effectiveType?: string } }
@@ -43,18 +36,8 @@ function useShouldLoadVideo() {
   );
 }
 
-function useIsMobile() {
-  return useSyncExternalStore(
-    () => () => {},
-    isMobileClient,
-    () => false,
-  );
-}
-
 export default function HomeHeroBackground() {
-  const isMobile = useIsMobile();
   const shouldLoadVideo = useShouldLoadVideo();
-  const videoSrc = isMobile ? VIDEO_MOBILE : VIDEO_DESKTOP;
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const [ready, setReady] = useState(false);
@@ -86,7 +69,7 @@ export default function HomeHeroBackground() {
         loop
         muted
         playsInline
-        preload="auto"
+        preload="metadata"
         poster={POSTER}
         className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-500 ${
           ready ? "opacity-100" : "opacity-0"
@@ -97,7 +80,8 @@ export default function HomeHeroBackground() {
         style={{ filter: "brightness(1.0001)" }}
         onCanPlay={() => setReady(true)}
       >
-        <source src={videoSrc} type="video/mp4" />
+        <source src={VIDEO_MOBILE} type="video/mp4" media="(max-width: 767px)" />
+        <source src={VIDEO_DESKTOP} type="video/mp4" media="(min-width: 768px)" />
       </video>
     </div>
   );

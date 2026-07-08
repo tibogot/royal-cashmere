@@ -6,12 +6,12 @@ import { routes } from "@/lib/routes";
 import { siteConfig } from "@/lib/site";
 
 const footerLinkClassName =
-  "w-fit text-left text-xs uppercase tracking-wide transition-opacity hover:opacity-60";
+  "inline-flex w-fit items-center py-1 text-left text-xs uppercase tracking-wide transition-opacity hover:opacity-60";
 
 const footerTextClassName = "text-xs uppercase tracking-wide";
 
 const footerLegalLinkClassName =
-  "text-[10px] text-black transition-opacity hover:opacity-60 md:text-xs";
+  "inline-flex items-center py-1 text-[10px] text-black transition-opacity hover:opacity-60 md:text-xs";
 
 const primaryLinks = [
   { label: "Boutique", href: routes.shop },
@@ -54,7 +54,7 @@ export default function Footer() {
     <footer className="w-full select-none bg-primary p-4 text-black md:p-8">
       <div className="flex flex-col gap-10 md:flex-row md:items-start md:justify-between md:gap-8">
         <div className="grid grid-cols-2 gap-x-6 md:flex md:gap-x-12">
-          <nav className="flex flex-col gap-1">
+          <nav className="flex flex-col gap-2">
             {primaryLinks.map(({ label, href }) => (
               <Link key={label} href={href} className={footerLinkClassName}>
                 {label}
@@ -62,7 +62,7 @@ export default function Footer() {
             ))}
           </nav>
 
-          <nav className="flex flex-col gap-1">
+          <nav className="flex flex-col gap-2">
             <Link href={routes.account} className={footerLinkClassName}>
               Mon compte
             </Link>
@@ -130,7 +130,7 @@ export default function Footer() {
         <p>© 2026 Royal Cashmere</p>
         <nav
           aria-label="Informations légales"
-          className="flex flex-wrap items-center gap-x-4 gap-y-2"
+          className="flex flex-wrap items-center gap-x-4 gap-y-3"
         >
           {legalLinks.map(({ label, href }) => (
             <Link key={href} href={href} className={footerLegalLinkClassName}>
