@@ -126,7 +126,7 @@ export default function CollectionsSection({
                   Royal Cashmere Collections
                 </h1>
 
-                <p className="mt-6 font-sans text-sm font-light leading-relaxed text-neutral-800 md:mt-8 md:text-base">
+                <p className="mt-6 font-serif text-sm font-light leading-relaxed text-neutral-800 md:mt-8 md:text-base">
                   Robes, pulls, pantalons et écharpes — chaque collection révèle
                   la douceur du pur cachemire mongol, pensée pour accompagner
                   vos saisons.
