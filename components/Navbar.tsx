@@ -403,10 +403,17 @@ export default function Navbar() {
 
     if (menuCurrentH <= 1 && bgHeight <= navHeight + 1) return;
 
+    const reduceMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+
+    // Only snap shut when an overlay (cart/search) is taking over the menu or
+    // motion is reduced. On a plain hover-away, let the close play its reverse
+    // animation instead of jumping instantly to the collapsed state.
     runNavAnimation({
       white: hasTransparentHero ? navSolid || navHovered || overlayOpen : true,
       expanded: false,
-      immediate: true,
+      immediate: reduceMotion || overlayOpen,
     });
   }, [navExpanded, hasTransparentHero, navSolid, navHovered, overlayOpen]);
 
