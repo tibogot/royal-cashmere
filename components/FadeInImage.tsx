@@ -1,15 +1,18 @@
 "use client";
 
 import Image, { type ImageProps } from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 
 /**
- * next/image with a soft fade-in on load instead of a hard pop-in / flash.
+ * next/image with a soft fade-in — but only when the image actually has to
+ * load over the network. Cached / already-seen images appear instantly, with
+ * no transition at all, so revisiting a page never re-plays the effect.
  *
- * Works for local, Shopify, and Sanity images alike — the effect is driven by
- * the browser's `load` event, so it's independent of the image source or
- * whether the image is optimized. The ref check covers images that are already
- * cached (and therefore `complete`) before React attaches the `onLoad` handler.
+ * How it works: the ref callback runs during commit (before the browser
+ * paints). A cached image already reports `complete === true` at that point,
+ * so we mark it "instant" and render it at full opacity with no transition —
+ * the user never sees the opacity-0 frame. Only images that are still loading
+ * fall through to the `onLoad` fade.
  *
  * Opacity is toggled with utility classes (not inline styles) so callers can
  * still layer hover states like `group-hover:opacity-95` on top.
@@ -19,23 +22,32 @@ export default function FadeInImage({
   onLoad,
   ...props
 }: ImageProps) {
-  const [loaded, setLoaded] = useState(false);
-  const ref = useRef<HTMLImageElement>(null);
+  // "pending" = hidden, not yet known · "instant" = was cached, show now, no
+  // fade · "fading" = had to load, animate in.
+  const [state, setState] = useState<"pending" | "instant" | "fading">(
+    "pending",
+  );
 
-  useEffect(() => {
-    if (ref.current?.complete) setLoaded(true);
-  }, []);
+  const handleRef = (node: HTMLImageElement | null) => {
+    // Fires during commit, before paint. A cached image is already `complete`
+    // here, so we can skip the animation without ever flashing opacity-0.
+    if (node?.complete) setState("instant");
+  };
+
+  const isVisible = state !== "pending";
+  const shouldAnimate = state === "fading";
 
   return (
     <Image
-      ref={ref}
+      ref={handleRef}
       {...props}
       onLoad={(event) => {
-        setLoaded(true);
+        // Only start a fade if the image wasn't already resolved as cached.
+        setState((prev) => (prev === "instant" ? prev : "fading"));
         onLoad?.(event);
       }}
-      className={`transition-opacity duration-700 ease-out ${
-        loaded ? "opacity-100" : "opacity-0"
+      className={`${shouldAnimate ? "transition-opacity duration-700 ease-out" : ""} ${
+        isVisible ? "opacity-100" : "opacity-0"
       } ${className}`}
     />
   );
