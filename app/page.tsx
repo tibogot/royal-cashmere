@@ -70,8 +70,8 @@ export default async function Home() {
 
       <FeaturedProducts products={products} />
 
-      <section className="flex w-full flex-col md:h-svh md:flex-row">
-        <div className="relative h-[40svh] w-full md:h-full md:w-1/2">
+      <section className="sticky top-0 z-0 flex h-svh w-full flex-col overflow-hidden bg-white md:flex-row">
+        <div className="relative h-1/2 w-full md:h-full md:w-1/2">
           <FadeInImage
             src="/images/Frame 63.png"
             alt="Cachemire Royal Cashmere"
@@ -80,14 +80,7 @@ export default async function Home() {
             sizes="(max-width: 767px) 100vw, 50vw"
           />
         </div>
-        <div className="relative flex min-h-[40svh] w-full flex-col items-center justify-center gap-5 px-4 py-12 md:h-full md:w-1/2 md:gap-6 md:py-0">
-          {/* <Image
-            src="/images/Frame 64.png"
-            alt="Cachemire Royal Cashmere"
-            fill
-            className="object-cover"
-            sizes="(max-width: 767px) 100vw, 50vw"
-          /> */}
+        <div className="relative flex h-1/2 w-full flex-col items-center justify-center gap-3 px-4 md:h-full md:w-1/2 md:gap-6">
           <p className="px-4 text-center font-serif text-3xl uppercase leading-[1.1] tracking-wide md:text-5xl">
             Fabriqué en
             <br />
@@ -102,7 +95,7 @@ export default async function Home() {
               sizes="(max-width: 768px) 176px, 224px"
             />
           </div>
-          <p className="max-w-sm px-4 text-center font-serif text-base  text-black">
+          <p className="max-w-sm px-4 text-center font-serif text-base text-black">
             Pur cachemire des hauts plateaux de Mongolie, sélectionné pour sa
             douceur et sa pureté exceptionnelles.
           </p>
@@ -111,6 +104,28 @@ export default async function Home() {
           </Link>
         </div>
       </section>
+
+      <div className="relative z-10 bg-white">
+        <ProductShowcase />
+
+        <FeaturedProducts products={products} limit={4} offset={4} />
+
+        <section className="w-full">
+          {bannerProduct ? (
+            <ProductImageBanner
+              product={bannerProduct}
+              imageSrc="/images/Desktop - 20.jpg"
+              imageAlt="Atelier Royal Cashmere"
+            />
+          ) : null}
+        </section>
+
+        {/* <CategoryShowcase /> */}
+
+        {/* <MouseDrivenGallery /> */}
+
+        <Faq />
+      </div>
 
       {/* <section className="relative h-svh w-full mt-20 mb-20">
         <FadeInImage
@@ -152,26 +167,6 @@ export default async function Home() {
           Découvrir notre histoire
         </Link>
       </section> */}
-
-      <ProductShowcase />
-
-      <FeaturedProducts products={products} limit={4} offset={4} />
-
-      <section className="w-full">
-        {bannerProduct ? (
-          <ProductImageBanner
-            product={bannerProduct}
-            imageSrc="/images/Desktop - 20.jpg"
-            imageAlt="Atelier Royal Cashmere"
-          />
-        ) : null}
-      </section>
-
-      {/* <CategoryShowcase /> */}
-
-      {/* <MouseDrivenGallery /> */}
-
-      <Faq />
 
       {/* <section className="bg-white px-4 py-32 text-center text-black md:px-8">
         <h2 className="mx-auto max-w-4xl font-serif text-2xl uppercase leading-snug md:max-w-3xl md:text-3xl">

@@ -24,7 +24,7 @@ export default function RootLayout({
         <OrganizationJsonLd />
         <SmoothScroll>
           <Navbar />
-          <div className="flex flex-1 flex-col">{children}</div>
+          <div className="relative flex flex-1 flex-col">{children}</div>
           <Footer />
         </SmoothScroll>
         <CookieConsent />

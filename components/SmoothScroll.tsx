@@ -15,8 +15,14 @@ function LenisGSAPSync() {
   useEffect(() => {
     if (!lenis) return;
 
-    ScrollTrigger.scrollerProxy(document.body, {
+    ScrollTrigger.scrollerProxy(window, {
       scrollTop(value) {
+        if (arguments.length && value !== undefined) {
+          lenis.scrollTo(value, { immediate: true });
+        }
+        return lenis.scroll;
+      },
+      scrollLeft(value) {
         if (arguments.length && value !== undefined) {
           lenis.scrollTo(value, { immediate: true });
         }
@@ -30,11 +36,10 @@ function LenisGSAPSync() {
           height: window.innerHeight,
         };
       },
-      pinType: "fixed",
+      pinType: "transform",
     });
 
-    const handleScroll = () => ScrollTrigger.update();
-    lenis.on("scroll", handleScroll);
+    lenis.on("scroll", ScrollTrigger.update);
 
     const tickerCallback = (time: number) => {
       lenis.raf(time * 1000);
@@ -45,9 +50,9 @@ function LenisGSAPSync() {
     ScrollTrigger.refresh();
 
     return () => {
-      lenis.off("scroll", handleScroll);
+      lenis.off("scroll", ScrollTrigger.update);
       gsap.ticker.remove(tickerCallback);
-      ScrollTrigger.scrollerProxy(document.body, {});
+      ScrollTrigger.scrollerProxy(window, {});
     };
   }, [lenis]);
 
