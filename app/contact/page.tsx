@@ -16,7 +16,7 @@ export default function ContactPage() {
       <section className="bg-white px-4 pt-24 pb-20 text-black md:px-8 md:pt-28 md:pb-32">
         <h1 className="sr-only">Contact — Royal Cashmere Bruxelles</h1>
 
-        <div className="grid gap-16 md:grid-cols-2 md:items-stretch md:gap-20">
+        <div className="grid gap-16 md:grid-cols-2 md:gap-20">
           <div className="space-y-8 text-left">
             <p className="font-serif text-2xl uppercase leading-snug tracking-wide md:text-3xl">
               Royal Cashmere Bruxelles
@@ -73,7 +73,7 @@ export default function ContactPage() {
             </div>
           </div>
 
-          <div className="relative min-h-128 w-full md:min-h-full">
+          <div className="relative min-h-160 w-full md:min-h-[calc(100svh-7rem)]">
             <FadeInImage
               src="/images/1140.3 coat 1.jpg"
               alt="Manteau en cachemire Royal Cashmere"

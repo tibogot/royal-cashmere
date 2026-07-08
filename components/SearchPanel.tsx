@@ -3,12 +3,13 @@
 import PanelCloseButton from "@/components/PanelCloseButton";
 import { popularSearches } from "@/lib/categories";
 import { routes } from "@/lib/routes";
+import { ctaLinkClassName } from "@/lib/ui";
 import { useMounted } from "@/lib/useMounted";
 import { useOverlayScrollLock } from "@/lib/useOverlayScrollLock";
 import gsap from "gsap";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
 type SearchPanelProps = {
@@ -20,7 +21,6 @@ const PANEL_ANIM_DURATION = 0.5;
 
 export default function SearchPanel({ open, onClose }: SearchPanelProps) {
   const router = useRouter();
-  const titleId = useId();
   const panelRef = useRef<HTMLDivElement>(null);
   const overlayRef = useRef<HTMLButtonElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -150,21 +150,15 @@ export default function SearchPanel({ open, onClose }: SearchPanelProps) {
         ref={panelRef}
         role="dialog"
         aria-modal="true"
-        aria-labelledby={titleId}
+        aria-label="Rechercher"
         className="absolute inset-y-0 right-0 flex w-full max-w-md flex-col overflow-y-auto bg-white px-6 py-8 text-black shadow-2xl md:px-8 md:py-10"
         data-lenis-prevent
       >
-        <div className="flex items-center justify-between gap-4">
-          <h2
-            id={titleId}
-            className="font-serif text-sm uppercase tracking-wide"
-          >
-            Rechercher
-          </h2>
+        <div className="flex justify-end">
           <PanelCloseButton onClose={onClose} />
         </div>
 
-        <form onSubmit={handleSubmit} className="mt-10">
+        <form onSubmit={handleSubmit} className="mt-6">
           <label htmlFor="search-query" className="sr-only">
             Rechercher un produit
           </label>
@@ -180,7 +174,7 @@ export default function SearchPanel({ open, onClose }: SearchPanelProps) {
           />
           <button
             type="submit"
-            className="mt-8 inline-flex items-center justify-center border border-black px-8 py-3 text-sm uppercase tracking-wide transition-opacity hover:opacity-60"
+            className={`${ctaLinkClassName} mt-8 font-sans transition-opacity hover:opacity-60`}
           >
             Rechercher
           </button>
