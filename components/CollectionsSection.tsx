@@ -16,6 +16,21 @@ type CollectionsSectionProps = {
   collections: ShopifyCollection[];
 };
 
+function CollectionsIntro() {
+  return (
+    <div className="flex max-w-md flex-col items-center text-center md:max-w-lg">
+      <h1 className="font-serif text-3xl uppercase leading-[1.12] sm:text-4xl md:text-5xl md:leading-[1.1] lg:text-6xl">
+        Royal Cashmere Collections
+      </h1>
+
+      <p className="mt-6 font-serif text-sm font-light leading-relaxed text-neutral-800 md:mt-8 md:text-base">
+        Robes, pulls, pantalons et écharpes — chaque collection révèle la
+        douceur du pur cachemire mongol, pensée pour accompagner vos saisons.
+      </p>
+    </div>
+  );
+}
+
 export default function CollectionsSection({
   collections,
 }: CollectionsSectionProps) {
@@ -107,87 +122,93 @@ export default function CollectionsSection({
   if (collections.length === 0) return null;
 
   return (
-    <div ref={containerRef}>
-      <div
-        ref={viewportRef}
-        className="overflow-hidden"
-        style={{ touchAction: "pan-y" }}
-      >
-        <div ref={trackRef} className="flex w-max items-stretch gap-6">
-          <article className="relative w-[88vw] shrink-0  sm:w-104 md:w-lg lg:w-152 xl:w-2xl">
-            <div
-              className={`invisible aspect-3/4 ${collectionCarouselCardWidthClass}`}
-              aria-hidden="true"
-            />
+    <>
+      <div className="flex flex-col gap-10 md:hidden">
+        <CollectionsIntro />
 
-            <div className="absolute inset-0 flex items-center justify-center px-8 md:px-12">
-              <div className="flex max-w-md flex-col items-center text-center md:max-w-lg">
-                <h1 className="font-serif text-3xl uppercase leading-[1.12] sm:text-4xl md:text-5xl md:leading-[1.1] lg:text-6xl">
-                  Royal Cashmere Collections
-                </h1>
-
-                <p className="mt-6 font-serif text-sm font-light leading-relaxed text-neutral-800 md:mt-8 md:text-base">
-                  Robes, pulls, pantalons et écharpes — chaque collection révèle
-                  la douceur du pur cachemire mongol, pensée pour accompagner
-                  vos saisons.
-                </p>
-              </div>
-            </div>
-          </article>
-
+        <div className="flex flex-col gap-8">
           {collections.map((collection) => (
             <CollectionCarouselCard
               key={collection.id}
               collection={collection}
-              preventClickAfterDrag
+              className="w-full"
             />
           ))}
         </div>
       </div>
 
-      <div className="mt-6 flex justify-end gap-2 md:mt-8">
-        <button
-          type="button"
-          onClick={() => scroll("prev")}
-          aria-label="Collection précédente"
-          className="flex size-8 select-none items-center justify-center bg-black text-white transition-opacity hover:opacity-80"
+      <div ref={containerRef} className="hidden md:block">
+        <div
+          ref={viewportRef}
+          className="overflow-hidden"
+          style={{ touchAction: "pan-y" }}
         >
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 16 16"
-            fill="none"
-            aria-hidden="true"
-          >
-            <path
-              d="M13 8H3M3 8L7 4M3 8L7 12"
-              stroke="currentColor"
-              strokeWidth="1.25"
-            />
-          </svg>
-        </button>
+          <div ref={trackRef} className="flex w-max items-stretch gap-6">
+            <article className="relative w-[88vw] shrink-0 sm:w-104 md:w-lg lg:w-152 xl:w-2xl">
+              <div
+                className={`invisible aspect-3/4 ${collectionCarouselCardWidthClass}`}
+                aria-hidden="true"
+              />
 
-        <button
-          type="button"
-          onClick={() => scroll("next")}
-          aria-label="Collection suivante"
-          className="flex size-8 select-none items-center justify-center transition-opacity hover:opacity-60"
-        >
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 16 16"
-            fill="none"
-            aria-hidden="true"
+              <div className="absolute inset-0 flex items-center justify-center px-8 md:px-12">
+                <CollectionsIntro />
+              </div>
+            </article>
+
+            {collections.map((collection) => (
+              <CollectionCarouselCard
+                key={collection.id}
+                collection={collection}
+                preventClickAfterDrag
+              />
+            ))}
+          </div>
+        </div>
+
+        <div className="mt-6 flex justify-end gap-2 md:mt-8">
+          <button
+            type="button"
+            onClick={() => scroll("prev")}
+            aria-label="Collection précédente"
+            className="flex size-8 select-none items-center justify-center bg-black text-white transition-opacity hover:opacity-80"
           >
-            <path
-              d="M3 8H13M13 8L9 4M13 8L9 12"
-              stroke="currentColor"
-              strokeWidth="1.25"
-            />
-          </svg>
-        </button>
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 16 16"
+              fill="none"
+              aria-hidden="true"
+            >
+              <path
+                d="M13 8H3M3 8L7 4M3 8L7 12"
+                stroke="currentColor"
+                strokeWidth="1.25"
+              />
+            </svg>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => scroll("next")}
+            aria-label="Collection suivante"
+            className="flex size-8 select-none items-center justify-center transition-opacity hover:opacity-60"
+          >
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 16 16"
+              fill="none"
+              aria-hidden="true"
+            >
+              <path
+                d="M3 8H13M13 8L9 4M13 8L9 12"
+                stroke="currentColor"
+                strokeWidth="1.25"
+              />
+            </svg>
+          </button>
+        </div>
       </div>
-    </div>
+    </>
   );
 }

@@ -20,6 +20,7 @@ type FeaturedProductsCarouselProps = {
   showViewAll?: boolean;
   compact?: boolean;
   quickAdd?: boolean;
+  ctaOnRight?: boolean;
 };
 
 function isQuickAddProduct(
@@ -33,6 +34,7 @@ export default function FeaturedProductsCarousel({
   showViewAll = true,
   compact = false,
   quickAdd = false,
+  ctaOnRight = false,
 }: FeaturedProductsCarouselProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const viewportRef = useRef<HTMLDivElement>(null);
@@ -126,59 +128,116 @@ export default function FeaturedProductsCarousel({
           compact ? "mb-4" : showViewAll ? "mb-10 md:mb-12" : "mb-0"
         }`}
       >
-        {showViewAll ? (
+        {ctaOnRight || !showViewAll ? (
+          <div aria-hidden="true" />
+        ) : (
           <Link
             href={routes.collectionsAll}
             className={`${ctaLinkClassName} inline-block`}
           >
             Tout voir
           </Link>
-        ) : (
-          <div aria-hidden="true" />
         )}
 
         <div className="flex flex-col items-end gap-2">
-          <button
-            type="button"
-            onClick={() => scroll("next")}
-            aria-label="Produits suivants"
-            className="flex size-8 select-none items-center justify-center transition-opacity hover:opacity-60"
-          >
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 16 16"
-              fill="none"
-              aria-hidden="true"
+          {ctaOnRight && showViewAll ? (
+            <Link
+              href={routes.collectionsAll}
+              className={`${ctaLinkClassName} inline-block`}
             >
-              <path
-                d="M3 8H13M13 8L9 4M13 8L9 12"
-                stroke="currentColor"
-                strokeWidth="1.25"
-              />
-            </svg>
-          </button>
+              Tout voir
+            </Link>
+          ) : null}
 
-          <button
-            type="button"
-            onClick={() => scroll("prev")}
-            aria-label="Produits précédents"
-            className="flex size-8 select-none items-center justify-center bg-black text-white transition-opacity hover:opacity-80"
-          >
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 16 16"
-              fill="none"
-              aria-hidden="true"
-            >
-              <path
-                d="M13 8H3M3 8L7 4M3 8L7 12"
-                stroke="currentColor"
-                strokeWidth="1.25"
-              />
-            </svg>
-          </button>
+          {!ctaOnRight ? (
+            <>
+              <button
+                type="button"
+                onClick={() => scroll("next")}
+                aria-label="Produits suivants"
+                className="flex size-8 select-none items-center justify-center transition-opacity hover:opacity-60"
+              >
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M3 8H13M13 8L9 4M13 8L9 12"
+                    stroke="currentColor"
+                    strokeWidth="1.25"
+                  />
+                </svg>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => scroll("prev")}
+                aria-label="Produits précédents"
+                className="flex size-8 select-none items-center justify-center bg-black text-white transition-opacity hover:opacity-80"
+              >
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M13 8H3M3 8L7 4M3 8L7 12"
+                    stroke="currentColor"
+                    strokeWidth="1.25"
+                  />
+                </svg>
+              </button>
+            </>
+          ) : (
+            <>
+              {/* <button
+                type="button"
+                onClick={() => scroll("next")}
+                aria-label="Produits suivants"
+                className="flex size-8 select-none items-center justify-center transition-opacity hover:opacity-60"
+              >
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M3 8H13M13 8L9 4M13 8L9 12"
+                    stroke="currentColor"
+                    strokeWidth="1.25"
+                  />
+                </svg>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => scroll("prev")}
+                aria-label="Produits précédents"
+                className="flex size-8 select-none items-center justify-center bg-black text-white transition-opacity hover:opacity-80"
+              >
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M13 8H3M3 8L7 4M3 8L7 12"
+                    stroke="currentColor"
+                    strokeWidth="1.25"
+                  />
+                </svg>
+              </button> */}
+            </>
+          )}
         </div>
       </div>
 

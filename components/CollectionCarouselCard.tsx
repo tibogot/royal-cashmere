@@ -15,11 +15,15 @@ export const collectionCarouselCardWidthClass =
 type CollectionCarouselCardProps = {
   collection: ShopifyCollection;
   preventClickAfterDrag?: boolean;
+  className?: string;
+  imageSizes?: string;
 };
 
 export default function CollectionCarouselCard({
   collection,
   preventClickAfterDrag = false,
+  className = collectionCarouselCardWidthClass,
+  imageSizes = "(max-width: 640px) 78vw, (max-width: 1024px) 352px, 512px",
 }: CollectionCarouselCardProps) {
   const imageUrl = collection.imageUrl ?? "";
   const resolvedSrc = shopifyImageUrl(imageUrl, SHOPIFY_IMAGE_WIDTH.card);
@@ -33,25 +37,31 @@ export default function CollectionCarouselCard({
     : undefined;
 
   return (
-    <article className={collectionCarouselCardWidthClass}>
+    <article className={className}>
       <Link
         href={routes.collectionByHandle(collection.handle)}
-        className="group relative block aspect-3/4 overflow-hidden"
+        className="group flex flex-col"
         onClick={handleLinkClick}
       >
-        <FadeInImage
-          src={resolvedSrc}
-          alt={collection.imageAlt ?? collection.title}
-          fill
-          unoptimized={isShopifyCdnUrl(imageUrl)}
-          className="object-cover group-hover:opacity-95"
-          sizes="(max-width: 640px) 78vw, (max-width: 1024px) 352px, 512px"
-        />
-
-        <div className="absolute inset-x-0 bottom-0 bg-linear-to-t from-black/50 to-transparent p-6 text-left text-white md:p-8">
-          <h3 className="font-serif text-2xl font-medium md:text-3xl lg:text-4xl">
+        <div className="order-1 mb-3 md:order-2 md:mb-0 md:mt-4">
+          <h3 className="text-left font-serif text-2xl font-medium text-black md:text-3xl lg:text-4xl">
             {collection.title}
           </h3>
+
+          <span className="animated-underline mt-2 hidden w-fit text-xs uppercase tracking-wide text-black group-hover:block md:mt-3">
+            Découvrir
+          </span>
+        </div>
+
+        <div className="relative order-2 aspect-3/4 overflow-hidden md:order-1">
+          <FadeInImage
+            src={resolvedSrc}
+            alt={collection.imageAlt ?? collection.title}
+            fill
+            unoptimized={isShopifyCdnUrl(imageUrl)}
+            className="object-cover group-hover:opacity-95"
+            sizes={imageSizes}
+          />
         </div>
       </Link>
     </article>

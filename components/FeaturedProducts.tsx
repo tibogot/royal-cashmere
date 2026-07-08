@@ -21,7 +21,7 @@ export default async function FeaturedProducts({
 
   return (
     <section className="bg-white px-4 pt-6 pb-20 text-black md:px-8 md:pt-10 md:pb-32">
-      <FeaturedProductsCarousel products={products} />
+      <FeaturedProductsCarousel products={products} ctaOnRight />
     </section>
   );
 }

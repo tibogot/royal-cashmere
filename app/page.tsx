@@ -43,7 +43,7 @@ export default async function Home() {
           Bruxelles
         </h1>
         <HomeHeroBackground />
-        <HeroBottomLogo priority />
+        {/* <HeroBottomLogo priority /> */}
         {/* <Image
           src="/images/nick-karvounis.jpg"
           alt="Boutique Royal Cashmere — cachemire d'exception à Bruxelles"
@@ -112,7 +112,7 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="relative h-svh w-full mt-20 mb-20">
+      {/* <section className="relative h-svh w-full mt-20 mb-20">
         <FadeInImage
           src="/images/ekaterina-grosheva-optimized.jpg"
           alt="Cachemire Royal Cashmere"
@@ -127,7 +127,7 @@ export default async function Home() {
             2026
           </h2>
         </div>
-      </section>
+      </section> */}
 
       {/* <section className="bg-white px-4 py-32 text-center text-black md:px-8">
         <h2 className="mx-auto max-w-4xl font-serif text-2xl uppercase leading-snug md:max-w-3xl md:text-3xl">

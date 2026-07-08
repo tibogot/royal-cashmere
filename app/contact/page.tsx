@@ -1,11 +1,12 @@
 import ContactForm from "@/components/ContactForm";
+import FadeInImage from "@/components/FadeInImage";
 import { createPageMetadata } from "@/lib/seo";
 import { siteConfig } from "@/lib/site";
 
 export const metadata = createPageMetadata({
   title: "Contact",
   description:
-    "Contactez Royal Cashmere Ã  Uccle, Bruxelles. Boutique de cachemire d'exception â€” adresse, horaires et tÃ©lÃ©phone.",
+    "Contactez Royal Cashmere à Uccle, Bruxelles. Boutique de cachemire d'exception — adresse, horaires et téléphone.",
   path: "/contact",
 });
 
@@ -13,68 +14,73 @@ export default function ContactPage() {
   return (
     <main className="w-full">
       <section className="bg-white px-4 pt-24 pb-20 text-black md:px-8 md:pt-28 md:pb-32">
-        <div className="">
-          <div className="text-center">
-            <h1 className="font-serif text-5xl uppercase leading-[1.12] md:text-7xl">
-              Contact
-            </h1>
+        <h1 className="sr-only">Contact — Royal Cashmere Bruxelles</h1>
 
-            <p className="mx-auto mt-8 max-w-lg text-sm text-black/70 md:mt-10 md:text-base">
-              Notre Ã©quipe vous accueille en boutique pour vous conseiller et
-              vous faire dÃ©couvrir nos collections en cachemire et soie.
+        <div className="grid gap-16 md:grid-cols-2 md:items-stretch md:gap-20">
+          <div className="space-y-8 text-left">
+            <p className="font-serif text-2xl uppercase leading-snug tracking-wide md:text-3xl">
+              Royal Cashmere Bruxelles
             </p>
-          </div>
 
-          <div className="mt-16 grid gap-16 md:mt-20 md:grid-cols-2 md:gap-20">
-            <div className="space-y-8 text-left">
-              <div>
-                <p className="text-xs uppercase tracking-wide text-black/50">
-                  Adresse
-                </p>
-                <p className="mt-2 font-serif text-sm md:text-base">
-                  {siteConfig.contact.street}
-                  <br />
-                  {siteConfig.contact.city}, {siteConfig.contact.country}
-                </p>
-              </div>
-
-              <div>
-                <p className="text-xs uppercase tracking-wide text-black/50">
-                  TÃ©lÃ©phone
-                </p>
-                <a
-                  href={`tel:${siteConfig.contact.phone.replace(/\s/g, "")}`}
-                  className="mt-2 inline-block font-serif text-sm transition-opacity hover:opacity-60 md:text-base"
-                >
-                  {siteConfig.contact.phone}
-                </a>
-              </div>
-
-              {siteConfig.contact.email ? (
-                <div>
-                  <p className="text-xs uppercase tracking-wide text-black/50">
-                    E-mail
-                  </p>
-                  <a
-                    href={`mailto:${siteConfig.contact.email}`}
-                    className="mt-2 inline-block font-serif text-sm transition-opacity hover:opacity-60 md:text-base"
-                  >
-                    {siteConfig.contact.email}
-                  </a>
-                </div>
-              ) : null}
-
-              <div>
-                <p className="text-xs uppercase tracking-wide text-black/50">
-                  Horaires d&apos;ouverture
-                </p>
-                <p className="mt-2 font-serif text-sm md:text-base">
-                  Du lundi au vendredi de 10 h Ã  18 h
-                </p>
-              </div>
+            <div>
+              <p className="text-xs uppercase tracking-wide text-black/50">
+                Adresse
+              </p>
+              <p className="mt-2 font-serif text-sm md:text-base">
+                {siteConfig.contact.street}
+                <br />
+                {siteConfig.contact.city}, {siteConfig.contact.country}
+              </p>
             </div>
 
-            <ContactForm />
+            <div>
+              <p className="text-xs uppercase tracking-wide text-black/50">
+                Téléphone
+              </p>
+              <a
+                href={`tel:${siteConfig.contact.phone.replace(/\s/g, "")}`}
+                className="mt-2 inline-block font-serif text-sm transition-opacity hover:opacity-60 md:text-base"
+              >
+                {siteConfig.contact.phone}
+              </a>
+            </div>
+
+            {siteConfig.contact.email ? (
+              <div>
+                <p className="text-xs uppercase tracking-wide text-black/50">
+                  E-mail
+                </p>
+                <a
+                  href={`mailto:${siteConfig.contact.email}`}
+                  className="mt-2 inline-block font-serif text-sm transition-opacity hover:opacity-60 md:text-base"
+                >
+                  {siteConfig.contact.email}
+                </a>
+              </div>
+            ) : null}
+
+            <div>
+              <p className="text-xs uppercase tracking-wide text-black/50">
+                Horaires d&apos;ouverture
+              </p>
+              <p className="mt-2 font-serif text-sm md:text-base">
+                Du lundi au vendredi de 10 h à 18 h
+              </p>
+            </div>
+
+            <div className="border-t border-black/10 pt-8">
+              <ContactForm />
+            </div>
+          </div>
+
+          <div className="relative min-h-128 w-full md:min-h-full">
+            <FadeInImage
+              src="/images/1140.3 coat 1.jpg"
+              alt="Manteau en cachemire Royal Cashmere"
+              fill
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, 50vw"
+            />
           </div>
         </div>
       </section>
