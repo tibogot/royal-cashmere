@@ -2,7 +2,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { routes } from "@/lib/routes";
 
-export default function HeroBottomLogo() {
+type HeroBottomLogoProps = {
+  priority?: boolean;
+};
+
+export default function HeroBottomLogo({ priority = false }: HeroBottomLogoProps) {
   return (
     <Link
       href={routes.home}
@@ -14,6 +18,8 @@ export default function HeroBottomLogo() {
         alt=""
         width={224}
         height={18}
+        loading={priority ? "eager" : undefined}
+        fetchPriority={priority ? "high" : undefined}
         className="block h-auto w-full brightness-0 invert"
       />
     </Link>

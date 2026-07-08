@@ -13,6 +13,7 @@ import ProductShowcase from "@/components/ProductShowcase";
 import { getFeaturedProducts } from "@/lib/shopify/products";
 import FadeInImage from "@/components/FadeInImage";
 import Link from "next/link";
+import { preload } from "react-dom";
 
 export const metadata = createPageMetadata({
   description:
@@ -21,6 +22,8 @@ export const metadata = createPageMetadata({
 });
 
 export default async function Home() {
+  preload("/brand/logo-nav.svg", { as: "image", fetchPriority: "high" });
+
   // Fetch the featured products once and slice them for each section below,
   // instead of issuing a separate Shopify request per <FeaturedProducts />.
   const products = await getFeaturedProducts(12);
@@ -40,7 +43,7 @@ export default async function Home() {
           Bruxelles
         </h1>
         <HomeHeroBackground />
-        <HeroBottomLogo />
+        <HeroBottomLogo priority />
         {/* <Image
           src="/images/nick-karvounis.jpg"
           alt="Boutique Royal Cashmere — cachemire d'exception à Bruxelles"

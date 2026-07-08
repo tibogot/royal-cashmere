@@ -11,7 +11,7 @@ const footerLinkClassName =
 const footerTextClassName = "text-xs uppercase tracking-wide";
 
 const footerLegalLinkClassName =
-  "text-[10px] text-black/50 transition-opacity hover:opacity-60 md:text-xs";
+  "text-[10px] text-black transition-opacity hover:opacity-60 md:text-xs";
 
 const primaryLinks = [
   { label: "Boutique", href: routes.shop },
@@ -126,7 +126,7 @@ export default function Footer() {
         />
       </Link>
 
-      <div className="mt-6 flex w-full flex-wrap items-center justify-between gap-x-4 gap-y-2 text-[10px] text-black/50 md:mt-8 md:text-xs">
+      <div className="mt-6 flex w-full flex-wrap items-center justify-between gap-x-4 gap-y-2 text-[10px] text-black md:mt-8 md:text-xs">
         <p>© 2026 Royal Cashmere</p>
         <nav
           aria-label="Informations légales"
