@@ -1,4 +1,5 @@
 import AccountPageView from "@/components/AccountPageView";
+import FadeInImage from "@/components/FadeInImage";
 import { getValidCustomerSession } from "@/lib/shopify/customer-account/auth";
 import { getCustomerAccountSummary } from "@/lib/shopify/customer-account/customer";
 import { isCustomerAccountConfigured } from "@/lib/shopify/customer-account/config";
@@ -9,7 +10,7 @@ import { redirect } from "next/navigation";
 export const metadata = createPageMetadata({
   title: "Mon compte",
   description:
-    "Consultez vos commandes et gÃ©rez votre compte client Royal Cashmere.",
+    "Consultez vos commandes et gérez votre compte client Royal Cashmere.",
   path: "/compte",
 });
 
@@ -30,17 +31,25 @@ export default async function AccountPage() {
   }
 
   return (
-    <main className="flex w-full flex-1 flex-col">
-      <section className="flex-1 bg-white px-4 pt-24 pb-20 text-black md:px-8 md:pt-28 md:pb-32">
-        <h1 className="text-center font-serif text-5xl uppercase leading-[1.12] md:text-7xl">
-          Mon compte
-        </h1>
+    <main className="w-full">
+      <section className="bg-white px-4 pt-24 pb-20 text-black md:px-8 md:pt-28 md:pb-32">
+        <h1 className="sr-only">Mon compte — Royal Cashmere</h1>
 
-        <div className="mt-16">
+        <div className="grid gap-16 md:grid-cols-2 md:gap-20">
           <AccountPageView
             customer={account.customer}
             orders={account.orders}
           />
+
+          <div className="relative min-h-80 w-full md:min-h-[calc(100svh-7rem)]">
+            <FadeInImage
+              src="/images/chu-william-DQkDC6-3vnQ-unsplash.jpg"
+              alt="Cachemire Royal Cashmere"
+              fill
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, 50vw"
+            />
+          </div>
         </div>
       </section>
     </main>

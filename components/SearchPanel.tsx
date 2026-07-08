@@ -151,14 +151,14 @@ export default function SearchPanel({ open, onClose }: SearchPanelProps) {
         role="dialog"
         aria-modal="true"
         aria-label="Rechercher"
-        className="absolute inset-y-0 right-0 flex w-full max-w-md flex-col overflow-y-auto bg-white px-6 py-8 text-black shadow-2xl md:px-8 md:py-10"
+        className="absolute inset-y-0 right-0 flex h-dvh max-h-dvh w-full max-w-md flex-col overflow-y-auto bg-white text-black shadow-2xl"
         data-lenis-prevent
       >
-        <div className="flex justify-end">
+        <div className="flex shrink-0 items-center justify-end gap-4 px-4 py-4 md:px-8">
           <PanelCloseButton onClose={onClose} />
         </div>
 
-        <form onSubmit={handleSubmit} className="mt-6">
+        <form onSubmit={handleSubmit} className="px-4 md:px-8">
           <label htmlFor="search-query" className="sr-only">
             Rechercher un produit
           </label>
@@ -180,7 +180,7 @@ export default function SearchPanel({ open, onClose }: SearchPanelProps) {
           </button>
         </form>
 
-        <div className="mt-12 border-t border-black/10 pt-10">
+        <div className="mt-12 border-t border-black/10 px-4 pt-10 md:px-8">
           <p className="text-xs uppercase tracking-wide text-black">
             Recherches populaires
           </p>
