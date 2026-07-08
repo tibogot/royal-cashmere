@@ -39,8 +39,8 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
 
           <div className="relative min-h-80 w-full md:min-h-[calc(100svh-7rem)]">
             <FadeInImage
-              src="/images/0179.1 jumper 1239 pants 1.jpg"
-              alt="Pull et pantalon en cachemire Royal Cashmere"
+              src="/images/chu-william-DQkDC6-3vnQ-unsplash.jpg"
+              alt="Cachemire Royal Cashmere"
               fill
               className="object-cover"
               sizes="(max-width: 768px) 100vw, 50vw"
