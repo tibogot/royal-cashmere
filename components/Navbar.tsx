@@ -30,6 +30,10 @@ const TRANSPARENT_NAV_PATHS: ReadonlySet<string> = new Set([
   routes.home,
   routes.about,
 ]);
+// Begin the reveal while the hero still sits behind the navbar. If we wait until
+// the hero bottom hits the viewport top, the white section is already under the
+// nav and scaleY 0→1 is invisible — only the text color snap is noticeable.
+const NAV_SCROLL_REVEAL_OFFSET = 72;
 
 type NavAppearance = {
   white: boolean;
@@ -58,6 +62,9 @@ export default function Navbar() {
   const menuMeasureAttemptsRef = useRef(0);
   const navExpandedRef = useRef(false);
   const hasTransparentHeroRef = useRef(hasTransparentHero);
+  const navHoveredRef = useRef(false);
+  const overlayOpenRef = useRef(false);
+  const scrollNavTriggerRef = useRef<ScrollTrigger | null>(null);
 
   const overlayOpen = cartOpen || searchOpen;
   const isNavWhite = hasTransparentHero
@@ -65,13 +72,56 @@ export default function Navbar() {
     : true;
   const navExpanded = shopMenuOpen && !overlayOpen;
 
-  // Mirror the latest values into refs for the ScrollTrigger and ResizeObserver
-  // callbacks below (which read them asynchronously), without writing to refs
-  // during render.
-  useEffect(() => {
+  // Keep refs in sync before layout effects / GSAP run (useEffect is too late
+  // for hover leave, where syncScrollNavAppearance reads navHoveredRef).
+  useLayoutEffect(() => {
     hasTransparentHeroRef.current = hasTransparentHero;
     navExpandedRef.current = navExpanded;
+    navHoveredRef.current = navHovered;
+    overlayOpenRef.current = overlayOpen;
   });
+
+  const shouldScrollControlNav = () =>
+    hasTransparentHeroRef.current &&
+    !navHoveredRef.current &&
+    !overlayOpenRef.current &&
+    !navExpandedRef.current;
+
+  const applyScrollNavAppearance = (progress: number, navHeight: number) => {
+    const bg = bgRef.current;
+    const nav = navRef.current;
+    const logo = logoRef.current;
+    if (!bg || !nav || !logo) return;
+
+    const links = nav.querySelectorAll<HTMLElement>("[data-nav-link]");
+    const clamped = gsap.utils.clamp(0, 1, progress);
+
+    navTweenRef.current?.kill();
+    gsap.killTweensOf(bg);
+
+    gsap.set(bg, {
+      transformOrigin: "top center",
+      scaleY: clamped,
+      height: navHeight,
+    });
+    gsap.set(links, {
+      color: gsap.utils.interpolate("#ffffff", "#000000", clamped),
+    });
+    gsap.set(logo, {
+      filter: `brightness(${1 - clamped})`,
+    });
+
+    const solid = clamped >= 0.5;
+    setNavSolid((current) => (current === solid ? current : solid));
+  };
+
+  const syncScrollNavAppearance = () => {
+    const nav = navRef.current;
+    const trigger = scrollNavTriggerRef.current;
+    if (!nav || !trigger || !shouldScrollControlNav()) return;
+
+    applyScrollNavAppearance(trigger.progress, nav.offsetHeight);
+  };
 
   const runNavAnimation = ({
     white,
@@ -247,20 +297,50 @@ export default function Navbar() {
         return;
       }
 
-      setNavSolid(transparentSection.getBoundingClientRect().bottom <= 0);
+      const revealOffset = Math.max(navHeight, NAV_SCROLL_REVEAL_OFFSET);
+      const reduceMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      ).matches;
 
       const transparentSectionTrigger = ScrollTrigger.create({
         trigger: transparentSection,
-        start: "bottom top",
-        onEnter: () => {
-          if (hasTransparentHeroRef.current) setNavSolid(true);
-        },
-        onLeaveBack: () => {
-          if (hasTransparentHeroRef.current) setNavSolid(false);
+        start: reduceMotion ? "bottom top" : `bottom top+=${revealOffset}`,
+        end: "bottom top",
+        invalidateOnRefresh: true,
+        ...(reduceMotion
+          ? {
+              onEnter: () => {
+                if (!shouldScrollControlNav()) return;
+                applyScrollNavAppearance(1, nav.offsetHeight);
+              },
+              onLeaveBack: () => {
+                if (!shouldScrollControlNav()) return;
+                applyScrollNavAppearance(0, nav.offsetHeight);
+              },
+            }
+          : {
+              scrub: true,
+              onUpdate: (self) => {
+                if (!shouldScrollControlNav()) return;
+                applyScrollNavAppearance(self.progress, nav.offsetHeight);
+              },
+            }),
+        onRefresh: (self) => {
+          if (!shouldScrollControlNav()) return;
+          applyScrollNavAppearance(
+            reduceMotion ? Number(self.isActive) : self.progress,
+            nav.offsetHeight,
+          );
         },
       });
 
-      return () => transparentSectionTrigger.kill();
+      scrollNavTriggerRef.current = transparentSectionTrigger;
+      syncScrollNavAppearance();
+
+      return () => {
+        scrollNavTriggerRef.current = null;
+        transparentSectionTrigger.kill();
+      };
     },
     { scope: headerRef, dependencies: [hasTransparentHero, pathname] },
   );
@@ -283,6 +363,34 @@ export default function Navbar() {
         "(prefers-reduced-motion: reduce)",
       ).matches;
 
+      // Scroll scrub owns the hero → solid transition; only tween for hover/menu.
+      if (
+        hasTransparentHero &&
+        !navHovered &&
+        !overlayOpen &&
+        !navExpanded
+      ) {
+        const progress = scrollNavTriggerRef.current?.progress ?? 0;
+
+        // At hero top or fully past hero, animate back; mid-reveal snaps to scrub.
+        if (progress <= 0.01) {
+          runNavAnimation({
+            white: false,
+            expanded: false,
+            immediate: reduceMotion,
+          });
+        } else if (progress >= 0.99) {
+          runNavAnimation({
+            white: true,
+            expanded: false,
+            immediate: reduceMotion,
+          });
+        } else {
+          syncScrollNavAppearance();
+        }
+        return;
+      }
+
       runNavAnimation({
         white: isNavWhite,
         expanded: navExpanded,
@@ -292,7 +400,7 @@ export default function Navbar() {
     {
       scope: headerRef,
       dependencies: [
-        isNavWhite,
+        navHovered,
         navExpanded,
         collections.length,
         hasTransparentHero,
@@ -338,8 +446,8 @@ export default function Navbar() {
     },
   );
 
-  const navLinkClassName = `animated-underline w-fit text-xs uppercase tracking-wide ${
-    hasTransparentHero && !isNavWhite ? "text-white" : "text-black"
+  const navLinkClassName = `animated-underline w-fit text-xs uppercase tracking-wide${
+    hasTransparentHero ? "" : isNavWhite ? " text-black" : " text-white"
   }`;
 
   const navIconButtonClassName =
@@ -387,7 +495,7 @@ export default function Navbar() {
       expanded: false,
       immediate: true,
     });
-  }, [overlayOpen, hasTransparentHero, navSolid, navHovered]);
+  }, [overlayOpen, hasTransparentHero, navHovered]);
 
   useLayoutEffect(() => {
     if (navExpanded) return;
@@ -415,7 +523,7 @@ export default function Navbar() {
       expanded: false,
       immediate: reduceMotion || overlayOpen,
     });
-  }, [navExpanded, hasTransparentHero, navSolid, navHovered, overlayOpen]);
+  }, [navExpanded, hasTransparentHero, navHovered, overlayOpen]);
 
   // Reset nav UI state on navigation. The navbar is mounted once and persists
   // across routes, so it can't be reset via a `key` remount; these resets
@@ -437,6 +545,11 @@ export default function Navbar() {
     const reduceMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
+
+    if (hasTransparentHero && !isHovered) {
+      syncScrollNavAppearance();
+      return;
+    }
 
     runNavAnimation({
       white: !hasTransparentHero || isHovered,
@@ -490,8 +603,12 @@ export default function Navbar() {
       <div
         ref={shellRef}
         className="relative"
-        onMouseEnter={() => setNavHovered(true)}
+        onMouseEnter={() => {
+          navHoveredRef.current = true;
+          setNavHovered(true);
+        }}
         onMouseLeave={() => {
+          navHoveredRef.current = false;
           setNavHovered(false);
           if (!cartOpen && !searchOpen) {
             setShopMenuOpen(false);
