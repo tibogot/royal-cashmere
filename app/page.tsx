@@ -43,7 +43,7 @@ export default async function Home() {
           Bruxelles
         </h1>
         <HomeHeroBackground />
-        {/* <HeroBottomLogo priority /> */}
+        <HeroBottomLogo priority raised />
         {/* <Image
           src="/images/nick-karvounis.jpg"
           alt="Boutique Royal Cashmere — cachemire d'exception à Bruxelles"
@@ -68,42 +68,30 @@ export default async function Home() {
         </Link>
       </section>
 
-      <FeaturedProducts products={products} />
-
-      <section className="sticky top-0 z-0 flex h-svh w-full flex-col overflow-hidden bg-white md:flex-row">
-        <div className="relative h-1/2 w-full md:h-full md:w-1/2">
-          <FadeInImage
-            src="/images/Frame 63.png"
-            alt="Cachemire Royal Cashmere"
-            fill
-            className="object-cover"
-            sizes="(max-width: 767px) 100vw, 50vw"
-          />
-        </div>
-        <div className="relative flex h-1/2 w-full flex-col items-center justify-center gap-3 px-4 md:h-full md:w-1/2 md:gap-6">
-          <p className="px-4 text-center font-serif text-3xl uppercase leading-[1.1] tracking-wide md:text-5xl">
-            Fabriqué en
-            <br />
-            Mongolie
-          </p>
-          <div className="relative aspect-4/5 w-44 overflow-hidden md:w-56">
+      <section className="bg-white px-4 py-6 md:px-8 md:py-10">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6">
+          <div className="relative aspect-5/4 overflow-hidden md:aspect-square">
             <FadeInImage
-              src="/images/degleex-ganzorig-SQoH2ZQd80E-unsplash.jpg"
+              src="/images/Frame 63.png"
               alt="Cachemire Royal Cashmere"
               fill
               className="object-cover"
-              sizes="(max-width: 768px) 176px, 224px"
+              sizes="(max-width: 767px) 100vw, 50vw"
             />
           </div>
-          <p className="max-w-sm px-4 text-center font-serif text-base text-black">
-            Pur cachemire des hauts plateaux de Mongolie, sélectionné pour sa
-            douceur et sa pureté exceptionnelles.
-          </p>
-          <Link href={routes.about} className={`${ctaLinkClassName} font-sans`}>
-            Découvrir notre histoire
-          </Link>
+          <div className="relative aspect-5/4 overflow-hidden md:aspect-square">
+            <FadeInImage
+              src="/images/cesar-la-rosa-HbAddptme1Q-unsplash.jpg"
+              alt="Cachemire Royal Cashmere — Mongolie"
+              fill
+              className="object-cover"
+              sizes="(max-width: 767px) 100vw, 50vw"
+            />
+          </div>
         </div>
       </section>
+
+      <FeaturedProducts products={products} />
 
       <div className="relative z-10 bg-white">
         <ProductShowcase />

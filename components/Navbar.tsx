@@ -28,7 +28,6 @@ const CONTENT_REVEAL_AT = 0.22;
 const TRANSPARENT_NAV_SELECTOR = "[data-transparent-nav]";
 const TRANSPARENT_NAV_PATHS: ReadonlySet<string> = new Set([
   routes.home,
-  routes.home2,
   routes.about,
 ]);
 
