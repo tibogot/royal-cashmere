@@ -4,14 +4,22 @@ import { routes } from "@/lib/routes";
 
 type HeroBottomLogoProps = {
   priority?: boolean;
+  raised?: boolean;
 };
 
-export default function HeroBottomLogo({ priority = false }: HeroBottomLogoProps) {
+export default function HeroBottomLogo({
+  priority = false,
+  raised = false,
+}: HeroBottomLogoProps) {
   return (
     <Link
       href={routes.home}
       aria-label="Royal Cashmere"
-      className="absolute inset-x-0 bottom-0 z-10 translate-y-[6%] px-4 md:px-8"
+      className={`absolute inset-x-0 z-10 px-4 md:px-8 ${
+        raised
+          ? "bottom-[6%] translate-y-0 md:bottom-[8%]"
+          : "bottom-0 translate-y-[6%]"
+      }`}
     >
       <Image
         src="/brand/logo-nav.svg"
