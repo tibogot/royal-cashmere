@@ -374,6 +374,7 @@ export default function Navbar() {
 
         // At hero top or fully past hero, animate back; mid-reveal snaps to scrub.
         if (progress <= 0.01) {
+          setNavSolid((current) => (current ? false : current));
           runNavAnimation({
             white: false,
             expanded: false,
@@ -452,8 +453,6 @@ export default function Navbar() {
 
   const navIconButtonClassName =
     "flex h-8 w-8 items-center justify-center text-xs uppercase tracking-wide";
-
-  const burgerLineClassName = isNavWhite ? "bg-black" : "bg-white";
 
   const handleMenuToggle = () => {
     setMenuOpen((current) => !current);
@@ -547,7 +546,18 @@ export default function Navbar() {
     ).matches;
 
     if (hasTransparentHero && !isHovered) {
-      syncScrollNavAppearance();
+      const trigger = scrollNavTriggerRef.current;
+      if (trigger) {
+        syncScrollNavAppearance();
+      } else {
+        const atHero = window.scrollY < NAV_SCROLL_REVEAL_OFFSET;
+        setNavSolid(!atHero);
+        runNavAnimation({
+          white: !atHero,
+          expanded: false,
+          immediate: reduceMotion,
+        });
+      }
       return;
     }
 
@@ -635,7 +645,6 @@ export default function Navbar() {
                   open={menuOpen}
                   onClick={handleMenuToggle}
                   className={navIconButtonClassName}
-                  lineClassName={burgerLineClassName}
                 />
               ) : null}
               <button
