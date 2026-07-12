@@ -1,5 +1,6 @@
 import { createPageMetadata } from "@/lib/seo";
 import FadeInImage from "@/components/FadeInImage";
+import { preload } from "react-dom";
 
 export const metadata = createPageMetadata({
   title: "À propos",
@@ -9,6 +10,11 @@ export const metadata = createPageMetadata({
 });
 
 export default function AboutPage() {
+  preload("/images/antonio-verdin-fvH0Konesh8-unsplash.jpg", {
+    as: "image",
+    fetchPriority: "high",
+  });
+
   return (
     <main className="w-full">
       <section className="bg-white px-4 pt-24 pb-10 text-center text-black md:px-8 md:pt-28 md:pb-16">
@@ -22,7 +28,7 @@ export default function AboutPage() {
           src="/images/antonio-verdin-fvH0Konesh8-unsplash.jpg"
           alt="Atelier Royal Cashmere à Uccle"
           fill
-          preload
+          priority
           className="object-cover"
           sizes="100vw"
         />
