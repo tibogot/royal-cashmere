@@ -1,4 +1,3 @@
-import HeroBottomLogo from "@/components/HeroBottomLogo";
 import { createPageMetadata } from "@/lib/seo";
 import FadeInImage from "@/components/FadeInImage";
 
@@ -12,13 +11,13 @@ export const metadata = createPageMetadata({
 export default function AboutPage() {
   return (
     <main className="w-full">
-      <section
-        data-transparent-nav
-        className="relative h-svh w-full"
-      >
-        <h1 className="sr-only">
+      <section className="bg-white px-4 pt-24 pb-10 text-center text-black md:px-8 md:pt-28 md:pb-16">
+        <h1 className="mx-auto max-w-5xl font-serif text-5xl uppercase leading-[1.12] md:max-w-6xl md:text-8xl md:leading-[1.08]">
           Une maison de cachemire d&apos;exception, ancrée à Bruxelles
         </h1>
+      </section>
+
+      <section className="relative h-[70svh] w-full md:h-[80svh]">
         <FadeInImage
           src="/images/antonio-verdin-fvH0Konesh8-unsplash.jpg"
           alt="Atelier Royal Cashmere à Uccle"
@@ -27,13 +26,6 @@ export default function AboutPage() {
           className="object-cover"
           sizes="100vw"
         />
-        <HeroBottomLogo />
-      </section>
-
-      <section className="bg-white px-4 pt-6 pb-20 text-center text-black md:px-8 md:pt-10 md:pb-32">
-        <h2 className="mx-auto mt-8 max-w-5xl font-serif text-5xl uppercase leading-[1.12] md:mt-10 md:max-w-6xl md:text-8xl md:leading-[1.08]">
-          Une maison de cachemire d&apos;exception, ancrée à Bruxelles
-        </h2>
       </section>
 
       <section className="bg-white px-4 py-16 text-left text-black md:px-8">

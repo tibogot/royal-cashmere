@@ -9,14 +9,18 @@ import SearchIcon from "@/components/SearchIcon";
 import SearchPanel from "@/components/SearchPanel";
 import WishlistNavLink from "@/components/WishlistNavLink";
 import { routes } from "@/lib/routes";
-import type { ShopifyCollection } from "@/lib/shopify/queries";
+import {
+  getCollectionsSnapshot,
+  getServerCollectionsSnapshot,
+  subscribeCollections,
+} from "@/lib/collections-store";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from "react";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
@@ -26,10 +30,7 @@ const CLOSE_EASE = "power2.inOut";
 const MENU_CONTENT_OFFSET = 6;
 const CONTENT_REVEAL_AT = 0.22;
 const TRANSPARENT_NAV_SELECTOR = "[data-transparent-nav]";
-const TRANSPARENT_NAV_PATHS: ReadonlySet<string> = new Set([
-  routes.home,
-  routes.about,
-]);
+const TRANSPARENT_NAV_PATHS: ReadonlySet<string> = new Set([routes.home]);
 // Begin the reveal while the hero still sits behind the navbar. If we wait until
 // the hero bottom hits the viewport top, the white section is already under the
 // nav and scaleY 0→1 is invisible — only the text color snap is noticeable.
@@ -49,7 +50,11 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [shopMenuOpen, setShopMenuOpen] = useState(false);
   const [navHovered, setNavHovered] = useState(false);
-  const [collections, setCollections] = useState<ShopifyCollection[]>([]);
+  const collections = useSyncExternalStore(
+    subscribeCollections,
+    getCollectionsSnapshot,
+    getServerCollectionsSnapshot,
+  );
   const [navSolid, setNavSolid] = useState(!hasTransparentHero);
   const headerRef = useRef<HTMLElement>(null);
   const shellRef = useRef<HTMLDivElement>(null);
@@ -567,23 +572,6 @@ export default function Navbar() {
       immediate: reduceMotion || !hasTransparentHero,
     });
   }, [pathname, hasTransparentHero]);
-
-  useEffect(() => {
-    let cancelled = false;
-
-    fetch("/api/collections")
-      .then((response) => response.json())
-      .then((data: { collections?: ShopifyCollection[] }) => {
-        if (!cancelled && data.collections) {
-          setCollections(data.collections);
-        }
-      })
-      .catch(() => {});
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
 
   useEffect(() => {
     const handleCartOpenEvent = () => {

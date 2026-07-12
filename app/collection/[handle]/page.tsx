@@ -48,7 +48,7 @@ export default async function CollectionPage({ params }: CollectionPageProps) {
   return (
     <main className="w-full">
       <section className="bg-white px-4 pt-24 pb-20 text-black md:px-8 md:pt-28 md:pb-32">
-        <h1 className="mx-auto max-w-5xl text-center font-serif text-5xl uppercase leading-[1.12] md:max-w-6xl md:text-8xl md:leading-[1.08]">
+        <h1 className="font-serif text-xl uppercase leading-[1.12] md:text-2xl md:leading-[1.08]">
           {collection.title}
         </h1>
 

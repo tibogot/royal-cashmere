@@ -3,70 +3,57 @@
 import ProductCard from "@/components/ProductCard";
 import { routes } from "@/lib/routes";
 import { ctaLinkClassName } from "@/lib/ui";
-import type { ShopifyProduct } from "@/lib/shopify/queries";
 import { getWishlistHandles, subscribeToWishlist } from "@/lib/wishlist";
+import {
+  getServerWishlistProducts,
+  getServerWishlistProductsHasFetched,
+  getWishlistProductsForHandlesKey,
+  getWishlistProductsHasFetchedForHandlesKey,
+  prefetchWishlistProductsForHandlesKey,
+  subscribeWishlistProducts,
+} from "@/lib/wishlist-products-store";
 import Link from "next/link";
-import { useEffect, useState, useSyncExternalStore } from "react";
+import { useEffect, useSyncExternalStore } from "react";
+
+function WishlistGridSkeleton() {
+  return (
+    <div className="mt-10 grid grid-cols-2 gap-x-6 gap-y-12 md:mt-12 lg:grid-cols-4">
+      {Array.from({ length: 4 }, (_, index) => (
+        <div key={index} className="space-y-3">
+          <div className="aspect-4/5 animate-pulse bg-black/5" />
+          <div className="h-3 w-3/4 animate-pulse bg-black/5" />
+          <div className="h-3 w-1/3 animate-pulse bg-black/5" />
+        </div>
+      ))}
+    </div>
+  );
+}
 
 export default function WishlistView() {
-  const [products, setProducts] = useState<ShopifyProduct[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  // A stable, primitive snapshot of the wishlist that changes whenever handles
-  // are added/removed (same-tab or cross-tab). The product fetch keys off it.
   const handlesKey = useSyncExternalStore(
     subscribeToWishlist,
     () => getWishlistHandles().join(","),
     () => "",
   );
 
+  const products = useSyncExternalStore(
+    subscribeWishlistProducts,
+    () => getWishlistProductsForHandlesKey(handlesKey),
+    getServerWishlistProducts,
+  );
+
+  const hasFetched = useSyncExternalStore(
+    subscribeWishlistProducts,
+    () => getWishlistProductsHasFetchedForHandlesKey(handlesKey),
+    getServerWishlistProductsHasFetched,
+  );
+
   useEffect(() => {
-    const handles = handlesKey ? handlesKey.split(",") : [];
-    let cancelled = false;
-
-    async function loadProducts() {
-      if (handles.length === 0) {
-        if (!cancelled) {
-          setProducts([]);
-          setIsLoading(false);
-        }
-        return;
-      }
-
-      if (!cancelled) setIsLoading(true);
-
-      try {
-        const params = new URLSearchParams({ handles: handles.join(",") });
-        const response = await fetch(`/api/products?${params.toString()}`, {
-          cache: "no-store",
-        });
-
-        if (cancelled) return;
-
-        if (!response.ok) {
-          setProducts([]);
-          return;
-        }
-
-        const data = (await response.json()) as {
-          products?: ShopifyProduct[];
-        };
-        if (!cancelled) setProducts(data.products ?? []);
-      } catch {
-        if (!cancelled) setProducts([]);
-      } finally {
-        if (!cancelled) setIsLoading(false);
-      }
-    }
-
-    loadProducts();
-    return () => {
-      cancelled = true;
-    };
+    prefetchWishlistProductsForHandlesKey(handlesKey);
   }, [handlesKey]);
 
-  if (isLoading) {
-    return <p className="mt-12 text-center text-sm text-black/50">Chargement…</p>;
+  if (!hasFetched && handlesKey.length > 0) {
+    return <WishlistGridSkeleton />;
   }
 
   if (products.length === 0) {

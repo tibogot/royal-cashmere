@@ -2,9 +2,10 @@
 
 import HeartIcon from "@/components/HeartIcon";
 import { routes } from "@/lib/routes";
-import { getWishlistCount, subscribeToWishlist } from "@/lib/wishlist";
+import { getWishlistCount, getWishlistHandles, subscribeToWishlist } from "@/lib/wishlist";
+import { prefetchWishlistProducts } from "@/lib/wishlist-products-store";
 import Link from "next/link";
-import { useSyncExternalStore } from "react";
+import { useEffect, useSyncExternalStore } from "react";
 
 type WishlistNavLinkProps = {
   className: string;
@@ -23,6 +24,17 @@ export default function WishlistNavLink({
     getWishlistCount,
     () => 0,
   );
+
+  const handlesKey = useSyncExternalStore(
+    subscribeToWishlist,
+    () => getWishlistHandles().join(","),
+    () => "",
+  );
+
+  useEffect(() => {
+    const handles = handlesKey ? handlesKey.split(",") : [];
+    prefetchWishlistProducts(handles);
+  }, [handlesKey]);
 
   const label = count > 0 ? `WISHLIST (${count})` : "WISHLIST";
 

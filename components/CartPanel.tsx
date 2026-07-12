@@ -2,11 +2,18 @@
 
 import CartPageView from "@/components/CartPageView";
 import PanelCloseButton from "@/components/PanelCloseButton";
-import type { Cart } from "@/lib/shopify/cart";
+import {
+  getCart,
+  getCartHasFetched,
+  getServerCart,
+  getServerCartHasFetched,
+  refreshCart,
+  subscribeCart,
+} from "@/lib/cart-store";
 import { useMounted } from "@/lib/useMounted";
 import { useOverlayScrollLock } from "@/lib/useOverlayScrollLock";
 import gsap from "gsap";
-import { useCallback, useEffect, useId, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 
 type CartPanelProps = {
@@ -21,10 +28,15 @@ export default function CartPanel({ open, onClose }: CartPanelProps) {
   const panelRef = useRef<HTMLDivElement>(null);
   const overlayRef = useRef<HTMLButtonElement>(null);
   const tweenRef = useRef<gsap.core.Timeline | null>(null);
-  const [cart, setCart] = useState<Cart | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const mounted = useMounted();
+
+  const cart = useSyncExternalStore(subscribeCart, getCart, getServerCart);
+  const hasFetched = useSyncExternalStore(
+    subscribeCart,
+    getCartHasFetched,
+    getServerCartHasFetched,
+  );
 
   // Keep the panel mounted while it's open (and during the close animation,
   // which flips isVisible back to false on completion). Adjusting state during
@@ -35,47 +47,10 @@ export default function CartPanel({ open, onClose }: CartPanelProps) {
 
   useOverlayScrollLock(isVisible);
 
-  // Silent refresh (no loading indicator) used for background cart updates.
-  const refreshCart = useCallback(async () => {
-    try {
-      const response = await fetch("/api/cart", { cache: "no-store" });
-      if (!response.ok) {
-        setCart(null);
-        return;
-      }
-
-      const data = (await response.json()) as { cart: Cart | null };
-      setCart(data.cart);
-    } catch {
-      setCart(null);
-    }
-  }, []);
-
   useEffect(() => {
     if (!open) return;
-
-    let cancelled = false;
-
-    async function loadOnOpen() {
-      setIsLoading(true);
-      await refreshCart();
-      if (!cancelled) setIsLoading(false);
-    }
-
-    loadOnOpen();
-    return () => {
-      cancelled = true;
-    };
-  }, [open, refreshCart]);
-
-  useEffect(() => {
-    const handleCartUpdated = () => {
-      refreshCart();
-    };
-
-    window.addEventListener("cart-updated", handleCartUpdated);
-    return () => window.removeEventListener("cart-updated", handleCartUpdated);
-  }, [refreshCart]);
+    void refreshCart();
+  }, [open]);
 
   useEffect(() => {
     if (!isVisible) return;
@@ -156,6 +131,8 @@ export default function CartPanel({ open, onClose }: CartPanelProps) {
 
   if (!mounted || !isVisible) return null;
 
+  const showLoading = !hasFetched;
+
   return createPortal(
     <div className="fixed inset-0 z-60">
       <button
@@ -184,7 +161,7 @@ export default function CartPanel({ open, onClose }: CartPanelProps) {
           <PanelCloseButton onClose={onClose} />
         </div>
 
-        {isLoading ? (
+        {showLoading ? (
           <p className="mt-6 px-4 text-sm text-black/50 md:px-8">Chargement…</p>
         ) : (
           <div className="flex min-h-0 flex-1 flex-col overflow-hidden">

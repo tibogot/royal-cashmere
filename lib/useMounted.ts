@@ -12,7 +12,15 @@ const emptySubscribe = () => () => {};
 export function useMounted(): boolean {
   return useSyncExternalStore(
     emptySubscribe,
-    () => true,
-    () => false,
+    getClientMountedSnapshot,
+    getServerMountedSnapshot,
   );
+}
+
+function getClientMountedSnapshot() {
+  return true;
+}
+
+function getServerMountedSnapshot() {
+  return false;
 }

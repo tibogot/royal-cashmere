@@ -6,6 +6,7 @@ import CartSimilarProducts from "@/components/CartSimilarProducts";
 import { routes } from "@/lib/routes";
 import { ctaLinkClassName } from "@/lib/ui";
 import type { Cart } from "@/lib/shopify/cart";
+import { getCart, refreshCart } from "@/lib/cart-store";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 
@@ -56,15 +57,8 @@ export default function CartView({
   }, [cart]);
 
   const syncCartFromServer = useCallback(async () => {
-    try {
-      const response = await fetch("/api/cart", { cache: "no-store" });
-      if (!response.ok) return;
-
-      const data = (await response.json()) as { cart: Cart | null };
-      setCart(data.cart);
-    } catch {
-      // Keep optimistic state on network errors.
-    }
+    await refreshCart();
+    setCart(getCart());
   }, []);
 
   useEffect(() => {

@@ -44,7 +44,7 @@ export default function CollectionCarouselCard({
         onClick={handleLinkClick}
       >
         <div className="order-1 mb-3 md:order-2 md:mb-0 md:mt-4">
-          <h3 className="text-left font-serif text-2xl font-medium text-black md:text-3xl lg:text-4xl">
+          <h3 className="text-left font-serif text-xl font-medium text-black md:text-2xl">
             {collection.title}
           </h3>
 

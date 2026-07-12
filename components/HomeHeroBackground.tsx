@@ -30,10 +30,19 @@ function subscribeReducedMotion(callback: () => void) {
 function useShouldLoadVideo() {
   return useSyncExternalStore(
     subscribeReducedMotion,
-    () =>
-      !window.matchMedia(REDUCED_MOTION_QUERY).matches && !isSlowConnection(),
-    () => false,
+    getShouldLoadVideoSnapshot,
+    getServerShouldLoadVideoSnapshot,
   );
+}
+
+function getShouldLoadVideoSnapshot() {
+  return (
+    !window.matchMedia(REDUCED_MOTION_QUERY).matches && !isSlowConnection()
+  );
+}
+
+function getServerShouldLoadVideoSnapshot() {
+  return false;
 }
 
 export default function HomeHeroBackground() {
