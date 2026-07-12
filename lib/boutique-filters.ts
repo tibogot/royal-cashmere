@@ -45,19 +45,32 @@ export function filterProducts(
   return products.filter((product) => productMatchesFilter(product, filter));
 }
 
+function fieldMatchesQuery(value: string, query: string) {
+  return normalize(value).includes(query);
+}
+
+function tagMatchesQuery(tag: string, query: string) {
+  const normalizedTag = normalize(tag);
+  return (
+    normalizedTag === query ||
+    normalizedTag.startsWith(query)
+  );
+}
+
 export function searchProducts(products: ShopifyProduct[], query: string) {
   const normalizedQuery = normalize(query.trim());
   if (!normalizedQuery) return products;
 
   return products.filter((product) => {
-    const haystack = [
-      product.title,
-      product.productType,
-      ...product.tags,
-    ]
-      .map(normalize)
-      .join(" ");
+    if (fieldMatchesQuery(product.title, normalizedQuery)) return true;
+    if (fieldMatchesQuery(product.handle, normalizedQuery)) return true;
+    if (
+      product.productType &&
+      fieldMatchesQuery(product.productType, normalizedQuery)
+    ) {
+      return true;
+    }
 
-    return haystack.includes(normalizedQuery);
+    return product.tags.some((tag) => tagMatchesQuery(tag, normalizedQuery));
   });
 }

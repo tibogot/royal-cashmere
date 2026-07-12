@@ -12,7 +12,7 @@ export default function PanelCloseButton({
       type="button"
       onClick={onClose}
       aria-label={label}
-      className="flex size-8 items-center justify-center transition-opacity hover:opacity-60"
+      className="flex size-8 cursor-pointer items-center justify-center text-black transition-opacity hover:opacity-60"
     >
       <svg
         width="14"
