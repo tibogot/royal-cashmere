@@ -5,7 +5,7 @@ import { ctaLinkClassName } from "@/lib/ui";
 import FeaturedProducts from "@/components/FeaturedProducts";
 import Faq from "@/components/Faq";
 // import HeroProductGlass from "@/components/HeroProductGlass";
-import HeroBottomLogo from "@/components/HeroBottomLogo";
+// import HeroBottomLogo from "@/components/HeroBottomLogo";
 import HomeHeroBackground from "@/components/HomeHeroBackground";
 // import MouseDrivenGallery from "@/components/MouseDrivenGallery";
 import ProductImageBanner from "@/components/ProductImageBanner";
@@ -14,6 +14,35 @@ import { getFeaturedProducts } from "@/lib/shopify/products";
 import FadeInImage from "@/components/FadeInImage";
 import Link from "next/link";
 import { preload } from "react-dom";
+
+// Order of the first homepage carousel, by product handle. Shopify returns
+// newest first; anything not listed here keeps that order after these.
+const CAROUSEL_ORDER = [
+  "robe-droite",
+  "poncho",
+  "robe-de-ligne-a",
+  "pull-col-v",
+  "pull-torsade",
+  "pull-ouvert",
+  "jupe-longue",
+  "pull-ouvert-copy",
+  "echarpes-unies",
+  "chales-tissees-avec-franges",
+  "chales-a-motif-tresse",
+  "chales",
+  "bonnet-reversible",
+  "bonnet-cotele",
+  "mitaines",
+  "mitaines-longues",
+];
+
+function sortByCarouselOrder<T extends { handle: string }>(items: T[]): T[] {
+  const rank = (handle: string) => {
+    const index = CAROUSEL_ORDER.indexOf(handle);
+    return index === -1 ? CAROUSEL_ORDER.length : index;
+  };
+  return [...items].sort((a, b) => rank(a.handle) - rank(b.handle));
+}
 
 export const metadata = createPageMetadata({
   description:
@@ -26,7 +55,7 @@ export default async function Home() {
 
   // Fetch the featured products once and slice them for each section below,
   // instead of issuing a separate Shopify request per <FeaturedProducts />.
-  const products = await getFeaturedProducts(12);
+  const products = await getFeaturedProducts(16);
   const bannerProduct = products[6] ?? products[0];
   // If you re-enable <HeroProductGlass /> below, fetch its product here:
   // const heroProduct = await getProductByHandle("pull-col-v");
@@ -43,7 +72,7 @@ export default async function Home() {
           Bruxelles
         </h1>
         <HomeHeroBackground />
-        <HeroBottomLogo priority raised />
+        {/* <HeroBottomLogo priority raised /> */}
         {/* <Image
           src="/images/nick-karvounis.jpg"
           alt="Boutique Royal Cashmere — cachemire d'exception à Bruxelles"
@@ -68,9 +97,14 @@ export default async function Home() {
         </Link>
       </section>
 
+      <FeaturedProducts products={sortByCarouselOrder(products)} limit={16} />
+
       <section className="bg-white px-4 py-6 md:px-8 md:py-10">
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6">
-          <div className="relative aspect-5/4 overflow-hidden md:aspect-square">
+          <Link
+            href={routes.shop}
+            className="group relative block aspect-5/4 cursor-pointer overflow-hidden md:aspect-square"
+          >
             <FadeInImage
               src="/images/Frame 63.png"
               alt="Cachemire Royal Cashmere"
@@ -78,8 +112,19 @@ export default async function Home() {
               className="object-cover"
               sizes="(max-width: 767px) 100vw, 50vw"
             />
-          </div>
-          <div className="relative aspect-5/4 overflow-hidden md:aspect-square">
+            <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-6 p-4 text-center md:gap-8 md:p-8">
+              <h3 className="font-serif text-4xl uppercase leading-[1.1] text-white md:text-6xl">
+                Summer Sales
+              </h3>
+              <span className={`${ctaLinkClassName} text-white!`}>
+                Voir les soldes
+              </span>
+            </div>
+          </Link>
+          <Link
+            href={routes.shop}
+            className="group relative block aspect-5/4 cursor-pointer overflow-hidden md:aspect-square"
+          >
             <FadeInImage
               src="/images/cesar-la-rosa-HbAddptme1Q-unsplash.jpg"
               alt="Cachemire Royal Cashmere — Mongolie"
@@ -87,16 +132,42 @@ export default async function Home() {
               className="object-cover"
               sizes="(max-width: 767px) 100vw, 50vw"
             />
+            <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-6 p-4 text-center md:gap-8 md:p-8">
+              <h3 className="font-serif text-4xl uppercase leading-[1.1] text-white md:text-6xl">
+                Bestsellers
+              </h3>
+              <span className={`${ctaLinkClassName} text-white!`}>
+                Voir les best-sellers
+              </span>
+            </div>
+          </Link>
+        </div>
+      </section>
+
+      <section className="bg-white px-4 py-6 text-left text-black md:flex md:px-8 md:py-10">
+        <div className="hidden md:block md:w-2/3" aria-hidden="true" />
+        <div className="md:w-1/3">
+          <div className="max-w-xl">
+            <p className="font-serif text-base leading-relaxed text-black/80 md:text-lg">
+              Royal Cashmere, boutique de cachemire d&apos;exception à Uccle, à
+              Bruxelles. Nous proposons des pièces exquises en cachemire et en
+              soie, issues des paysages intemporels de la steppe mongole, et
+              sélectionnées pour leur pureté et leur douceur incomparable.
+            </p>
+            <Link
+              href={routes.about}
+              className={`${ctaLinkClassName} mt-8 inline-block`}
+            >
+              Découvrir notre histoire
+            </Link>
           </div>
         </div>
       </section>
 
-      <FeaturedProducts products={products} />
+      <FeaturedProducts products={products} limit={4} offset={4} />
 
       <div className="relative z-10 bg-white">
         <ProductShowcase />
-
-        <FeaturedProducts products={products} limit={4} offset={4} />
 
         <section className="w-full">
           {bannerProduct ? (
@@ -104,6 +175,10 @@ export default async function Home() {
               product={bannerProduct}
               imageSrc="/images/Desktop - 20.jpg"
               imageAlt="Atelier Royal Cashmere"
+              eyebrow="Notre savoir-faire"
+              title="Le cachemire, dans sa plus belle matière"
+              description="Sur les hauts plateaux de Mongolie, le cachemire naît d'un lien ancestral entre les éleveurs et leurs troupeaux. Nous sélectionnons chaque fibre à la source, puis nos pièces sont pensées à Bruxelles avec une attention méticuleuse, pour une douceur incomparable et un vestiaire intemporel, conçu pour durer."
+              ctaLabel="Découvrir la pièce"
             />
           ) : null}
         </section>

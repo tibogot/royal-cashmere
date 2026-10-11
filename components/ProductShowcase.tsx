@@ -16,6 +16,7 @@ export default async function ProductShowcase() {
             key={collection.id}
             collection={collection}
             className="w-full min-w-0"
+            overlay
             imageSizes="(max-width: 768px) 100vw, 33vw"
           />
         ))}

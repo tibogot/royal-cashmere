@@ -4,6 +4,7 @@ import {
   SHOPIFY_IMAGE_WIDTH,
 } from "@/lib/shopify/image";
 import { routes } from "@/lib/routes";
+import { ctaLinkClassName } from "@/lib/ui";
 import type { ShopifyCollection } from "@/lib/shopify/queries";
 import { Draggable } from "gsap/Draggable";
 import FadeInImage from "@/components/FadeInImage";
@@ -17,6 +18,8 @@ type CollectionCarouselCardProps = {
   preventClickAfterDrag?: boolean;
   className?: string;
   imageSizes?: string;
+  // Title and CTA sit on the image, bottom-centre, instead of beside it.
+  overlay?: boolean;
 };
 
 export default function CollectionCarouselCard({
@@ -24,6 +27,7 @@ export default function CollectionCarouselCard({
   preventClickAfterDrag = false,
   className = collectionCarouselCardWidthClass,
   imageSizes = "(max-width: 640px) 78vw, (max-width: 1024px) 352px, 512px",
+  overlay = false,
 }: CollectionCarouselCardProps) {
   const imageUrl = collection.imageUrl ?? "";
   const resolvedSrc = shopifyImageUrl(imageUrl, SHOPIFY_IMAGE_WIDTH.card);
@@ -43,17 +47,19 @@ export default function CollectionCarouselCard({
         className="group flex flex-col"
         onClick={handleLinkClick}
       >
-        <div className="order-1 mb-3 md:order-2 md:mb-0 md:mt-4">
-          <h3 className="text-left font-serif text-xl font-medium text-black md:text-2xl">
-            {collection.title}
-          </h3>
+        {!overlay ? (
+          <div className="order-1 mb-3 md:order-2 md:mb-0 md:mt-4">
+            <h3 className="text-left font-serif text-xl font-medium text-black md:text-2xl">
+              {collection.title}
+            </h3>
 
-          <span className="animated-underline mt-2 hidden w-fit text-xs uppercase tracking-wide text-black group-hover:block md:mt-3">
-            Découvrir
-          </span>
-        </div>
+            <span className="animated-underline mt-2 hidden w-fit text-xs uppercase tracking-wide text-black group-hover:block md:mt-3">
+              Découvrir
+            </span>
+          </div>
+        ) : null}
 
-        <div className="relative order-2 aspect-3/4 overflow-hidden md:order-1">
+        <div className="relative order-2 aspect-3/4 cursor-pointer overflow-hidden md:order-1">
           <FadeInImage
             src={resolvedSrc}
             alt={collection.imageAlt ?? collection.title}
@@ -62,6 +68,16 @@ export default function CollectionCarouselCard({
             className="object-cover group-hover:opacity-95"
             sizes={imageSizes}
           />
+          {overlay ? (
+            <div className="absolute inset-x-0 bottom-0 z-10 flex flex-col items-center gap-6 p-4 text-center md:gap-8 md:p-8">
+              <h3 className="font-serif text-4xl uppercase leading-[1.1] text-white xl:text-5xl">
+                {collection.title}
+              </h3>
+              <span className={`${ctaLinkClassName} text-white!`}>
+                Découvrir
+              </span>
+            </div>
+          ) : null}
         </div>
       </Link>
     </article>

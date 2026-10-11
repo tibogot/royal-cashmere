@@ -1,6 +1,6 @@
 import ProductColorSwatches from "@/components/ProductColorSwatches";
-import ProductImageWishlist from "@/components/ProductImageWishlist";
 import ShopifyProductImage from "@/components/ShopifyProductImage";
+import WishlistHeartButton from "@/components/WishlistHeartButton";
 import { routes } from "@/lib/routes";
 import { Draggable } from "gsap/Draggable";
 import Link from "next/link";
@@ -46,20 +46,24 @@ export default function ProductCard({
         className="group block"
         onClick={handleLinkClick}
       >
-        <ProductImageWishlist product={product}>
-          <ShopifyProductImage
-            src={product.imageUrl}
-            alt={product.imageAlt}
-            sizes={imageSizes}
-            className="aspect-4/5"
-            imageClassName="transition-opacity group-hover:opacity-90"
-          />
-        </ProductImageWishlist>
+        <ShopifyProductImage
+          src={product.imageUrl}
+          alt={product.imageAlt}
+          sizes={imageSizes}
+          className="aspect-4/5"
+          imageClassName="transition-opacity group-hover:opacity-90"
+        />
 
         <div className="mt-2 space-y-1 text-left">
-          <h3 className="font-sans text-sm font-medium uppercase text-black">
-            {product.title}
-          </h3>
+          <div className="flex items-start justify-between gap-2">
+            <h3 className="font-sans text-sm font-medium uppercase text-black">
+              {product.title}
+            </h3>
+            <WishlistHeartButton
+              handle={product.handle}
+              className="-my-1 -mr-1.5 shrink-0"
+            />
+          </div>
           <p className="text-sm font-normal text-neutral-800">
             {product.price}
           </p>
