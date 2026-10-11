@@ -8,6 +8,7 @@ import { ctaLinkClassName } from "@/lib/ui";
 import type { ShopifyCollection } from "@/lib/shopify/queries";
 import { Draggable } from "gsap/Draggable";
 import FadeInImage from "@/components/FadeInImage";
+import ScrollShrinkImage from "@/components/ScrollShrinkImage";
 import Link from "next/link";
 
 export const collectionCarouselCardWidthClass =
@@ -60,14 +61,27 @@ export default function CollectionCarouselCard({
         ) : null}
 
         <div className="relative order-2 aspect-3/4 cursor-pointer overflow-hidden md:order-1">
-          <FadeInImage
-            src={resolvedSrc}
-            alt={collection.imageAlt ?? collection.title}
-            fill
-            unoptimized={isShopifyCdnUrl(imageUrl)}
-            className="object-cover group-hover:opacity-95"
-            sizes={imageSizes}
-          />
+          {overlay ? (
+            <ScrollShrinkImage>
+              <FadeInImage
+                src={resolvedSrc}
+                alt={collection.imageAlt ?? collection.title}
+                fill
+                unoptimized={isShopifyCdnUrl(imageUrl)}
+                className="object-cover group-hover:opacity-95"
+                sizes={imageSizes}
+              />
+            </ScrollShrinkImage>
+          ) : (
+            <FadeInImage
+              src={resolvedSrc}
+              alt={collection.imageAlt ?? collection.title}
+              fill
+              unoptimized={isShopifyCdnUrl(imageUrl)}
+              className="object-cover group-hover:opacity-95"
+              sizes={imageSizes}
+            />
+          )}
           {overlay ? (
             <div className="absolute inset-x-0 bottom-0 z-10 flex flex-col items-center gap-6 p-4 text-center md:gap-8 md:p-8">
               <h3 className="font-serif text-4xl uppercase leading-[1.1] text-white xl:text-5xl">

@@ -12,8 +12,13 @@ import ProductImageBanner from "@/components/ProductImageBanner";
 import ProductShowcase from "@/components/ProductShowcase";
 import { getFeaturedProducts } from "@/lib/shopify/products";
 import FadeInImage from "@/components/FadeInImage";
+import ScrollShrinkImage from "@/components/ScrollShrinkImage";
 import Link from "next/link";
 import { preload } from "react-dom";
+
+// Handle of the "new in" Shopify collection the hero CTA points to. Create a
+// collection with this handle in Shopify and the link starts working.
+const NEW_IN_COLLECTION_HANDLE = "nouveautes";
 
 // Order of the first homepage carousel, by product handle. Shopify returns
 // newest first; anything not listed here keeps that order after these.
@@ -73,6 +78,14 @@ export default async function Home() {
         </h1>
         <HomeHeroBackground />
         {/* <HeroBottomLogo priority raised /> */}
+        <div className="absolute inset-x-0 bottom-0 z-10 flex justify-center p-4 md:p-8">
+          <Link
+            href={routes.collectionByHandle(NEW_IN_COLLECTION_HANDLE)}
+            className={`${ctaLinkClassName} text-white!`}
+          >
+            Voir les nouveautés
+          </Link>
+        </div>
         {/* <Image
           src="/images/nick-karvounis.jpg"
           alt="Boutique Royal Cashmere — cachemire d'exception à Bruxelles"
@@ -105,16 +118,18 @@ export default async function Home() {
             href={routes.shop}
             className="group relative block aspect-5/4 cursor-pointer overflow-hidden md:aspect-square"
           >
-            <FadeInImage
-              src="/images/Frame 63.png"
-              alt="Cachemire Royal Cashmere"
-              fill
-              className="object-cover"
-              sizes="(max-width: 767px) 100vw, 50vw"
-            />
+            <ScrollShrinkImage>
+              <FadeInImage
+                src="/images/Frame 63.png"
+                alt="Cachemire Royal Cashmere"
+                fill
+                className="object-cover"
+                sizes="(max-width: 767px) 100vw, 50vw"
+              />
+            </ScrollShrinkImage>
             <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-6 p-4 text-center md:gap-8 md:p-8">
-              <h3 className="font-serif text-4xl uppercase leading-[1.1] text-white md:text-6xl">
-                Summer Sales
+              <h3 className="font-serif text-5xl uppercase leading-[1.1] text-white md:text-7xl">
+                Soldes
               </h3>
               <span className={`${ctaLinkClassName} text-white!`}>
                 Voir les soldes
@@ -125,15 +140,17 @@ export default async function Home() {
             href={routes.shop}
             className="group relative block aspect-5/4 cursor-pointer overflow-hidden md:aspect-square"
           >
-            <FadeInImage
-              src="/images/cesar-la-rosa-HbAddptme1Q-unsplash.jpg"
-              alt="Cachemire Royal Cashmere — Mongolie"
-              fill
-              className="object-cover"
-              sizes="(max-width: 767px) 100vw, 50vw"
-            />
+            <ScrollShrinkImage>
+              <FadeInImage
+                src="/images/cesar-la-rosa-HbAddptme1Q-unsplash.jpg"
+                alt="Cachemire Royal Cashmere — Mongolie"
+                fill
+                className="object-cover"
+                sizes="(max-width: 767px) 100vw, 50vw"
+              />
+            </ScrollShrinkImage>
             <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-6 p-4 text-center md:gap-8 md:p-8">
-              <h3 className="font-serif text-4xl uppercase leading-[1.1] text-white md:text-6xl">
+              <h3 className="font-serif text-5xl uppercase leading-[1.1] text-white md:text-7xl">
                 Bestsellers
               </h3>
               <span className={`${ctaLinkClassName} text-white!`}>
@@ -149,10 +166,10 @@ export default async function Home() {
         <div className="md:w-1/3">
           <div className="max-w-xl">
             <p className="font-serif text-base leading-relaxed text-black/80 md:text-lg">
-              Royal Cashmere, boutique de cachemire d&apos;exception à Uccle, à
-              Bruxelles. Nous proposons des pièces exquises en cachemire et en
-              soie, issues des paysages intemporels de la steppe mongole, et
-              sélectionnées pour leur pureté et leur douceur incomparable.
+              Royal Cashmere est une boutique de cachemire installée à Uccle,
+              à Bruxelles. Notre propriétaire est mongole, et nos pièces sont
+              réalisées dans le meilleur cachemire de Mongolie : doux, chaud et
+              fait pour durer.
             </p>
             <Link
               href={routes.about}
@@ -166,22 +183,69 @@ export default async function Home() {
 
       <FeaturedProducts products={products} limit={4} offset={4} />
 
+      <section className="w-full">
+        {bannerProduct ? (
+          <ProductImageBanner
+            product={bannerProduct}
+            imageSrc="/images/fullwidthhome.webp"
+            imageAlt="Atelier Royal Cashmere"
+            eyebrow="Notre histoire"
+            title="Le meilleur cachemire de Mongolie"
+            description="Le cachemire de Mongolie est réputé parmi les plus fins au monde. Notre propriétaire, mongole elle-même, a choisi de le faire découvrir à Bruxelles : des pièces d'une douceur rare, pensées pour vous accompagner longtemps. À retrouver en boutique à Uccle comme en ligne."
+            ctaLabel="Découvrir la pièce"
+          />
+        ) : null}
+      </section>
+
+      <section className="bg-white px-4 py-6 md:px-8 md:py-10">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6">
+          <Link
+            href={routes.shop}
+            aria-label="Voir les nouveautés"
+            className="group relative block aspect-5/4 cursor-pointer overflow-hidden md:aspect-3/5"
+          >
+            <FadeInImage
+              src="/images/Frame 64.png"
+              alt="Nouveautés Royal Cashmere"
+              fill
+              className="object-cover"
+              sizes="(max-width: 767px) 100vw, 50vw"
+            />
+          </Link>
+          <div className="flex flex-col gap-10 md:px-8">
+            <div className="md:flex-1">
+              <div className="flex flex-col items-start justify-start py-6 text-left text-black md:sticky md:top-24 md:py-0">
+                <p className="max-w-xl font-serif text-base leading-relaxed text-black/80 md:text-lg">
+                  Passez nous voir à la boutique, chaussée de Waterloo 1251B à
+                  Uccle. Touchez la matière, essayez les pièces et laissez-vous
+                  conseiller : rien ne remplace le toucher d&apos;un vrai
+                  cachemire de Mongolie.
+                </p>
+                <Link
+                  href={routes.contact}
+                  className={`${ctaLinkClassName} mt-8 inline-block`}
+                >
+                  Nous rendre visite
+                </Link>
+              </div>
+            </div>
+            <div className="relative aspect-4/5 w-2/3 self-end overflow-hidden md:w-1/2">
+              <ScrollShrinkImage>
+                <FadeInImage
+                  src="/images/Frame 54.jpg"
+                  alt="Boutique Royal Cashmere à Uccle"
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 767px) 66vw, 25vw"
+                />
+              </ScrollShrinkImage>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <div className="relative z-10 bg-white">
         <ProductShowcase />
-
-        <section className="w-full">
-          {bannerProduct ? (
-            <ProductImageBanner
-              product={bannerProduct}
-              imageSrc="/images/Desktop - 20.jpg"
-              imageAlt="Atelier Royal Cashmere"
-              eyebrow="Notre savoir-faire"
-              title="Le cachemire, dans sa plus belle matière"
-              description="Sur les hauts plateaux de Mongolie, le cachemire naît d'un lien ancestral entre les éleveurs et leurs troupeaux. Nous sélectionnons chaque fibre à la source, puis nos pièces sont pensées à Bruxelles avec une attention méticuleuse, pour une douceur incomparable et un vestiaire intemporel, conçu pour durer."
-              ctaLabel="Découvrir la pièce"
-            />
-          ) : null}
-        </section>
 
         {/* <CategoryShowcase /> */}
 

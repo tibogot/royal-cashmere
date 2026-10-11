@@ -40,20 +40,24 @@ export default function ProductImageBanner({
         />
       </ProductImageWishlist>
 
-      <div className="absolute inset-x-0 bottom-0 z-10 bg-linear-to-t from-black/50 to-transparent px-4 pt-4 pb-12 text-left text-white md:px-8 md:pt-8 md:pb-20">
-        <p className="mb-4 font-sans text-sm font-medium uppercase">{eyebrow}</p>
-        <h2 className="max-w-3xl font-serif text-2xl uppercase leading-[1.1] md:text-4xl">
-          {title}
-        </h2>
-        <p className="mt-6 max-w-xl font-serif text-base leading-relaxed text-white/80 md:text-lg">
-          {description}
-        </p>
-        <Link
-          href={`/products/${product.handle}`}
-          className={`${ctaLinkClassName} mt-8 inline-block text-white!`}
-        >
-          {ctaLabel}
-        </Link>
+      {/* Gradient + text layer covers the section; the text inside is sticky,
+          so it starts at the top and stays pinned while the section scrolls past. */}
+      <div className="pointer-events-none absolute inset-0 z-10 bg-linear-to-b from-black/50 to-transparent p-4 text-left text-white md:p-8">
+        <div className="pointer-events-auto sticky top-24 w-fit">
+          <p className="mb-4 font-sans text-sm font-medium uppercase">{eyebrow}</p>
+          <h2 className="max-w-3xl font-serif text-2xl leading-[1.1] md:text-4xl">
+            {title}
+          </h2>
+          <p className="mt-6 max-w-xl font-serif text-base leading-relaxed text-white/80 md:text-lg">
+            {description}
+          </p>
+          <Link
+            href={`/products/${product.handle}`}
+            className={`${ctaLinkClassName} mt-8 inline-block text-white!`}
+          >
+            {ctaLabel}
+          </Link>
+        </div>
       </div>
     </div>
   );
