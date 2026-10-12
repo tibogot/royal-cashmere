@@ -54,53 +54,53 @@ export default async function JournalArticlePage({
   return (
     <main className="w-full">
       <article>
-        <header className="bg-white px-4 pt-24 pb-12 text-black md:px-8 md:pt-28 md:pb-16">
-          <div className="mx-auto max-w-3xl">
-            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] uppercase tracking-wide text-black/50">
-              {category ? <span>{category}</span> : null}
-              {category && article.publishedAt ? (
+        <header className="bg-white px-4 pt-24 pb-10 text-center text-black md:px-8 md:pt-28 md:pb-16">
+          <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-[11px] uppercase tracking-wide text-black/50">
+            {category ? <span>{category}</span> : null}
+            {category && article.publishedAt ? (
+              <span aria-hidden="true">·</span>
+            ) : null}
+            {article.publishedAt ? (
+              <time dateTime={article.publishedAt}>
+                {formatArticleDate(article.publishedAt)}
+              </time>
+            ) : null}
+            {article.author?.name ? (
+              <>
                 <span aria-hidden="true">·</span>
-              ) : null}
-              {article.publishedAt ? (
-                <time dateTime={article.publishedAt}>
-                  {formatArticleDate(article.publishedAt)}
-                </time>
-              ) : null}
-              {article.author?.name ? (
-                <>
-                  <span aria-hidden="true">·</span>
-                  <span>{article.author.name}</span>
-                </>
-              ) : null}
-            </div>
-
-            <h1 className="mt-6 font-serif text-4xl leading-[1.12] md:text-6xl">
-              {article.title}
-            </h1>
-
-            {article.excerpt ? (
-              <p className="mt-6 font-serif text-base leading-relaxed text-black/70 md:text-lg">
-                {article.excerpt}
-              </p>
+                <span>{article.author.name}</span>
+              </>
             ) : null}
           </div>
+
+          <h1 className="mx-auto mt-6 max-w-5xl font-serif text-5xl uppercase leading-[1.12] md:max-w-6xl md:text-8xl md:leading-[1.08]">
+            {article.title}
+          </h1>
         </header>
 
         {article.mainImage ? (
-          <div className="relative mx-auto aspect-4/5 w-full max-w-4xl bg-neutral-100 md:aspect-16/10">
+          <div className="relative h-[70svh] w-full bg-neutral-100 md:h-[80svh]">
             <SanityImage
               image={article.mainImage}
               alt={article.mainImage.alt ?? article.title}
-              sizes="(max-width: 896px) 100vw, 896px"
+              sizes="100vw"
+              width={2400}
               preload
             />
           </div>
         ) : null}
 
-        {article.body?.length ? (
+        {article.excerpt || article.body?.length ? (
           <section className="bg-white px-4 py-16 text-black md:px-8 md:py-20">
             <div className="mx-auto max-w-2xl">
-              <PortableTextContent value={article.body} />
+              {article.excerpt ? (
+                <p className="mb-10 font-serif text-lg leading-relaxed text-black/70 md:text-xl">
+                  {article.excerpt}
+                </p>
+              ) : null}
+              {article.body?.length ? (
+                <PortableTextContent value={article.body} />
+              ) : null}
             </div>
           </section>
         ) : null}

@@ -8,6 +8,8 @@ type SanityImageProps = {
   sizes?: string;
   className?: string;
   preload?: boolean;
+  // Source width requested from the Sanity CDN; raise for full-bleed images.
+  width?: number;
 };
 
 export default function SanityImage({
@@ -16,10 +18,11 @@ export default function SanityImage({
   sizes = "100vw",
   className = "object-cover",
   preload = false,
+  width = 1600,
 }: SanityImageProps) {
   if (!image.asset) return null;
 
-  const imageUrl = urlFor(image).width(1600).auto("format").url();
+  const imageUrl = urlFor(image).width(width).auto("format").url();
 
   return (
     <FadeInImage

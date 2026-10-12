@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useSyncExternalStore } from "react";
 
 const VIDEO_DESKTOP =
@@ -48,34 +49,47 @@ function getServerShouldLoadVideoSnapshot() {
 export default function HomeHeroBackground() {
   const shouldLoadVideo = useShouldLoadVideo();
 
-  if (!shouldLoadVideo) {
-    return (
-      <div
-        className="absolute inset-0 z-0 bg-cover bg-center"
-        style={{ backgroundImage: `url(${POSTER})` }}
-        aria-hidden="true"
-      />
-    );
-  }
-
+  // The poster is a real <Image>, not a CSS background: it gets resized and
+  // preloaded by Next, so it is what the visitor sees while the video loads.
+  // Plain Image (no fade) so it never delays first paint. The video has no
+  // `poster` attribute of its own; until it has a frame it is transparent and
+  // this image shows through underneath.
   return (
     <div className="absolute inset-0 z-0" aria-hidden="true">
-      <video
-        autoPlay
-        loop
-        muted
-        playsInline
-        preload="metadata"
-        poster={POSTER}
-        className="absolute inset-0 h-full w-full object-cover"
-        // Keep this: forces the video off Chrome's GPU overlay plane (which
-        // desyncs from Lenis's scroll and causes jitter). The filter is
-        // imperceptible but required — translateZ/clip-path don't work.
-        style={{ filter: "brightness(1.0001)" }}
-      >
-        <source src={VIDEO_MOBILE} type="video/mp4" media="(max-width: 767px)" />
-        <source src={VIDEO_DESKTOP} type="video/mp4" media="(min-width: 768px)" />
-      </video>
+      <Image
+        src={POSTER}
+        alt=""
+        fill
+        preload
+        className="object-cover"
+        sizes="100vw"
+        quality={75}
+      />
+      {shouldLoadVideo ? (
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="metadata"
+          className="absolute inset-0 h-full w-full object-cover"
+          // Keep this: forces the video off Chrome's GPU overlay plane (which
+          // desyncs from Lenis's scroll and causes jitter). The filter is
+          // imperceptible but required — translateZ/clip-path don't work.
+          style={{ filter: "brightness(1.0001)" }}
+        >
+          <source
+            src={VIDEO_MOBILE}
+            type="video/mp4"
+            media="(max-width: 767px)"
+          />
+          <source
+            src={VIDEO_DESKTOP}
+            type="video/mp4"
+            media="(min-width: 768px)"
+          />
+        </video>
+      ) : null}
     </div>
   );
 }

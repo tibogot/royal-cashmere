@@ -169,7 +169,10 @@ export default async function Home() {
               Royal Cashmere est une boutique de cachemire installée à Uccle,
               à Bruxelles. Notre propriétaire est mongole, et nos pièces sont
               réalisées dans le meilleur cachemire de Mongolie : doux, chaud et
-              fait pour durer.
+              fait pour durer. Pulls, robes, ponchos, écharpes, châles,
+              bonnets et mitaines : chaque pièce est choisie pour sa finesse,
+              sa douceur et sa tenue dans le temps. Vous les retrouvez à la
+              boutique comme en ligne, avec la livraison en Europe.
             </p>
             <Link
               href={routes.about}
