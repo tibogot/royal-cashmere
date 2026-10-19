@@ -37,8 +37,8 @@ function buildPlaceholderVariants(
   const variants: ProductVariant[] = [];
   const alternateImage =
     index % 2 === 0
-      ? "/images/unsplash_mjtLS0CDuIQ-1.png"
-      : "/images/unsplash_mjtLS0CDuIQ.png";
+      ? "/images/placeholders/produit-2.png"
+      : "/images/placeholders/produit.png";
 
   for (const color of PLACEHOLDER_OPTIONS[0].values) {
     for (const size of PLACEHOLDER_OPTIONS[1].values) {
@@ -63,7 +63,7 @@ const placeholderCatalog: Omit<ShopifyProduct, "id" | "colorSwatches">[] = [
   {
     title: "Pull ouvert",
     handle: "pull-ouvert",
-    imageUrl: "/images/unsplash_mjtLS0CDuIQ.png",
+    imageUrl: "/images/placeholders/produit.png",
     imageAlt: "Pull ouvert en cachemire",
     price: "319,00 €",
     colorCount: 5,
@@ -73,7 +73,7 @@ const placeholderCatalog: Omit<ShopifyProduct, "id" | "colorSwatches">[] = [
   {
     title: "Pantalon long",
     handle: "pantalon-long",
-    imageUrl: "/images/unsplash_mjtLS0CDuIQ-1.png",
+    imageUrl: "/images/placeholders/produit-2.png",
     imageAlt: "Pantalon long en cachemire",
     price: "369,00 €",
     colorCount: 3,
@@ -83,7 +83,7 @@ const placeholderCatalog: Omit<ShopifyProduct, "id" | "colorSwatches">[] = [
   {
     title: "Robe droite",
     handle: "robe-droite",
-    imageUrl: "/images/unsplash_mjtLS0CDuIQ.png",
+    imageUrl: "/images/placeholders/produit.png",
     imageAlt: "Robe droite en cachemire",
     price: "459,00 €",
     colorCount: 3,
@@ -93,7 +93,7 @@ const placeholderCatalog: Omit<ShopifyProduct, "id" | "colorSwatches">[] = [
   {
     title: "Pull col V",
     handle: "pull-col-v",
-    imageUrl: "/images/unsplash_mjtLS0CDuIQ-1.png",
+    imageUrl: "/images/placeholders/produit-2.png",
     imageAlt: "Pull col V en cachemire",
     price: "359,00 €",
     colorCount: 6,
@@ -103,7 +103,7 @@ const placeholderCatalog: Omit<ShopifyProduct, "id" | "colorSwatches">[] = [
   {
     title: "Pull torsadé",
     handle: "pull-torsade",
-    imageUrl: "/images/unsplash_mjtLS0CDuIQ.png",
+    imageUrl: "/images/placeholders/produit.png",
     imageAlt: "Pull torsadé en cachemire",
     price: "499,00 €",
     colorCount: 4,
@@ -113,7 +113,7 @@ const placeholderCatalog: Omit<ShopifyProduct, "id" | "colorSwatches">[] = [
   {
     title: "Jupe longue",
     handle: "jupe-longue",
-    imageUrl: "/images/unsplash_mjtLS0CDuIQ-1.png",
+    imageUrl: "/images/placeholders/produit-2.png",
     imageAlt: "Jupe longue en cachemire",
     price: "519,00 €",
     colorCount: 3,
@@ -123,7 +123,7 @@ const placeholderCatalog: Omit<ShopifyProduct, "id" | "colorSwatches">[] = [
   {
     title: "Poncho",
     handle: "poncho",
-    imageUrl: "/images/unsplash_mjtLS0CDuIQ.png",
+    imageUrl: "/images/placeholders/produit.png",
     imageAlt: "Poncho en cachemire",
     price: "489,00 €",
     colorCount: 3,
@@ -133,7 +133,7 @@ const placeholderCatalog: Omit<ShopifyProduct, "id" | "colorSwatches">[] = [
   {
     title: "Écharpes unies",
     handle: "echarpes-unies",
-    imageUrl: "/images/unsplash_mjtLS0CDuIQ-1.png",
+    imageUrl: "/images/placeholders/produit-2.png",
     imageAlt: "Écharpe unie en cachemire",
     price: "219,00 €",
     colorCount: 5,

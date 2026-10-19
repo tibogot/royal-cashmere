@@ -1,4 +1,9 @@
 import { createPageMetadata } from "@/lib/seo";
+import {
+  BESTSELLERS_COLLECTION_HANDLE,
+  NEW_IN_COLLECTION_HANDLE,
+  SALE_COLLECTION_HANDLE,
+} from "@/lib/collection-handles";
 import { routes } from "@/lib/routes";
 import { ctaLinkClassName } from "@/lib/ui";
 // import CategoryShowcase from "@/components/CategoryShowcase";
@@ -13,12 +18,24 @@ import ProductShowcase from "@/components/ProductShowcase";
 import { getFeaturedProducts } from "@/lib/shopify/products";
 import FadeInImage from "@/components/FadeInImage";
 import ScrollShrinkImage from "@/components/ScrollShrinkImage";
+import SplitTextReveal from "@/components/SplitTextReveal";
 import Link from "next/link";
 import { preload } from "react-dom";
+import saleImage from "@/public/images/home/soldes.webp";
+import bestsellersImage from "@/public/images/home/bestsellers.webp";
+import boutiqueVisitImage from "@/public/images/home/visite-boutique.webp";
+import newInImage from "@/public/images/home/nouveautes.webp";
+import bannerImage from "@/public/images/home/banniere-histoire.webp";
 
-// Handle of the "new in" Shopify collection the hero CTA points to. Create a
-// collection with this handle in Shopify and the link starts working.
-const NEW_IN_COLLECTION_HANDLE = "nouveautes";
+// Below-the-fold editorial photos. Static imports give each a blur
+// placeholder (shown instantly) and an immutable cache URL; eager + low
+// priority starts the downloads right after the hero instead of waiting for
+// the visitor to scroll near them, so a fast scroll doesn't land on blanks.
+const editorialImageProps = {
+  placeholder: "blur",
+  loading: "eager",
+  fetchPriority: "low",
+} as const;
 
 // Order of the first homepage carousel, by product handle. Shopify returns
 // newest first; anything not listed here keeps that order after these.
@@ -87,7 +104,7 @@ export default async function Home() {
           </Link>
         </div>
         {/* <Image
-          src="/images/nick-karvounis.jpg"
+          src="/images/_archive/nick-karvounis.jpg"
           alt="Boutique Royal Cashmere — cachemire d'exception à Bruxelles"
           fill
           priority
@@ -102,9 +119,12 @@ export default async function Home() {
       </section>
 
       <section className="bg-white px-4 pt-6 pb-6 text-center text-black md:px-8 md:pt-10 md:pb-10">
-        <h2 className="mx-auto mt-8 max-w-5xl font-serif mb-10 text-5xl uppercase leading-[1.12] md:mt-10 md:max-w-6xl md:text-8xl md:leading-[1.08]">
+        <SplitTextReveal
+          as="h2"
+          className="mx-auto mt-8 max-w-5xl font-serif mb-10 text-5xl uppercase leading-[1.12] md:mt-10 md:max-w-6xl md:text-8xl md:leading-[1.08]"
+        >
           Le cachemire d&apos;exception venu de Mongolie
-        </h2>
+        </SplitTextReveal>
         <Link href={routes.shop} className={`${ctaLinkClassName} inline-block`}>
           Voir les nouveautés
         </Link>
@@ -115,47 +135,63 @@ export default async function Home() {
       <section className="bg-white px-4 py-6 md:px-8 md:py-10">
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6">
           <Link
-            href={routes.shop}
-            className="group relative block aspect-5/4 cursor-pointer overflow-hidden md:aspect-square"
+            href={routes.collectionByHandle(SALE_COLLECTION_HANDLE)}
+            className="group relative block aspect-5/4 cursor-pointer overflow-hidden md:aspect-4/5"
           >
-            <ScrollShrinkImage>
+            <ScrollShrinkImage reveal>
               <FadeInImage
-                src="/images/Frame 63.png"
-                alt="Cachemire Royal Cashmere"
+                src={saleImage}
+                {...editorialImageProps}
+                alt="Pull en cachemire Royal Cashmere"
                 fill
-                className="object-cover"
+                className="object-cover object-[50%_15%] md:object-center"
                 sizes="(max-width: 767px) 100vw, 50vw"
               />
             </ScrollShrinkImage>
             <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-6 p-4 text-center md:gap-8 md:p-8">
-              <h3 className="font-serif text-5xl uppercase leading-[1.1] text-white md:text-7xl">
+              <SplitTextReveal
+                as="h3"
+                triggerClosest="a"
+                delay={0.5}
+                className="font-serif text-5xl uppercase leading-[1.1] text-white md:text-7xl"
+              >
                 Soldes
-              </h3>
-              <span className={`${ctaLinkClassName} text-white!`}>
-                Voir les soldes
-              </span>
+              </SplitTextReveal>
+              <SplitTextReveal triggerClosest="a" delay={0.8} splitLines={false}>
+                <span className={`${ctaLinkClassName} text-white!`}>
+                  Voir les soldes
+                </span>
+              </SplitTextReveal>
             </div>
           </Link>
           <Link
-            href={routes.shop}
-            className="group relative block aspect-5/4 cursor-pointer overflow-hidden md:aspect-square"
+            href={routes.collectionByHandle(BESTSELLERS_COLLECTION_HANDLE)}
+            className="group relative block aspect-5/4 cursor-pointer overflow-hidden md:aspect-4/5"
           >
-            <ScrollShrinkImage>
+            <ScrollShrinkImage reveal>
               <FadeInImage
-                src="/images/cesar-la-rosa-HbAddptme1Q-unsplash.jpg"
-                alt="Cachemire Royal Cashmere — Mongolie"
+                src={bestsellersImage}
+                {...editorialImageProps}
+                alt="Ensembles jogging en cachemire Royal Cashmere"
                 fill
-                className="object-cover"
+                className="object-cover object-[50%_15%] md:object-center"
                 sizes="(max-width: 767px) 100vw, 50vw"
               />
             </ScrollShrinkImage>
             <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-6 p-4 text-center md:gap-8 md:p-8">
-              <h3 className="font-serif text-5xl uppercase leading-[1.1] text-white md:text-7xl">
+              <SplitTextReveal
+                as="h3"
+                triggerClosest="a"
+                delay={0.5}
+                className="font-serif text-5xl uppercase leading-[1.1] text-white md:text-7xl"
+              >
                 Bestsellers
-              </h3>
-              <span className={`${ctaLinkClassName} text-white!`}>
-                Voir les best-sellers
-              </span>
+              </SplitTextReveal>
+              <SplitTextReveal triggerClosest="a" delay={0.8} splitLines={false}>
+                <span className={`${ctaLinkClassName} text-white!`}>
+                  Voir les best-sellers
+                </span>
+              </SplitTextReveal>
             </div>
           </Link>
         </div>
@@ -190,8 +226,8 @@ export default async function Home() {
         {bannerProduct ? (
           <ProductImageBanner
             product={bannerProduct}
-            imageSrc="/images/fullwidthhome.webp"
-            imageAlt="Atelier Royal Cashmere"
+            imageSrc={bannerImage}
+            imageAlt="Veste zippée en cachemire Royal Cashmere"
             eyebrow="Notre histoire"
             title="Le meilleur cachemire de Mongolie"
             description="Le cachemire de Mongolie est réputé parmi les plus fins au monde. Notre propriétaire, mongole elle-même, a choisi de le faire découvrir à Bruxelles : des pièces d'une douceur rare, pensées pour vous accompagner longtemps. À retrouver en boutique à Uccle comme en ligne."
@@ -205,15 +241,18 @@ export default async function Home() {
           <Link
             href={routes.shop}
             aria-label="Voir les nouveautés"
-            className="group relative block aspect-5/4 cursor-pointer overflow-hidden md:aspect-3/5"
+            className="group relative block aspect-5/4 cursor-pointer overflow-hidden md:aspect-4/5"
           >
-            <FadeInImage
-              src="/images/Frame 64.png"
-              alt="Nouveautés Royal Cashmere"
-              fill
-              className="object-cover"
-              sizes="(max-width: 767px) 100vw, 50vw"
-            />
+            <ScrollShrinkImage reveal>
+              <FadeInImage
+                src={newInImage}
+                {...editorialImageProps}
+                alt="Ensemble polo et jogging en cachemire Royal Cashmere"
+                fill
+                className="object-cover object-[50%_15%] md:object-center"
+                sizes="(max-width: 767px) 100vw, 50vw"
+              />
+            </ScrollShrinkImage>
           </Link>
           <div className="flex flex-col gap-10 md:px-8">
             <div className="md:flex-1">
@@ -233,10 +272,11 @@ export default async function Home() {
               </div>
             </div>
             <div className="relative aspect-4/5 w-2/3 self-end overflow-hidden md:w-1/2">
-              <ScrollShrinkImage>
+              <ScrollShrinkImage reveal>
                 <FadeInImage
-                  src="/images/Frame 54.jpg"
-                  alt="Boutique Royal Cashmere à Uccle"
+                  src={boutiqueVisitImage}
+                  {...editorialImageProps}
+                  alt="Ensemble en cachemire Royal Cashmere"
                   fill
                   className="object-cover"
                   sizes="(max-width: 767px) 66vw, 25vw"
@@ -259,8 +299,8 @@ export default async function Home() {
 
       {/* <section className="relative h-svh w-full mt-20 mb-20">
         <FadeInImage
-          src="/images/ekaterina-grosheva-optimized.jpg"
-          alt="Cachemire Royal Cashmere"
+          src="/images/_archive/ekaterina-grosheva-optimized.jpg"
+          alt="Pull en cachemire Royal Cashmere"
           fill
           className="object-cover"
           sizes="100vw"

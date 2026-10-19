@@ -22,6 +22,10 @@ export default function FadeInImage({
   onLoad,
   ...props
 }: ImageProps) {
+  // With a blur placeholder there is already something to show while the
+  // image loads, so it stays visible and Next swaps blur for image itself.
+  const hasPlaceholder = Boolean(props.placeholder && props.placeholder !== "empty");
+
   // "pending" = hidden, not yet known · "instant" = was cached, show now, no
   // fade · "fading" = had to load, animate in.
   const [state, setState] = useState<"pending" | "instant" | "fading">(
@@ -34,8 +38,8 @@ export default function FadeInImage({
     if (node?.complete) setState("instant");
   };
 
-  const isVisible = state !== "pending";
-  const shouldAnimate = state === "fading";
+  const isVisible = hasPlaceholder || state !== "pending";
+  const shouldAnimate = !hasPlaceholder && state === "fading";
 
   return (
     <Image

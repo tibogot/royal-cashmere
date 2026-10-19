@@ -4,7 +4,7 @@ import ProductImageWishlist from "@/components/ProductImageWishlist";
 import { routes } from "@/lib/routes";
 import type { ShopifyProduct } from "@/lib/shopify/queries";
 
-const HERO_PRODUCT_IMAGE = "/images/image_5-removebg-preview 1.png";
+const HERO_PRODUCT_IMAGE = "/images/_archive/image_5-removebg-preview 1.png";
 
 type HeroProductGlassProps = {
   product: ShopifyProduct;

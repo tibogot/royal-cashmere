@@ -132,7 +132,7 @@ export default function FeaturedProductsCarousel({
           <div aria-hidden="true" />
         ) : (
           <Link
-            href={routes.collectionsAll}
+            href={routes.shop}
             className={`${ctaLinkClassName} inline-block`}
           >
             Tout voir
@@ -142,7 +142,7 @@ export default function FeaturedProductsCarousel({
         <div className="flex flex-col items-end gap-2">
           {ctaOnRight && showViewAll ? (
             <Link
-              href={routes.collectionsAll}
+              href={routes.shop}
               className={`${ctaLinkClassName} inline-block`}
             >
               Tout voir

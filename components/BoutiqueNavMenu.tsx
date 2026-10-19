@@ -17,11 +17,11 @@ const cardTitleClassName =
 
 const featuredCardImages = [
   {
-    src: "/images/0179.1 jumper 1239 pants 1.jpg",
+    src: "/images/shared/pull-et-pantalon.jpg",
     alt: "Pull et pantalon en cachemire Royal Cashmere",
   },
   {
-    src: "/images/1140.3 coat 1.jpg",
+    src: "/images/shared/manteau.jpg",
     alt: "Manteau en cachemire Royal Cashmere",
   },
 ] as const;

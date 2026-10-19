@@ -1,9 +1,10 @@
+import { ALL_PRODUCTS_HANDLE } from "@/lib/collection-handles";
+
 export const routes = {
   home: "/",
   about: "/a-propos",
   journal: "/journal",
-  shop: "/boutique",
-  collection: "/collection",
+  shop: `/collection/${ALL_PRODUCTS_HANDLE}`,
   contact: "/contact",
   search: "/recherche",
   signIn: "/connexion",
@@ -16,7 +17,6 @@ export const routes = {
   privacy: "/politique-de-confidentialite",
   terms: "/cgv",
   cookies: "/cookies",
-  collectionsAll: "/boutique",
   collectionByHandle: (handle: string) => `/collection/${handle}`,
   journalArticle: (slug: string) => `/journal/${slug}`,
   product: (handle: string, options?: { color?: string }) => {

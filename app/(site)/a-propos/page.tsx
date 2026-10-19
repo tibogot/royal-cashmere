@@ -10,7 +10,7 @@ export const metadata = createPageMetadata({
 });
 
 export default function AboutPage() {
-  preload("/images/antonio-verdin-fvH0Konesh8-unsplash.jpg", {
+  preload("/images/about/atelier.jpg", {
     as: "image",
     fetchPriority: "high",
   });
@@ -25,7 +25,7 @@ export default function AboutPage() {
 
       <section className="relative h-[70svh] w-full md:h-[80svh]">
         <FadeInImage
-          src="/images/antonio-verdin-fvH0Konesh8-unsplash.jpg"
+          src="/images/about/atelier.jpg"
           alt="Atelier Royal Cashmere à Uccle"
           fill
           priority
@@ -64,7 +64,7 @@ export default function AboutPage() {
           />
           <div className="relative h-[32svh] w-full md:h-full md:w-1/2">
             <FadeInImage
-              src="/images/chu-william-DQkDC6-3vnQ-unsplash.jpg"
+              src="/images/shared/paysage-mongolie.jpg"
               alt="Paysages de Mongolie"
               fill
               className="object-cover"
@@ -76,7 +76,7 @@ export default function AboutPage() {
         <section className="flex w-full flex-col md:min-h-[80svh] md:flex-row pb-20">
           <div className="relative h-[50svh] w-full md:h-auto md:min-h-[80svh] md:w-1/2">
             <FadeInImage
-              src="/images/fadhil-abhimantra.jpg"
+              src="/images/about/cachemire.jpg"
               alt="Cachemire Royal Cashmere"
               fill
               className="object-cover"
@@ -110,7 +110,7 @@ export default function AboutPage() {
 
       <section className="relative h-svh w-full">
         <FadeInImage
-          src="/images/Frame 49.jpg"
+          src="/images/about/collections.jpg"
           alt="Collections Royal Cashmere"
           fill
           className="object-cover"

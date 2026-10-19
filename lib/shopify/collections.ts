@@ -1,5 +1,6 @@
 import { unstable_cache } from "next/cache";
 import { collectionHandles, getCollectionLabel, getCollectionNavCardImage } from "@/lib/categories";
+import { ALL_PRODUCTS_HANDLE, isCategoryHandle } from "@/lib/collection-handles";
 import { getShopifyClient, isShopifyConfigured } from "./client";
 import { SHOPIFY_CACHE_TAG } from "./products";
 import {
@@ -197,3 +198,27 @@ export const getCollectionByHandle = unstable_cache(
   ["shopify-collection-by-handle"],
   { revalidate: SHOPIFY_REVALIDATE, tags: [SHOPIFY_CACHE_TAG] },
 );
+
+// Collections that are product categories, for menus and category links —
+// merchandising ones like Soldes are left out (see lib/collection-handles).
+export async function getCategoryCollections(): Promise<ShopifyCollection[]> {
+  const collections = await getCollections();
+  return collections.filter((collection) => isCategoryHandle(collection.handle));
+}
+
+// What a /collection/[handle] page shows: the all-products view for
+// ALL_PRODUCTS_HANDLE, otherwise the Shopify collection with that handle.
+export async function getCollectionPageData(
+  handle: string,
+): Promise<ShopifyCollectionWithProducts | null> {
+  if (handle !== ALL_PRODUCTS_HANDLE) return getCollectionByHandle(handle);
+
+  const { getAllProducts } = await import("./products");
+
+  return {
+    id: ALL_PRODUCTS_HANDLE,
+    handle: ALL_PRODUCTS_HANDLE,
+    title: "Boutique",
+    products: await getAllProducts(),
+  };
+}

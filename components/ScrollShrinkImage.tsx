@@ -11,6 +11,9 @@ type ScrollShrinkImageProps = {
   children: React.ReactNode;
   // Scale the image starts at while the card is still entering the viewport.
   from?: number;
+  // Play once when the card enters the viewport instead of scrubbing, with a
+  // bottom-to-top clip-path reveal alongside the shrink.
+  reveal?: boolean;
 };
 
 /**
@@ -21,6 +24,7 @@ type ScrollShrinkImageProps = {
 export default function ScrollShrinkImage({
   children,
   from = 1.12,
+  reveal = false,
 }: ScrollShrinkImageProps) {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -32,6 +36,25 @@ export default function ScrollShrinkImage({
 
       const mm = gsap.matchMedia();
       mm.add("(prefers-reduced-motion: no-preference)", () => {
+        if (reveal) {
+          gsap.fromTo(
+            el,
+            { scale: from, clipPath: "inset(100% 0% 0% 0%)" },
+            {
+              scale: 1,
+              clipPath: "inset(0% 0% 0% 0%)",
+              duration: 1.4,
+              ease: "power3.out",
+              scrollTrigger: {
+                trigger: card,
+                start: "top 85%",
+                once: true,
+              },
+            },
+          );
+          return;
+        }
+
         gsap.fromTo(
           el,
           { scale: from },
@@ -50,7 +73,7 @@ export default function ScrollShrinkImage({
 
       return () => mm.revert();
     },
-    { scope: ref, dependencies: [from] },
+    { scope: ref, dependencies: [from, reveal] },
   );
 
   return (

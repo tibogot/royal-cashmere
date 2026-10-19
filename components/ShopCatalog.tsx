@@ -1,42 +1,35 @@
 "use client";
 
 import ProductCard from "@/components/ProductCard";
-import {
-  boutiqueFilters,
-  filterProducts,
-  searchProducts,
-} from "@/lib/boutique-filters";
+import { searchProducts } from "@/lib/boutique-filters";
 import type { ShopifyProduct } from "@/lib/shopify/queries";
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
+
+export type CategoryLink = {
+  label: string;
+  href: string;
+  active: boolean;
+};
 
 type ShopCatalogProps = {
   products: ShopifyProduct[];
-  initialFilterId?: string;
-  hideFilters?: boolean;
+  // Links to the sibling category collections, shown above the grid.
+  categoryLinks?: CategoryLink[];
 };
 
 export default function ShopCatalog({
   products,
-  initialFilterId = "all",
-  hideFilters = false,
+  categoryLinks = [],
 }: ShopCatalogProps) {
   const searchParams = useSearchParams();
   const query = searchParams.get("q") ?? "";
-  const [activeFilterId, setActiveFilterId] = useState(initialFilterId);
-  // Reset the active filter when the incoming prop changes (e.g. navigating
-  // between category pages). Adjusting state during render is preferred over a
-  // sync effect. https://react.dev/reference/react/useState#storing-information-from-previous-renders
-  const [prevInitialFilterId, setPrevInitialFilterId] = useState(initialFilterId);
-  if (initialFilterId !== prevInitialFilterId) {
-    setPrevInitialFilterId(initialFilterId);
-    setActiveFilterId(initialFilterId);
-  }
 
-  const filteredProducts = useMemo(() => {
-    const categoryProducts = filterProducts(products, activeFilterId);
-    return searchProducts(categoryProducts, query);
-  }, [products, activeFilterId, query]);
+  const filteredProducts = useMemo(
+    () => searchProducts(products, query),
+    [products, query],
+  );
 
   return (
     <>
@@ -47,30 +40,25 @@ export default function ShopCatalog({
       ) : null}
 
       <div className="mt-10 flex flex-col gap-6 border-b border-black/10 pb-6 md:mt-12 md:flex-row md:items-end md:justify-between">
-        {hideFilters ? (
-          <div aria-hidden="true" />
+        {categoryLinks.length > 0 ? (
+          <nav aria-label="Catégories" className="flex flex-wrap gap-x-6 gap-y-3">
+            {categoryLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                aria-current={link.active ? "page" : undefined}
+                className={`select-none text-xs uppercase tracking-wide transition-opacity ${
+                  link.active
+                    ? "text-black"
+                    : "text-black/50 hover:text-black/80"
+                }`}
+              >
+                {link.label}
+              </Link>
+            ))}
+          </nav>
         ) : (
-          <div className="flex flex-wrap gap-x-6 gap-y-3">
-            {boutiqueFilters.map((filter) => {
-              const isActive = filter.id === activeFilterId;
-
-              return (
-                <button
-                  key={filter.id}
-                  type="button"
-                  onClick={() => setActiveFilterId(filter.id)}
-                  aria-pressed={isActive}
-                  className={`select-none text-xs uppercase tracking-wide transition-opacity ${
-                    isActive
-                      ? "text-black"
-                      : "text-black/50 hover:text-black/80"
-                  }`}
-                >
-                  {filter.label}
-                </button>
-              );
-            })}
-          </div>
+          <div aria-hidden="true" />
         )}
 
         <p className="text-sm text-black/50">

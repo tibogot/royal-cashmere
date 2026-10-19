@@ -62,11 +62,16 @@ export default function CollectionCarouselCard({
 
         <div className="relative order-2 aspect-3/4 cursor-pointer overflow-hidden md:order-1">
           {overlay ? (
-            <ScrollShrinkImage>
+            <ScrollShrinkImage reveal>
+              {/* Only the homepage showcase uses overlay cards: start them
+                  early at low priority so they're ready by the time they
+                  scroll in, like the other editorial images there. */}
               <FadeInImage
                 src={resolvedSrc}
                 alt={collection.imageAlt ?? collection.title}
                 fill
+                loading="eager"
+                fetchPriority="low"
                 unoptimized={isShopifyCdnUrl(imageUrl)}
                 className="object-cover group-hover:opacity-95"
                 sizes={imageSizes}

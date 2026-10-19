@@ -1,8 +1,8 @@
-import { getCollections } from "@/lib/shopify/collections";
+import { getCategoryCollections } from "@/lib/shopify/collections";
 import { NextResponse } from "next/server";
 
 export async function GET() {
-  const collections = await getCollections();
+  const collections = await getCategoryCollections();
 
   return NextResponse.json(
     { collections },

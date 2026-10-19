@@ -12,25 +12,25 @@ const categoryConfig = [
   {
     id: "robes",
     label: "Robes",
-    image: "/images/Frame 53.jpg",
+    image: "/images/categories/robes.jpg",
     imageAlt: "Robes en cachemire Royal Cashmere",
   },
   {
     id: "pantalons",
     label: "Pantalons",
-    image: "/images/Frame 54.jpg",
+    image: "/images/categories/pantalons.jpg",
     imageAlt: "Pantalons en cachemire Royal Cashmere",
   },
   {
     id: "echarpes",
     label: "Écharpes",
-    image: "/images/Frame 55.jpg",
+    image: "/images/categories/echarpes.jpg",
     imageAlt: "Écharpes en cachemire Royal Cashmere",
   },
   {
     id: "pulls",
     label: "Pulls",
-    image: "/images/Frame 12.jpg",
+    image: "/images/categories/pulls.jpg",
     imageAlt: "Pulls en cachemire Royal Cashmere",
   },
 ] as const;
@@ -59,11 +59,11 @@ export function getCollectionLabel(handle: string) {
 
 const navCardFallbacks = [
   {
-    imageUrl: "/images/Frame 53.jpg",
+    imageUrl: "/images/categories/robes.jpg",
     imageAlt: "Collection Royal Cashmere",
   },
   {
-    imageUrl: "/images/Frame 54.jpg",
+    imageUrl: "/images/categories/pantalons.jpg",
     imageAlt: "Collection Royal Cashmere",
   },
 ] as const;

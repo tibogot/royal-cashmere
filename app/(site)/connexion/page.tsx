@@ -33,7 +33,7 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
 
           <div className="relative min-h-80 w-full md:min-h-[calc(100svh-7rem)]">
             <Image
-              src="/images/chu-william-DQkDC6-3vnQ-unsplash.jpg"
+              src="/images/shared/paysage-mongolie.jpg"
               alt="Cachemire Royal Cashmere"
               fill
               priority

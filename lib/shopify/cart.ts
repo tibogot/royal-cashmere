@@ -263,7 +263,7 @@ function mapCartNode(
         variantTitle,
         colorValue,
         sizeValue,
-        imageUrl: merchandise.image?.url ?? "/images/unsplash_mjtLS0CDuIQ.png",
+        imageUrl: merchandise.image?.url ?? "/images/placeholders/produit.png",
         imageAlt:
           merchandise.image?.altText ?? merchandise.product.title,
         price: formatPrice(

@@ -75,7 +75,7 @@ export default function ContactPage() {
 
           <div className="relative min-h-160 w-full md:min-h-[calc(100svh-7rem)]">
             <FadeInImage
-              src="/images/1140.3 coat 1.jpg"
+              src="/images/shared/manteau.jpg"
               alt="Manteau en cachemire Royal Cashmere"
               fill
               className="object-cover"

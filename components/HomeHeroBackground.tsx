@@ -7,7 +7,7 @@ const VIDEO_DESKTOP =
   "https://dymcnsx6f7jgtkqa.public.blob.vercel-storage.com/royal-cashmere/9784260-desktop.mp4";
 const VIDEO_MOBILE =
   "https://dymcnsx6f7jgtkqa.public.blob.vercel-storage.com/royal-cashmere/9784260-mobile.mp4";
-const POSTER = "/images/9784260-poster.jpg";
+const POSTER = "/images/home/hero-poster.jpg";
 
 const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)";
 
