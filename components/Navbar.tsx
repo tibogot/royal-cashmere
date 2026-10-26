@@ -50,7 +50,7 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [shopMenuOpen, setShopMenuOpen] = useState(false);
   const [navHovered, setNavHovered] = useState(false);
-  const collections = useSyncExternalStore(
+  const sections = useSyncExternalStore(
     subscribeCollections,
     getCollectionsSnapshot,
     getServerCollectionsSnapshot,
@@ -408,7 +408,7 @@ export default function Navbar() {
       dependencies: [
         navHovered,
         navExpanded,
-        collections.length,
+        sections.length,
         hasTransparentHero,
         overlayOpen,
       ],
@@ -749,7 +749,7 @@ export default function Navbar() {
           aria-hidden={!navExpanded}
         >
           <div ref={menuInnerRef}>
-            <BoutiqueNavMenu collections={collections} />
+            <BoutiqueNavMenu sections={sections} />
           </div>
         </div>
       </div>
@@ -757,7 +757,7 @@ export default function Navbar() {
       <MobileNavMenu
         open={menuOpen}
         onClose={() => setMenuOpen(false)}
-        collections={collections}
+        sections={sections}
       />
       <SearchPanel open={searchOpen} onClose={() => setSearchOpen(false)} />
       <CartPanel open={cartOpen} onClose={() => setCartOpen(false)} />

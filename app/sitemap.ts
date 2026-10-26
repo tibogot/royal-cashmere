@@ -1,15 +1,15 @@
 import type { MetadataRoute } from "next";
 import { routes } from "@/lib/routes";
 import { getJournalArticleSlugs } from "@/lib/sanity/queries";
-import { getCollections } from "@/lib/shopify/collections";
+import { getListedCollectionHandles } from "@/lib/shopify/collections";
 import { getAllProducts } from "@/lib/shopify/products";
 import { siteConfig } from "@/lib/site";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [articleSlugs, products, collections] = await Promise.all([
+  const [articleSlugs, products, collectionHandles] = await Promise.all([
     getJournalArticleSlugs(),
     getAllProducts(),
-    getCollections(),
+    getListedCollectionHandles(),
   ]);
 
   const now = new Date();
@@ -54,9 +54,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }));
 
-  const collectionEntries: MetadataRoute.Sitemap = collections.map(
-    (collection) => ({
-      url: `${siteConfig.url}${routes.collectionByHandle(collection.handle)}`,
+  const collectionEntries: MetadataRoute.Sitemap = collectionHandles.map(
+    (handle) => ({
+      url: `${siteConfig.url}${routes.collectionByHandle(handle)}`,
       lastModified: now,
       changeFrequency: "weekly",
       priority: 0.7,

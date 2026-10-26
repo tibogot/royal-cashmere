@@ -1,7 +1,7 @@
 "use client";
 
+import type { CatalogNavSection } from "@/lib/catalog";
 import { routes } from "@/lib/routes";
-import type { ShopifyCollection } from "@/lib/shopify/queries";
 import { useOverlayScrollLock } from "@/lib/useOverlayScrollLock";
 import gsap from "gsap";
 import Link from "next/link";
@@ -12,7 +12,7 @@ import { createPortal } from "react-dom";
 type MobileNavMenuProps = {
   open: boolean;
   onClose: () => void;
-  collections?: ShopifyCollection[];
+  sections?: CatalogNavSection[];
 };
 
 const MENU_ANIM_DURATION = 0.45;
@@ -33,6 +33,9 @@ const linkClassName =
 const subLinkClassName =
   "font-serif text-lg uppercase tracking-wide transition-opacity hover:opacity-60";
 
+const childLinkClassName =
+  "text-xs uppercase tracking-wide text-black/60 transition-opacity hover:opacity-60";
+
 function subscribeNoop() {
   return () => {};
 }
@@ -48,7 +51,7 @@ function getServerSnapshot() {
 export default function MobileNavMenu({
   open,
   onClose,
-  collections = [],
+  sections = [],
 }: MobileNavMenuProps) {
   const pathname = usePathname();
   const panelRef = useRef<HTMLDivElement>(null);
@@ -161,7 +164,7 @@ export default function MobileNavMenu({
               </div>
               <div
                 className="overflow-hidden transition-all duration-300 ease-in-out"
-                style={{ maxHeight: boutiqueOpen ? "20rem" : "0" }}
+                style={{ maxHeight: boutiqueOpen ? "40rem" : "0" }}
               >
                 <ul className="mt-3 flex flex-col gap-3 border-l border-black/15 pl-3">
                   <li>
@@ -169,15 +172,30 @@ export default function MobileNavMenu({
                       Tout
                     </Link>
                   </li>
-                  {collections.map((collection) => (
-                    <li key={collection.id}>
+                  {sections.map((section) => (
+                    <li key={section.handle}>
                       <Link
-                        href={routes.collectionByHandle(collection.handle)}
+                        href={routes.collectionByHandle(section.handle)}
                         onClick={handleClose}
                         className={subLinkClassName}
                       >
-                        {collection.title}
+                        {section.label}
                       </Link>
+                      {section.children.length > 0 ? (
+                        <ul className="mt-2 flex flex-col gap-2 pl-3">
+                          {section.children.map((child) => (
+                            <li key={child.handle}>
+                              <Link
+                                href={routes.collectionByHandle(child.handle)}
+                                onClick={handleClose}
+                                className={childLinkClassName}
+                              >
+                                {child.label}
+                              </Link>
+                            </li>
+                          ))}
+                        </ul>
+                      ) : null}
                     </li>
                   ))}
                 </ul>

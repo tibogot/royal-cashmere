@@ -1,5 +1,4 @@
 import { routes } from "@/lib/routes";
-import { boutiqueFilters } from "@/lib/boutique-filters";
 
 export type CategoryItem = {
   label: string;
@@ -10,25 +9,25 @@ export type CategoryItem = {
 
 const categoryConfig = [
   {
-    id: "robes",
+    id: "robes-cachemire",
     label: "Robes",
     image: "/images/categories/robes.jpg",
     imageAlt: "Robes en cachemire Royal Cashmere",
   },
   {
-    id: "pantalons",
+    id: "pantalons-femme",
     label: "Pantalons",
     image: "/images/categories/pantalons.jpg",
     imageAlt: "Pantalons en cachemire Royal Cashmere",
   },
   {
-    id: "echarpes",
+    id: "echarpes-cachemire",
     label: "Écharpes",
     image: "/images/categories/echarpes.jpg",
     imageAlt: "Écharpes en cachemire Royal Cashmere",
   },
   {
-    id: "pulls",
+    id: "pulls-femme",
     label: "Pulls",
     image: "/images/categories/pulls.jpg",
     imageAlt: "Pulls en cachemire Royal Cashmere",
@@ -44,35 +43,10 @@ export const showcaseCategories: CategoryItem[] = categoryConfig.map(
   }),
 );
 
-export const popularSearches = boutiqueFilters
-  .filter((filter) => filter.id !== "all")
-  .map((filter) => ({
-    label: filter.label,
-    href: routes.collectionByHandle(filter.id),
-  }));
-
-export const collectionHandles = categoryConfig.map((category) => category.id);
-
-export function getCollectionLabel(handle: string) {
-  return boutiqueFilters.find((filter) => filter.id === handle)?.label;
-}
-
-const navCardFallbacks = [
-  {
-    imageUrl: "/images/categories/robes.jpg",
-    imageAlt: "Collection Royal Cashmere",
-  },
-  {
-    imageUrl: "/images/categories/pantalons.jpg",
-    imageAlt: "Collection Royal Cashmere",
-  },
-] as const;
-
-export function getCollectionNavCardImage(handle: string, index: number) {
-  const match = categoryConfig.find((category) => category.id === handle);
-  if (match) {
-    return { imageUrl: match.image, imageAlt: match.imageAlt };
-  }
-
-  return navCardFallbacks[index % navCardFallbacks.length];
-}
+// Search panel shortcuts to the main categories (handles from lib/catalog).
+export const popularSearches = [
+  { label: "Pulls femme", href: routes.collectionByHandle("pulls-femme") },
+  { label: "Pulls homme", href: routes.collectionByHandle("pulls-homme") },
+  { label: "Robes", href: routes.collectionByHandle("robes-cachemire") },
+  { label: "Écharpes", href: routes.collectionByHandle("echarpes-cachemire") },
+];

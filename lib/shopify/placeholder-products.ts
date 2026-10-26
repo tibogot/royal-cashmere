@@ -68,7 +68,7 @@ const placeholderCatalog: Omit<ShopifyProduct, "id" | "colorSwatches">[] = [
     price: "319,00 €",
     colorCount: 5,
     productType: "Pulls",
-    tags: ["pull", "cachemire"],
+    tags: ["pull", "cachemire", "mixte"],
   },
   {
     title: "Pantalon long",
@@ -98,7 +98,7 @@ const placeholderCatalog: Omit<ShopifyProduct, "id" | "colorSwatches">[] = [
     price: "359,00 €",
     colorCount: 6,
     productType: "Pulls",
-    tags: ["pull", "cachemire"],
+    tags: ["pull", "cachemire", "mixte"],
   },
   {
     title: "Pull torsadé",
@@ -139,6 +139,26 @@ const placeholderCatalog: Omit<ShopifyProduct, "id" | "colorSwatches">[] = [
     colorCount: 5,
     productType: "Écharpes",
     tags: ["écharpe", "cachemire"],
+  },
+  {
+    title: "Pull col roulé",
+    handle: "pull-col-roule",
+    imageUrl: "/images/placeholders/produit.png",
+    imageAlt: "Pull col roulé en cachemire",
+    price: "389,00 €",
+    colorCount: 4,
+    productType: "Pulls",
+    tags: ["pull", "col-roule", "cachemire", "mixte"],
+  },
+  {
+    title: "Bonnet côtelé",
+    handle: "bonnet-cotele",
+    imageUrl: "/images/placeholders/produit-2.png",
+    imageAlt: "Bonnet côtelé en cachemire",
+    price: "129,00 €",
+    colorCount: 5,
+    productType: "Bonnets",
+    tags: ["bonnet", "cachemire"],
   },
 ];
 

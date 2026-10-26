@@ -1,8 +1,17 @@
 import { unstable_cache } from "next/cache";
-import { collectionHandles, getCollectionLabel, getCollectionNavCardImage } from "@/lib/categories";
-import { ALL_PRODUCTS_HANDLE, isCategoryHandle } from "@/lib/collection-handles";
+import {
+  buildCatalogNav,
+  findCatalogCollection,
+  isCatalogHandle,
+  type CatalogMatch,
+  type CatalogNavSection,
+} from "@/lib/catalog";
+import {
+  ALL_PRODUCTS_HANDLE,
+  legacyCollectionRedirects,
+} from "@/lib/collection-handles";
 import { getShopifyClient, isShopifyConfigured } from "./client";
-import { SHOPIFY_CACHE_TAG } from "./products";
+import { getAllProducts, SHOPIFY_CACHE_TAG } from "./products";
 import {
   COLLECTION_BY_HANDLE_QUERY,
   COLLECTIONS_QUERY,
@@ -47,45 +56,22 @@ function mapProductNode(node: ShopifyProductNode): ShopifyProduct | null {
   };
 }
 
-function mapCollectionNode(
-  node: ShopifyCollectionListNode,
-  index: number,
-): ShopifyCollection {
+function mapCollectionNode(node: ShopifyCollectionListNode): ShopifyCollection {
   const productImage = node.products.edges[0]?.node.featuredImage;
-  const fallback = getCollectionNavCardImage(node.handle, index);
+  const image = node.image ?? productImage;
 
   return {
     id: node.id,
     title: node.title,
     handle: node.handle,
-    imageUrl: node.image?.url ?? productImage?.url ?? fallback.imageUrl,
-    imageAlt:
-      node.image?.altText ??
-      productImage?.altText ??
-      fallback.imageAlt ??
-      node.title,
+    imageUrl: image?.url,
+    imageAlt: image?.altText ?? node.title,
   };
-}
-
-function getPlaceholderCollections(): ShopifyCollection[] {
-  return collectionHandles.map((handle, index) => {
-    const fallback = getCollectionNavCardImage(handle, index);
-
-    return {
-      id: handle,
-      handle,
-      title: getCollectionLabel(handle) ?? handle,
-      imageUrl: fallback.imageUrl,
-      imageAlt: fallback.imageAlt,
-    };
-  });
 }
 
 export const getCollections = unstable_cache(
   async (): Promise<ShopifyCollection[]> => {
-  if (!isShopifyConfigured()) {
-    return getPlaceholderCollections();
-  }
+  if (!isShopifyConfigured()) return [];
 
   try {
     const client = getShopifyClient();
@@ -95,20 +81,17 @@ export const getCollections = unstable_cache(
 
     if (errors?.length) {
       console.error("Shopify Storefront API errors:", errors);
-      return getPlaceholderCollections();
+      return [];
     }
 
-    const collections =
+    return (
       data?.collections.edges
-        .map(({ node }, index) => mapCollectionNode(node, index))
-        .filter((collection) => collection.handle !== "frontpage") ?? [];
-
-    return collections.length > 0
-      ? collections
-      : getPlaceholderCollections();
+        .map(({ node }) => mapCollectionNode(node))
+        .filter((collection) => collection.handle !== "frontpage") ?? []
+    );
   } catch (error) {
     console.error("Failed to fetch Shopify collections:", error);
-    return getPlaceholderCollections();
+    return [];
   }
   },
   ["shopify-collections"],
@@ -123,21 +106,7 @@ export const getCollectionByHandle = unstable_cache(
   async (
     handle: string,
   ): Promise<ShopifyCollectionWithProducts | null> => {
-  if (!isShopifyConfigured()) {
-    const title = getCollectionLabel(handle);
-    if (!title) return null;
-
-    const { getAllProducts } = await import("./products");
-    const { filterProducts } = await import("@/lib/boutique-filters");
-    const products = filterProducts(await getAllProducts(), handle);
-
-    return {
-      id: handle,
-      handle,
-      title,
-      products,
-    };
-  }
+  if (!isShopifyConfigured()) return null;
 
   try {
     const client = getShopifyClient();
@@ -199,26 +168,75 @@ export const getCollectionByHandle = unstable_cache(
   { revalidate: SHOPIFY_REVALIDATE, tags: [SHOPIFY_CACHE_TAG] },
 );
 
-// Collections that are product categories, for menus and category links —
-// merchandising ones like Soldes are left out (see lib/collection-handles).
-export async function getCategoryCollections(): Promise<ShopifyCollection[]> {
-  const collections = await getCollections();
-  return collections.filter((collection) => isCategoryHandle(collection.handle));
+// The category menus: catalog sections and sub-collections that have products.
+export async function getCatalogNav(): Promise<CatalogNavSection[]> {
+  return buildCatalogNav(await getAllProducts());
 }
 
+// Every collection page worth listing: catalog categories that have products,
+// then Shopify's own collections (Soldes, Nouveautés…) minus old category
+// collections the catalog replaced. The shop itself (ALL_PRODUCTS_HANDLE) is
+// left to the caller.
+export async function getListedCollectionHandles(): Promise<string[]> {
+  const [sections, shopifyCollections] = await Promise.all([
+    getCatalogNav(),
+    getCollections(),
+  ]);
+
+  return [
+    ...sections.flatMap((section) => [
+      section.handle,
+      ...section.children.map((child) => child.handle),
+    ]),
+    ...shopifyCollections
+      .map((collection) => collection.handle)
+      .filter(
+        (handle) =>
+          !isCatalogHandle(handle) && !(handle in legacyCollectionRedirects),
+      ),
+  ];
+}
+
+export type CollectionPageData = ShopifyCollectionWithProducts & {
+  description?: string;
+  intro?: string;
+  // Set for the category tree's pages (lib/catalog).
+  catalog?: CatalogMatch;
+};
+
 // What a /collection/[handle] page shows: the all-products view for
-// ALL_PRODUCTS_HANDLE, otherwise the Shopify collection with that handle.
+// ALL_PRODUCTS_HANDLE, a catalog collection built from every product, or
+// else the Shopify collection with that handle (Soldes, Nouveautés…).
 export async function getCollectionPageData(
   handle: string,
-): Promise<ShopifyCollectionWithProducts | null> {
-  if (handle !== ALL_PRODUCTS_HANDLE) return getCollectionByHandle(handle);
+): Promise<CollectionPageData | null> {
+  if (handle === ALL_PRODUCTS_HANDLE) {
+    return {
+      id: ALL_PRODUCTS_HANDLE,
+      handle: ALL_PRODUCTS_HANDLE,
+      title: "Boutique",
+      products: await getAllProducts(),
+    };
+  }
 
-  const { getAllProducts } = await import("./products");
+  const catalog = findCatalogCollection(handle);
+  if (!catalog) return getCollectionByHandle(handle);
+
+  const collection = catalog.collection ?? catalog.section;
+  const products = (await getAllProducts()).filter((product) =>
+    collection.matches(product),
+  );
+
+  // An empty category is no page to index; it's also missing from the menus.
+  if (products.length === 0) return null;
 
   return {
-    id: ALL_PRODUCTS_HANDLE,
-    handle: ALL_PRODUCTS_HANDLE,
-    title: "Boutique",
-    products: await getAllProducts(),
+    id: handle,
+    handle,
+    title: collection.title,
+    description: collection.description,
+    intro: collection.intro,
+    catalog,
+    products,
   };
 }

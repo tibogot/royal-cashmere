@@ -1,7 +1,10 @@
 import type { NextConfig } from "next";
 // Relative import: the config loader doesn't resolve the "@/" alias, so this
 // can't go through lib/routes.
-import { ALL_PRODUCTS_HANDLE } from "./lib/collection-handles";
+import {
+  ALL_PRODUCTS_HANDLE,
+  legacyCollectionRedirects,
+} from "./lib/collection-handles";
 
 const shopPath = `/collection/${ALL_PRODUCTS_HANDLE}`;
 
@@ -12,6 +15,13 @@ const nextConfig: NextConfig = {
     return [
       { source: "/boutique", destination: shopPath, permanent: true },
       { source: "/collection", destination: shopPath, permanent: true },
+      ...Object.entries(legacyCollectionRedirects).map(
+        ([oldHandle, newHandle]) => ({
+          source: `/collection/${oldHandle}`,
+          destination: `/collection/${newHandle}`,
+          permanent: true,
+        }),
+      ),
     ];
   },
   experimental: {

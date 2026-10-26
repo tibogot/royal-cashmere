@@ -8,13 +8,13 @@ const galleryItems = [
     id: "robes",
     title: "Robes",
     image: "/images/categories/robes.jpg",
-    href: routes.collectionByHandle("robes"),
+    href: routes.collectionByHandle("robes-cachemire"),
   },
   {
     id: "chales",
     title: "Châles",
     image: "/images/categories/echarpes.jpg",
-    href: routes.collectionByHandle("echarpes"),
+    href: routes.collectionByHandle("echarpes-cachemire"),
   },
   {
     id: "bonnets",
@@ -26,19 +26,19 @@ const galleryItems = [
     id: "pulls",
     title: "Pulls",
     image: "/images/categories/pulls.jpg",
-    href: routes.collectionByHandle("pulls"),
+    href: routes.collectionByHandle("pulls-femme"),
   },
   {
     id: "pantalons",
     title: "Pantalons",
     image: "/images/categories/pantalons.jpg",
-    href: routes.collectionByHandle("pantalons"),
+    href: routes.collectionByHandle("pantalons-femme"),
   },
   {
     id: "echarpes",
     title: "Écharpes",
     image: "/images/_archive/Catalog+Org-1 1.jpg",
-    href: routes.collectionByHandle("echarpes"),
+    href: routes.collectionByHandle("echarpes-cachemire"),
   },
   {
     id: "manteaux",
@@ -62,7 +62,7 @@ const galleryItems = [
     id: "cardigans",
     title: "Cardigans",
     image: "/images/_archive/Frame 63.png",
-    href: routes.collectionByHandle("pulls"),
+    href: routes.collectionByHandle("pulls-femme"),
   },
   {
     id: "cachemire",

@@ -13,16 +13,19 @@ import {
   getInitialSelections,
   getProductImageForSelections,
 } from "@/lib/shopify/variants";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 
 type ProductDetailClientProps = {
   product: ShopifyProductDetail;
   initialColor?: string;
+  // Rendered above the purchase panel (the server-built breadcrumbs).
+  breadcrumbs?: ReactNode;
 };
 
 export default function ProductDetailClient({
   product,
   initialColor,
+  breadcrumbs,
 }: ProductDetailClientProps) {
   const [selections, setSelections] = useState(() =>
     getInitialSelections(product.options, product.variants, initialColor),
@@ -77,6 +80,7 @@ export default function ProductDetailClient({
       </ProductImageWishlist>
 
       <div className="flex min-w-0 w-full flex-col justify-center overflow-x-hidden px-4 py-12 md:w-1/2 md:px-12 md:py-24 lg:px-20">
+        {breadcrumbs}
         <ProductPurchasePanel
           product={product}
           selections={selections}

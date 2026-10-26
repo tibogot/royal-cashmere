@@ -1,8 +1,8 @@
-import type { ShopifyCollection } from "@/lib/shopify/queries";
+import type { CatalogNavSection } from "@/lib/catalog";
 
-const EMPTY_COLLECTIONS: ShopifyCollection[] = [];
+const EMPTY_COLLECTIONS: CatalogNavSection[] = [];
 
-let collections: ShopifyCollection[] = EMPTY_COLLECTIONS;
+let collections: CatalogNavSection[] = EMPTY_COLLECTIONS;
 let hasFetched = false;
 let inFlight: Promise<void> | null = null;
 const listeners = new Set<() => void>();
@@ -20,9 +20,9 @@ async function fetchCollections(): Promise<void> {
       if (!response.ok) return;
 
       const data = (await response.json()) as {
-        collections?: ShopifyCollection[];
+        sections?: CatalogNavSection[];
       };
-      collections = data.collections ?? EMPTY_COLLECTIONS;
+      collections = data.sections ?? EMPTY_COLLECTIONS;
     } catch {
       // Keep the last known collections on network errors.
     } finally {
@@ -47,7 +47,7 @@ export function subscribeCollections(callback: () => void): () => void {
   return () => listeners.delete(callback);
 }
 
-export function getCollectionsSnapshot(): ShopifyCollection[] {
+export function getCollectionsSnapshot(): CatalogNavSection[] {
   return collections;
 }
 
@@ -55,7 +55,7 @@ export function getCollectionsHasFetched(): boolean {
   return hasFetched;
 }
 
-export function getServerCollectionsSnapshot(): ShopifyCollection[] {
+export function getServerCollectionsSnapshot(): CatalogNavSection[] {
   return EMPTY_COLLECTIONS;
 }
 
