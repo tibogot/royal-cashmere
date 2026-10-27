@@ -8,6 +8,11 @@ import MobileNavMenu from "@/components/MobileNavMenu";
 import SearchIcon from "@/components/SearchIcon";
 import SearchPanel from "@/components/SearchPanel";
 import WishlistNavLink from "@/components/WishlistNavLink";
+import { ACCESSORIES_SECTION_HANDLE, type ShopNav } from "@/lib/catalog";
+import {
+  NEW_IN_COLLECTION_HANDLE,
+  SALE_COLLECTION_HANDLE,
+} from "@/lib/collection-handles";
 import { routes } from "@/lib/routes";
 import {
   getCollectionsSnapshot,
@@ -50,7 +55,7 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [shopMenuOpen, setShopMenuOpen] = useState(false);
   const [navHovered, setNavHovered] = useState(false);
-  const sections = useSyncExternalStore(
+  const shopNav = useSyncExternalStore(
     subscribeCollections,
     getCollectionsSnapshot,
     getServerCollectionsSnapshot,
@@ -408,7 +413,7 @@ export default function Navbar() {
       dependencies: [
         navHovered,
         navExpanded,
-        sections.length,
+        shopNav,
         hasTransparentHero,
         overlayOpen,
       ],
@@ -661,7 +666,7 @@ export default function Navbar() {
               className="hidden items-center nav:flex nav:gap-4"
               onMouseEnter={closeShopMenu}
             >
-              {leftLinks.map(({ label, href }) => (
+              {getShortcutLinks(shopNav).map(({ label, href }) => (
                 <li key={label}>
                   <Link href={href} className={navLinkClassName} data-nav-link>
                     {label}
@@ -749,7 +754,7 @@ export default function Navbar() {
           aria-hidden={!navExpanded}
         >
           <div ref={menuInnerRef}>
-            <BoutiqueNavMenu sections={sections} />
+            <BoutiqueNavMenu nav={shopNav} />
           </div>
         </div>
       </div>
@@ -757,7 +762,7 @@ export default function Navbar() {
       <MobileNavMenu
         open={menuOpen}
         onClose={() => setMenuOpen(false)}
-        sections={sections}
+        nav={shopNav}
       />
       <SearchPanel open={searchOpen} onClose={() => setSearchOpen(false)} />
       <CartPanel open={cartOpen} onClose={() => setCartOpen(false)} />
@@ -765,10 +770,18 @@ export default function Navbar() {
   );
 }
 
-const leftLinks = [
-  { label: "Journal", href: routes.journal },
-  { label: "À propos", href: routes.about },
-  { label: "Contact", href: routes.contact },
-] as const;
+// Shortcuts beside Boutique, each shown once its collection has products.
+// Journal, À propos and Contact live in the footer and the mobile menu.
+function getShortcutLinks({ sections, collections }: ShopNav) {
+  return [
+    collections.find(({ handle }) => handle === NEW_IN_COLLECTION_HANDLE),
+    sections.find(({ handle }) => handle === ACCESSORIES_SECTION_HANDLE),
+    collections.find(({ handle }) => handle === SALE_COLLECTION_HANDLE),
+  ].flatMap((link) =>
+    link
+      ? [{ label: link.label, href: routes.collectionByHandle(link.handle) }]
+      : [],
+  );
+}
 
 const rightLinks = [{ label: "Mon compte", href: routes.account }] as const;

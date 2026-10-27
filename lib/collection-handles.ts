@@ -10,6 +10,8 @@ export const ALL_PRODUCTS_HANDLE = "tout";
 export const SALE_COLLECTION_HANDLE = "soldes";
 export const BESTSELLERS_COLLECTION_HANDLE = "bestsellers";
 export const NEW_IN_COLLECTION_HANDLE = "nouveautes";
+// Seasonal (holidays), linked from the shop menu while it has products.
+export const GIFTS_COLLECTION_HANDLE = "idees-cadeaux";
 
 // Category handles from before the femme/homme split, mapped to their
 // replacement. Redirected in next.config.ts, and kept out of the sitemap in

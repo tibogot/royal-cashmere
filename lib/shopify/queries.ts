@@ -228,6 +228,7 @@ export type ShopifyCollection = {
   handle: string;
   imageUrl?: string;
   imageAlt?: string;
+  hasProducts?: boolean;
 };
 
 type ShopifyCollectionListNode = {

@@ -1,8 +1,8 @@
-import type { CatalogNavSection } from "@/lib/catalog";
+import type { ShopNav } from "@/lib/catalog";
 
-const EMPTY_COLLECTIONS: CatalogNavSection[] = [];
+const EMPTY_NAV: ShopNav = { sections: [], collections: [] };
 
-let collections: CatalogNavSection[] = EMPTY_COLLECTIONS;
+let nav: ShopNav = EMPTY_NAV;
 let hasFetched = false;
 let inFlight: Promise<void> | null = null;
 const listeners = new Set<() => void>();
@@ -19,10 +19,11 @@ async function fetchCollections(): Promise<void> {
       const response = await fetch("/api/collections");
       if (!response.ok) return;
 
-      const data = (await response.json()) as {
-        sections?: CatalogNavSection[];
+      const data = (await response.json()) as Partial<ShopNav>;
+      nav = {
+        sections: data.sections ?? [],
+        collections: data.collections ?? [],
       };
-      collections = data.sections ?? EMPTY_COLLECTIONS;
     } catch {
       // Keep the last known collections on network errors.
     } finally {
@@ -47,16 +48,16 @@ export function subscribeCollections(callback: () => void): () => void {
   return () => listeners.delete(callback);
 }
 
-export function getCollectionsSnapshot(): CatalogNavSection[] {
-  return collections;
+export function getCollectionsSnapshot(): ShopNav {
+  return nav;
 }
 
 export function getCollectionsHasFetched(): boolean {
   return hasFetched;
 }
 
-export function getServerCollectionsSnapshot(): CatalogNavSection[] {
-  return EMPTY_COLLECTIONS;
+export function getServerCollectionsSnapshot(): ShopNav {
+  return EMPTY_NAV;
 }
 
 export function refreshCollections(): Promise<void> {

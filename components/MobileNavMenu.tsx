@@ -1,6 +1,6 @@
 "use client";
 
-import type { CatalogNavSection } from "@/lib/catalog";
+import type { ShopNav } from "@/lib/catalog";
 import { routes } from "@/lib/routes";
 import { useOverlayScrollLock } from "@/lib/useOverlayScrollLock";
 import gsap from "gsap";
@@ -12,7 +12,7 @@ import { createPortal } from "react-dom";
 type MobileNavMenuProps = {
   open: boolean;
   onClose: () => void;
-  sections?: CatalogNavSection[];
+  nav?: ShopNav;
 };
 
 const MENU_ANIM_DURATION = 0.45;
@@ -51,8 +51,10 @@ function getServerSnapshot() {
 export default function MobileNavMenu({
   open,
   onClose,
-  sections = [],
+  nav,
 }: MobileNavMenuProps) {
+  const sections = nav?.sections ?? [];
+  const collections = nav?.collections ?? [];
   const pathname = usePathname();
   const panelRef = useRef<HTMLDivElement>(null);
   const previousPathnameRef = useRef(pathname);
@@ -196,6 +198,17 @@ export default function MobileNavMenu({
                           ))}
                         </ul>
                       ) : null}
+                    </li>
+                  ))}
+                  {collections.map((collection) => (
+                    <li key={collection.handle}>
+                      <Link
+                        href={routes.collectionByHandle(collection.handle)}
+                        onClick={handleClose}
+                        className={subLinkClassName}
+                      >
+                        {collection.label}
+                      </Link>
                     </li>
                   ))}
                 </ul>

@@ -15,6 +15,7 @@ const footerLegalLinkClassName =
 
 const primaryLinks = [
   { label: "Boutique", href: routes.shop },
+  { label: "Journal", href: routes.journal },
   { label: "À propos", href: routes.about },
   { label: "Contact", href: routes.contact },
 ] as const;

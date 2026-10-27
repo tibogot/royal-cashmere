@@ -1,13 +1,16 @@
 "use client";
 
-import type { CatalogNavSection } from "@/lib/catalog";
-import { NEW_IN_COLLECTION_HANDLE } from "@/lib/collection-handles";
+import type { ShopNav } from "@/lib/catalog";
+import {
+  GIFTS_COLLECTION_HANDLE,
+  NEW_IN_COLLECTION_HANDLE,
+} from "@/lib/collection-handles";
 import { routes } from "@/lib/routes";
 import FadeInImage from "@/components/FadeInImage";
 import Link from "next/link";
 
 type BoutiqueNavMenuProps = {
-  sections: CatalogNavSection[];
+  nav: ShopNav;
 };
 
 const linkClassName =
@@ -19,12 +22,6 @@ const subLinkClassName =
 const cardTitleClassName =
   "animated-underline text-[10px] uppercase tracking-wide text-black md:text-xs";
 
-const newInCard = {
-  href: routes.collectionByHandle(NEW_IN_COLLECTION_HANDLE),
-  title: "Nouveautés",
-  imageSrc: "/images/shared/manteau.jpg",
-  imageAlt: "Manteau en cachemire Royal Cashmere",
-};
 
 type FeaturedCardProps = {
   href: string;
@@ -57,8 +54,16 @@ function FeaturedCard({ href, title, imageSrc, imageAlt }: FeaturedCardProps) {
   );
 }
 
-export default function BoutiqueNavMenu({ sections }: BoutiqueNavMenuProps) {
+export default function BoutiqueNavMenu({ nav }: BoutiqueNavMenuProps) {
+  const { sections, collections } = nav;
   const firstSection = sections[0];
+  // Gifts take the second card while the collection is live (the holidays),
+  // then Nouveautés, then the second section.
+  const secondCardLink =
+    collections.find(({ handle }) => handle === GIFTS_COLLECTION_HANDLE) ??
+    collections.find(({ handle }) => handle === NEW_IN_COLLECTION_HANDLE) ??
+    sections[1];
+
   const featuredCards = [
     {
       href: firstSection
@@ -68,7 +73,16 @@ export default function BoutiqueNavMenu({ sections }: BoutiqueNavMenuProps) {
       imageSrc: "/images/shared/pull-et-pantalon.jpg",
       imageAlt: "Pull et pantalon en cachemire Royal Cashmere",
     },
-    newInCard,
+    ...(secondCardLink
+      ? [
+          {
+            href: routes.collectionByHandle(secondCardLink.handle),
+            title: secondCardLink.label,
+            imageSrc: "/images/shared/manteau.jpg",
+            imageAlt: "Manteau en cachemire Royal Cashmere",
+          },
+        ]
+      : []),
   ];
 
   return (
@@ -101,6 +115,15 @@ export default function BoutiqueNavMenu({ sections }: BoutiqueNavMenuProps) {
           <Link href={routes.shop} className={linkClassName}>
             Tout voir
           </Link>
+          {collections.map((collection) => (
+            <Link
+              key={collection.handle}
+              href={routes.collectionByHandle(collection.handle)}
+              className={subLinkClassName}
+            >
+              {collection.label}
+            </Link>
+          ))}
         </div>
       </nav>
 

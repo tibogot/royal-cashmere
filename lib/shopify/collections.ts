@@ -5,10 +5,14 @@ import {
   isCatalogHandle,
   type CatalogMatch,
   type CatalogNavSection,
+  type ShopNav,
 } from "@/lib/catalog";
 import {
   ALL_PRODUCTS_HANDLE,
+  GIFTS_COLLECTION_HANDLE,
   legacyCollectionRedirects,
+  NEW_IN_COLLECTION_HANDLE,
+  SALE_COLLECTION_HANDLE,
 } from "@/lib/collection-handles";
 import { getShopifyClient, isShopifyConfigured } from "./client";
 import { getAllProducts, SHOPIFY_CACHE_TAG } from "./products";
@@ -66,6 +70,7 @@ function mapCollectionNode(node: ShopifyCollectionListNode): ShopifyCollection {
     handle: node.handle,
     imageUrl: image?.url,
     imageAlt: image?.altText ?? node.title,
+    hasProducts: node.products.edges.length > 0,
   };
 }
 
@@ -171,6 +176,30 @@ export const getCollectionByHandle = unstable_cache(
 // The category menus: catalog sections and sub-collections that have products.
 export async function getCatalogNav(): Promise<CatalogNavSection[]> {
   return buildCatalogNav(await getAllProducts());
+}
+
+// Shopify collections the menus link to, in this order, when they have
+// products: no menu link leads to an empty page.
+const NAV_COLLECTION_HANDLES = [
+  NEW_IN_COLLECTION_HANDLE,
+  SALE_COLLECTION_HANDLE,
+  GIFTS_COLLECTION_HANDLE,
+];
+
+export async function getShopNav(): Promise<ShopNav> {
+  const [sections, shopifyCollections] = await Promise.all([
+    getCatalogNav(),
+    getCollections(),
+  ]);
+
+  const collections = NAV_COLLECTION_HANDLES.flatMap((handle) => {
+    const collection = shopifyCollections.find(
+      (item) => item.handle === handle && item.hasProducts,
+    );
+    return collection ? [{ handle, label: collection.title }] : [];
+  });
+
+  return { sections, collections };
 }
 
 // Every collection page worth listing: catalog categories that have products,

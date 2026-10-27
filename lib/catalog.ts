@@ -102,6 +102,8 @@ function isTurtleneck(product: CatalogProduct) {
   );
 }
 
+export const ACCESSORIES_SECTION_HANDLE = "accessoires";
+
 function section(
   config: Omit<CatalogSection, "matches">,
 ): CatalogSection {
@@ -247,7 +249,7 @@ export const catalogSections: CatalogSection[] = [
     ],
   }),
   section({
-    handle: "accessoires",
+    handle: ACCESSORIES_SECTION_HANDLE,
     label: "Accessoires",
     title: "Accessoires en cachemire",
     description:
@@ -341,6 +343,13 @@ export type CatalogNavSection = CatalogNavLink & {
   image: string;
   imageAlt: string;
   children: CatalogNavLink[];
+};
+
+// Everything the navbar menus link to: the category tree, plus Shopify
+// collections (Nouveautés, Soldes…) that exist and have products.
+export type ShopNav = {
+  sections: CatalogNavSection[];
+  collections: CatalogNavLink[];
 };
 
 export function buildCatalogNav(

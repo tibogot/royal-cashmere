@@ -1,11 +1,11 @@
-import { getCatalogNav } from "@/lib/shopify/collections";
+import { getShopNav } from "@/lib/shopify/collections";
 import { NextResponse } from "next/server";
 
 export async function GET() {
-  const sections = await getCatalogNav();
+  const nav = await getShopNav();
 
   return NextResponse.json(
-    { sections },
+    nav,
     {
       headers: {
         "Cache-Control":
