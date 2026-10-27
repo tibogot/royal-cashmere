@@ -44,7 +44,7 @@ export default function Faq() {
                   aria-expanded={isOpen}
                   className="flex w-full items-center justify-between gap-6 py-5 text-left transition-opacity hover:opacity-60"
                 >
-                  <span className="text-sm md:text-base">{item.question}</span>
+                  <span className="font-serif text-base md:text-lg">{item.question}</span>
                   <ChevronIcon open={isOpen} />
                 </button>
 
@@ -54,7 +54,7 @@ export default function Faq() {
                   }`}
                 >
                   <div className="overflow-hidden">
-                    <p className="pb-5 text-sm leading-relaxed text-black/70">
+                    <p className="pb-5 font-serif text-base leading-relaxed text-black/70 md:text-lg">
                       {item.answer}
                     </p>
                   </div>
