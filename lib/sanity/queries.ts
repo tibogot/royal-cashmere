@@ -33,7 +33,10 @@ const hotspotImageFields = `..., "lqip": asset->metadata.lqip`;
 
 export const homePageQuery = `*[_type == "homePage" && _id == "homePage"][0] {
   saleCardImage { ${hotspotImageFields} },
-  bestsellersCardImage { ${hotspotImageFields} }
+  bestsellersCardImage { ${hotspotImageFields} },
+  storyBannerImage { ${hotspotImageFields} },
+  newInCardImage { ${hotspotImageFields} },
+  boutiqueVisitImage { ${hotspotImageFields} }
 }`;
 
 export async function getHomePageContent(): Promise<HomePageContent | null> {

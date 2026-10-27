@@ -1,16 +1,14 @@
 import FadeInImage from "@/components/FadeInImage";
-import type { StaticImageData } from "next/image";
 import Link from "next/link";
 import ProductImageWishlist from "@/components/ProductImageWishlist";
 import ScrollShrinkImage from "@/components/ScrollShrinkImage";
+import type { EditableImageProps } from "@/lib/sanity/image";
 import { ctaLinkClassName } from "@/lib/ui";
 import type { ShopifyProduct } from "@/lib/shopify/queries";
 
 type ProductImageBannerProps = {
   product: ShopifyProduct;
-  // A static import gets a blur placeholder and starts loading early.
-  imageSrc: string | StaticImageData;
-  imageAlt?: string;
+  image: EditableImageProps;
   eyebrow: string;
   title: string;
   description: string;
@@ -19,8 +17,7 @@ type ProductImageBannerProps = {
 
 export default function ProductImageBanner({
   product,
-  imageSrc,
-  imageAlt,
+  image,
   eyebrow,
   title,
   description,
@@ -36,14 +33,12 @@ export default function ProductImageBanner({
       >
         <ScrollShrinkImage reveal>
           <FadeInImage
-            src={imageSrc}
-            alt={imageAlt ?? product.imageAlt}
+            {...image}
+            loading="eager"
+            fetchPriority="low"
             fill
             className="object-cover"
             sizes="100vw"
-            {...(typeof imageSrc === "string"
-              ? {}
-              : { placeholder: "blur", loading: "eager", fetchPriority: "low" } as const)}
           />
           {/* Inside the clipped layer so it reveals with the image. */}
           <div className="absolute inset-0 bg-linear-to-b from-black/50 to-transparent" />

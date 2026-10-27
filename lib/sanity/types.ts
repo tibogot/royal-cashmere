@@ -23,6 +23,9 @@ export type SanityHotspotImage = SanityImage & {
 export type HomePageContent = {
   saleCardImage?: SanityHotspotImage;
   bestsellersCardImage?: SanityHotspotImage;
+  storyBannerImage?: SanityHotspotImage;
+  newInCardImage?: SanityHotspotImage;
+  boutiqueVisitImage?: SanityHotspotImage;
 };
 
 export type JournalArticleListItem = {

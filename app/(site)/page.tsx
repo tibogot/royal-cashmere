@@ -20,9 +20,7 @@ import FadeInImage from "@/components/FadeInImage";
 import ScrollShrinkImage from "@/components/ScrollShrinkImage";
 import SplitTextReveal from "@/components/SplitTextReveal";
 import { getHomePageContent } from "@/lib/sanity/queries";
-import { urlFor } from "@/lib/sanity/image";
-import type { SanityHotspotImage } from "@/lib/sanity/types";
-import type { StaticImageData } from "next/image";
+import { editableImageProps } from "@/lib/sanity/image";
 import Link from "next/link";
 import { preload } from "react-dom";
 import saleImage from "@/public/images/home/soldes.webp";
@@ -40,30 +38,6 @@ const editorialImageProps = {
   loading: "eager",
   fetchPriority: "low",
 } as const;
-
-// The card photo picked in the Studio, or the bundled one when none is set.
-// The hotspot becomes object-position rather than a fixed crop, so the chosen
-// focus holds on both the mobile (5:4) and desktop (4:5) card shapes.
-function cardImageProps(
-  image: SanityHotspotImage | undefined,
-  fallback: StaticImageData,
-  fallbackAlt: string,
-) {
-  if (!image?.asset) {
-    return { src: fallback, alt: fallbackAlt, placeholder: "blur" as const };
-  }
-  return {
-    src: urlFor(image).width(1600).auto("format").url(),
-    alt: image.alt || fallbackAlt,
-    placeholder: image.lqip ? ("blur" as const) : ("empty" as const),
-    blurDataURL: image.lqip,
-    style: image.hotspot
-      ? {
-          objectPosition: `${image.hotspot.x * 100}% ${image.hotspot.y * 100}%`,
-        }
-      : undefined,
-  };
-}
 
 // Order of the first homepage carousel, by product handle. Shopify returns
 // newest first; anything not listed here keeps that order after these.
@@ -174,7 +148,7 @@ export default async function Home() {
             <ScrollShrinkImage reveal>
               <FadeInImage
                 {...editorialImageProps}
-                {...cardImageProps(
+                {...editableImageProps(
                   homePage?.saleCardImage,
                   saleImage,
                   "Pull en cachemire Royal Cashmere",
@@ -207,7 +181,7 @@ export default async function Home() {
             <ScrollShrinkImage reveal>
               <FadeInImage
                 {...editorialImageProps}
-                {...cardImageProps(
+                {...editableImageProps(
                   homePage?.bestsellersCardImage,
                   bestsellersImage,
                   "Ensembles jogging en cachemire Royal Cashmere",
@@ -265,8 +239,12 @@ export default async function Home() {
         {bannerProduct ? (
           <ProductImageBanner
             product={bannerProduct}
-            imageSrc={bannerImage}
-            imageAlt="Veste zippée en cachemire Royal Cashmere"
+            image={editableImageProps(
+              homePage?.storyBannerImage,
+              bannerImage,
+              "Veste zippée en cachemire Royal Cashmere",
+              2400,
+            )}
             eyebrow="Notre histoire"
             title="Le meilleur cachemire de Mongolie"
             description="Le cachemire de Mongolie est réputé parmi les plus fins au monde. Notre propriétaire, mongole elle-même, a choisi de le faire découvrir à Bruxelles : des pièces d'une douceur rare, pensées pour vous accompagner longtemps. À retrouver en boutique à Uccle comme en ligne."
@@ -284,9 +262,12 @@ export default async function Home() {
           >
             <ScrollShrinkImage reveal>
               <FadeInImage
-                src={newInImage}
                 {...editorialImageProps}
-                alt="Ensemble polo et jogging en cachemire Royal Cashmere"
+                {...editableImageProps(
+                  homePage?.newInCardImage,
+                  newInImage,
+                  "Ensemble polo et jogging en cachemire Royal Cashmere",
+                )}
                 fill
                 className="object-cover object-[50%_15%] md:object-center"
                 sizes="(max-width: 767px) 100vw, 50vw"
@@ -313,9 +294,12 @@ export default async function Home() {
             <div className="relative aspect-4/5 w-2/3 self-end overflow-hidden md:w-1/2">
               <ScrollShrinkImage reveal>
                 <FadeInImage
-                  src={boutiqueVisitImage}
                   {...editorialImageProps}
-                  alt="Ensemble en cachemire Royal Cashmere"
+                  {...editableImageProps(
+                    homePage?.boutiqueVisitImage,
+                    boutiqueVisitImage,
+                    "Ensemble en cachemire Royal Cashmere",
+                  )}
                   fill
                   className="object-cover"
                   sizes="(max-width: 767px) 66vw, 25vw"
