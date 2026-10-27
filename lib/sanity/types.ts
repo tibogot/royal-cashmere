@@ -13,6 +13,18 @@ export type SanityImage = {
   };
 };
 
+export type SanityHotspotImage = SanityImage & {
+  hotspot?: { x: number; y: number };
+  crop?: { top: number; bottom: number; left: number; right: number };
+  // Base64 blur preview, projected from the asset metadata by the query.
+  lqip?: string;
+};
+
+export type HomePageContent = {
+  saleCardImage?: SanityHotspotImage;
+  bestsellersCardImage?: SanityHotspotImage;
+};
+
 export type JournalArticleListItem = {
   _id: string;
   title: string;

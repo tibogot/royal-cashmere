@@ -1,5 +1,9 @@
 import { sanityClient, sanityFetchOptions } from "./client";
-import type { JournalArticle, JournalArticleListItem } from "./types";
+import type {
+  HomePageContent,
+  JournalArticle,
+  JournalArticleListItem,
+} from "./types";
 
 const articleListFields = `
   _id,
@@ -24,6 +28,21 @@ export const articleBySlugQuery = `*[_type == "article" && slug.current == $slug
 export const articleSlugsQuery = `*[_type == "article" && defined(slug.current)]{
   "slug": slug.current
 }`;
+
+const hotspotImageFields = `..., "lqip": asset->metadata.lqip`;
+
+export const homePageQuery = `*[_type == "homePage" && _id == "homePage"][0] {
+  saleCardImage { ${hotspotImageFields} },
+  bestsellersCardImage { ${hotspotImageFields} }
+}`;
+
+export async function getHomePageContent(): Promise<HomePageContent | null> {
+  return sanityClient.fetch<HomePageContent | null>(
+    homePageQuery,
+    {},
+    sanityFetchOptions,
+  );
+}
 
 export async function getJournalArticles(): Promise<JournalArticleListItem[]> {
   return sanityClient.fetch<JournalArticleListItem[]>(

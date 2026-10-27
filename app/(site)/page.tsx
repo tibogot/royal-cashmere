@@ -19,6 +19,10 @@ import { getFeaturedProducts } from "@/lib/shopify/products";
 import FadeInImage from "@/components/FadeInImage";
 import ScrollShrinkImage from "@/components/ScrollShrinkImage";
 import SplitTextReveal from "@/components/SplitTextReveal";
+import { getHomePageContent } from "@/lib/sanity/queries";
+import { urlFor } from "@/lib/sanity/image";
+import type { SanityHotspotImage } from "@/lib/sanity/types";
+import type { StaticImageData } from "next/image";
 import Link from "next/link";
 import { preload } from "react-dom";
 import saleImage from "@/public/images/home/soldes.webp";
@@ -36,6 +40,30 @@ const editorialImageProps = {
   loading: "eager",
   fetchPriority: "low",
 } as const;
+
+// The card photo picked in the Studio, or the bundled one when none is set.
+// The hotspot becomes object-position rather than a fixed crop, so the chosen
+// focus holds on both the mobile (5:4) and desktop (4:5) card shapes.
+function cardImageProps(
+  image: SanityHotspotImage | undefined,
+  fallback: StaticImageData,
+  fallbackAlt: string,
+) {
+  if (!image?.asset) {
+    return { src: fallback, alt: fallbackAlt, placeholder: "blur" as const };
+  }
+  return {
+    src: urlFor(image).width(1600).auto("format").url(),
+    alt: image.alt || fallbackAlt,
+    placeholder: image.lqip ? ("blur" as const) : ("empty" as const),
+    blurDataURL: image.lqip,
+    style: image.hotspot
+      ? {
+          objectPosition: `${image.hotspot.x * 100}% ${image.hotspot.y * 100}%`,
+        }
+      : undefined,
+  };
+}
 
 // Order of the first homepage carousel, by product handle. Shopify returns
 // newest first; anything not listed here keeps that order after these.
@@ -77,7 +105,12 @@ export default async function Home() {
 
   // Fetch the featured products once and slice them for each section below,
   // instead of issuing a separate Shopify request per <FeaturedProducts />.
-  const products = await getFeaturedProducts(16);
+  // A Studio outage shouldn't take the homepage down: fall back to the
+  // bundled photos instead.
+  const [products, homePage] = await Promise.all([
+    getFeaturedProducts(16),
+    getHomePageContent().catch(() => null),
+  ]);
   const bannerProduct = products[6] ?? products[0];
   // If you re-enable <HeroProductGlass /> below, fetch its product here:
   // const heroProduct = await getProductByHandle("pull-col-v");
@@ -140,9 +173,12 @@ export default async function Home() {
           >
             <ScrollShrinkImage reveal>
               <FadeInImage
-                src={saleImage}
                 {...editorialImageProps}
-                alt="Pull en cachemire Royal Cashmere"
+                {...cardImageProps(
+                  homePage?.saleCardImage,
+                  saleImage,
+                  "Pull en cachemire Royal Cashmere",
+                )}
                 fill
                 className="object-cover object-[50%_15%] md:object-center"
                 sizes="(max-width: 767px) 100vw, 50vw"
@@ -170,9 +206,12 @@ export default async function Home() {
           >
             <ScrollShrinkImage reveal>
               <FadeInImage
-                src={bestsellersImage}
                 {...editorialImageProps}
-                alt="Ensembles jogging en cachemire Royal Cashmere"
+                {...cardImageProps(
+                  homePage?.bestsellersCardImage,
+                  bestsellersImage,
+                  "Ensembles jogging en cachemire Royal Cashmere",
+                )}
                 fill
                 className="object-cover object-[50%_15%] md:object-center"
                 sizes="(max-width: 767px) 100vw, 50vw"
