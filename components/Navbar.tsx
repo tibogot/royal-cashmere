@@ -666,7 +666,7 @@ export default function Navbar() {
               className="hidden items-center nav:flex nav:gap-4"
               onMouseEnter={closeShopMenu}
             >
-              {getShortcutLinks(shopNav).map(({ label, href }) => (
+              {[...getShortcutLinks(shopNav), ...leftLinks].map(({ label, href }) => (
                 <li key={label}>
                   <Link href={href} className={navLinkClassName} data-nav-link>
                     {label}
@@ -771,7 +771,6 @@ export default function Navbar() {
 }
 
 // Shortcuts beside Boutique, each shown once its collection has products.
-// Journal, À propos and Contact live in the footer and the mobile menu.
 function getShortcutLinks({ sections, collections }: ShopNav) {
   return [
     collections.find(({ handle }) => handle === NEW_IN_COLLECTION_HANDLE),
@@ -783,5 +782,11 @@ function getShortcutLinks({ sections, collections }: ShopNav) {
       : [],
   );
 }
+
+const leftLinks = [
+  { label: "Journal", href: routes.journal },
+  { label: "À propos", href: routes.about },
+  { label: "Contact", href: routes.contact },
+] as const;
 
 const rightLinks = [{ label: "Mon compte", href: routes.account }] as const;
