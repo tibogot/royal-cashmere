@@ -11,7 +11,7 @@ import FeaturedProducts from "@/components/FeaturedProducts";
 import Faq from "@/components/Faq";
 // import HeroProductGlass from "@/components/HeroProductGlass";
 // import HeroBottomLogo from "@/components/HeroBottomLogo";
-import HomeHeroBackground from "@/components/HomeHeroBackground";
+// import HomeHeroBackground from "@/components/HomeHeroBackground";
 // import MouseDrivenGallery from "@/components/MouseDrivenGallery";
 import ProductImageBanner from "@/components/ProductImageBanner";
 import ProductShowcase from "@/components/ProductShowcase";
@@ -21,8 +21,10 @@ import ScrollShrinkImage from "@/components/ScrollShrinkImage";
 import SplitTextReveal from "@/components/SplitTextReveal";
 import { getHomePageContent } from "@/lib/sanity/queries";
 import { editableImageProps } from "@/lib/sanity/image";
+import Image from "next/image";
 import Link from "next/link";
 import { preload } from "react-dom";
+import heroImage from "@/public/images/about/cavaliere-steppe-mongolie.jpg";
 import saleImage from "@/public/images/home/soldes.webp";
 import bestsellersImage from "@/public/images/home/bestsellers.webp";
 import boutiqueVisitImage from "@/public/images/home/visite-boutique.webp";
@@ -100,7 +102,16 @@ export default async function Home() {
           Royal Cashmere — Boutique de cachemire d&apos;exception à Uccle,
           Bruxelles
         </h1>
-        <HomeHeroBackground />
+        {/* <HomeHeroBackground /> */}
+        <Image
+          src={heroImage}
+          alt=""
+          fill
+          preload
+          className="object-cover"
+          sizes="100vw"
+          quality={75}
+        />
         {/* <HeroBottomLogo priority raised /> */}
         <div className="absolute inset-x-0 bottom-0 z-10 flex justify-center p-4 md:p-8">
           <Link
