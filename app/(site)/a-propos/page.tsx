@@ -1,6 +1,5 @@
 import { createPageMetadata } from "@/lib/seo";
 import FadeInImage from "@/components/FadeInImage";
-import { preload } from "react-dom";
 
 export const metadata = createPageMetadata({
   title: "À propos",
@@ -10,11 +9,6 @@ export const metadata = createPageMetadata({
 });
 
 export default function AboutPage() {
-  preload("/images/about/atelier.jpg", {
-    as: "image",
-    fetchPriority: "high",
-  });
-
   return (
     <main className="w-full">
       <section className="bg-white px-4 pt-24 pb-10 text-center text-black md:px-8 md:pt-28 md:pb-16">
@@ -25,8 +19,8 @@ export default function AboutPage() {
 
       <section className="relative h-[70svh] w-full md:h-[80svh]">
         <FadeInImage
-          src="/images/about/atelier.jpg"
-          alt="Atelier Royal Cashmere à Uccle"
+          src="/images/about/cavaliere-steppe-mongolie.jpg"
+          alt="Cavalière en manteau de cachemire préparant son cheval dans la steppe mongole"
           fill
           priority
           className="object-cover"
