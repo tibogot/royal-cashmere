@@ -150,7 +150,7 @@ export default async function Home() {
 
       <FeaturedProducts products={sortByCarouselOrder(products)} limit={16} />
 
-      <section className="bg-white">
+      <section className="bg-white py-6 md:py-10">
         <div className="grid grid-cols-1 md:grid-cols-2">
           <Link
             href={routes.collectionByHandle(SALE_COLLECTION_HANDLE)}
