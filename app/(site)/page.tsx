@@ -115,7 +115,10 @@ export default async function Home() {
             fill
             preload
             className="object-cover"
-            sizes="100vw"
+            // object-cover on a portrait screen fills the height, so the
+            // rendered width is 100vh × 16/9, not 100vw. With "100vw" a phone
+            // downloads a ~1080px-wide file and stretches it 2–3× (blurry).
+            sizes="(max-aspect-ratio: 16/9) 178vh, 100vw"
             quality={75}
           />
         </ScrollShrinkImage>

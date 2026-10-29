@@ -24,7 +24,9 @@ export default function AboutPage() {
           fill
           priority
           className="object-cover object-[70%_50%] md:object-center"
-          sizes="100vw"
+          // Height-bound when the screen is narrower than the 8:5 photo at
+          // 70svh / 80svh: size by height, or phones get a blurry file.
+          sizes="(max-width: 767px) 112vh, (max-aspect-ratio: 32/25) 128vh, 100vw"
         />
       </section>
 
@@ -108,7 +110,7 @@ export default function AboutPage() {
           alt="Collections Royal Cashmere"
           fill
           className="object-cover"
-          sizes="100vw"
+          sizes="(max-aspect-ratio: 16/9) 182vh, 100vw"
         />
       </section>
 
