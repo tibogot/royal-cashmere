@@ -19,11 +19,11 @@ export default function AboutPage() {
 
       <section className="relative h-[70svh] w-full md:h-[80svh]">
         <FadeInImage
-          src="/images/about/cavaliere-steppe-mongolie.jpg"
-          alt="Cavalière en manteau de cachemire préparant son cheval dans la steppe mongole"
+          src="/images/about/chevreaux-cachemire-steppe.jpg"
+          alt="Femme tenant un chevreau dans un enclos de chèvres cachemire, steppe mongole"
           fill
           priority
-          className="object-cover"
+          className="object-cover object-[70%_50%] md:object-center"
           sizes="100vw"
         />
       </section>
