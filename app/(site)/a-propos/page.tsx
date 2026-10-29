@@ -89,8 +89,10 @@ export default function AboutPage() {
               sizes="(max-width: 767px) calc(100vw - 2rem), calc(50vw - 2rem)"
             />
           </div>
-          <div className="flex w-full bg-white py-4 text-left text-black md:w-1/2 md:pt-0 md:pl-8">
-            <div className="max-w-xl">
+          {/* Stretches to the image height so the text can stick while the
+              portrait scrolls past, like the home page. */}
+          <div className="w-full bg-white py-4 text-left text-black md:w-1/2 md:py-0 md:pl-8">
+            <div className="max-w-xl md:sticky md:top-24">
               {/* <h2 className={sectionHeadingClassName}>
               Cachemire mongol, héritage nomade
             </h2> */}
