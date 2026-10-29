@@ -52,7 +52,12 @@ type NavAppearance = {
 };
 
 export default function Navbar() {
-  const pathname = usePathname();
+  // When Vercel regenerates the prerendered home page (ISR), the server
+  // render sees "/index" instead of "/". Left as is, the HTML ships as if
+  // this weren't the home page — nav visible with black links — and the
+  // client then corrects it after hydration, which is a visible flash.
+  const rawPathname = usePathname();
+  const pathname = rawPathname === "/index" ? routes.home : rawPathname;
   const hasTransparentHero = TRANSPARENT_NAV_PATHS.has(pathname);
   const [searchOpen, setSearchOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
