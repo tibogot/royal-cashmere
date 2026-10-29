@@ -25,7 +25,7 @@ import { editableImageProps } from "@/lib/sanity/image";
 import Image from "next/image";
 import Link from "next/link";
 import { preload } from "react-dom";
-import heroImage from "@/public/images/about/cavaliere-steppe-mongolie.jpg";
+import heroImage from "@/public/images/home/cavaliere-steppe-mongolie.jpg";
 import saleImage from "@/public/images/home/soldes.webp";
 import bestsellersImage from "@/public/images/home/bestsellers.webp";
 import boutiqueVisitImage from "@/public/images/home/visite-boutique.webp";
@@ -73,7 +73,7 @@ function sortByCarouselOrder<T extends { handle: string }>(items: T[]): T[] {
 
 export const metadata = createPageMetadata({
   description:
-    "Royal Cashmere, boutique de cachemire d'exception à Uccle. Découvrez nos nouveautés en pur cachemire de Mongolie — pulls, écharpes et accessoires.",
+    "Boutique de cachemire d'exception à Uccle, Bruxelles : pulls, écharpes et accessoires en pur cachemire de Mongolie.",
   path: "/",
 });
 
