@@ -24,6 +24,10 @@ type SplitTextRevealProps = {
   // false slides the whole content up as one masked block instead of
   // splitting it — for elements like CTAs whose underline is a pseudo-element.
   splitLines?: boolean;
+  // Start invisible already in the server HTML. Use it above the fold, where
+  // the text would otherwise flash fully visible before hydration, vanish
+  // for the split, then reveal.
+  hiddenUntilReveal?: boolean;
 };
 
 /**
@@ -41,6 +45,7 @@ export default function SplitTextReveal({
   start = "top 85%",
   triggerClosest,
   splitLines = true,
+  hiddenUntilReveal = false,
 }: SplitTextRevealProps) {
   const ref = useRef<HTMLElement>(null);
   const blockRef = useRef<HTMLSpanElement>(null);
@@ -51,8 +56,11 @@ export default function SplitTextReveal({
       if (!el) return;
       const trigger = (triggerClosest && el.closest(triggerClosest)) || el;
 
-      const reveal = (targets: gsap.TweenTarget) =>
-        gsap.from(targets, {
+      const reveal = (targets: gsap.TweenTarget) => {
+        // Lines are masked at yPercent 110 from here on, so it's safe to
+        // lift the server-side hiding.
+        if (hiddenUntilReveal) gsap.set(el, { visibility: "visible" });
+        return gsap.from(targets, {
           yPercent: 110,
           duration,
           delay,
@@ -60,6 +68,7 @@ export default function SplitTextReveal({
           ease: "power3.out",
           scrollTrigger: { trigger, start, once: true },
         });
+      };
 
       const mm = gsap.matchMedia();
       mm.add("(prefers-reduced-motion: no-preference)", () => {
@@ -84,12 +93,27 @@ export default function SplitTextReveal({
     },
     {
       scope: ref,
-      dependencies: [stagger, duration, delay, start, triggerClosest, splitLines],
+      dependencies: [
+        stagger,
+        duration,
+        delay,
+        start,
+        triggerClosest,
+        splitLines,
+        hiddenUntilReveal,
+      ],
     },
   );
 
   return (
-    <Tag ref={ref as React.Ref<HTMLDivElement>} className={className}>
+    <Tag
+      ref={ref as React.Ref<HTMLDivElement>}
+      // motion-safe only: with reduced motion GSAP never runs, so the text
+      // must not start hidden.
+      className={`${className ?? ""}${
+        hiddenUntilReveal ? " motion-safe:invisible" : ""
+      }`}
+    >
       {splitLines ? (
         children
       ) : (

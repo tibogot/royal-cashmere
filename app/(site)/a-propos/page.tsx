@@ -1,5 +1,8 @@
 import { createPageMetadata } from "@/lib/seo";
 import FadeInImage from "@/components/FadeInImage";
+import ScrollShrinkImage from "@/components/ScrollShrinkImage";
+import SplitTextReveal from "@/components/SplitTextReveal";
+import Image from "next/image";
 
 export const metadata = createPageMetadata({
   title: "À propos",
@@ -12,22 +15,29 @@ export default function AboutPage() {
   return (
     <main className="w-full">
       <section className="bg-white px-4 pt-24 pb-10 text-center text-black md:px-8 md:pt-28 md:pb-16">
-        <h1 className="mx-auto max-w-5xl font-serif text-5xl uppercase leading-[1.12] md:max-w-6xl md:text-8xl md:leading-[1.08]">
+        <SplitTextReveal
+          as="h1"
+          hiddenUntilReveal
+          className="mx-auto max-w-5xl font-serif text-5xl uppercase leading-[1.12] md:max-w-6xl md:text-8xl md:leading-[1.08]"
+        >
           Une maison de cachemire d&apos;exception, ancrée à Bruxelles
-        </h1>
+        </SplitTextReveal>
       </section>
 
-      <section className="relative h-[70svh] w-full md:h-[80svh]">
-        <FadeInImage
-          src="/images/about/chevreaux-cachemire-steppe.jpg"
-          alt="Femme tenant un chevreau dans un enclos de chèvres cachemire, steppe mongole"
-          fill
-          priority
-          className="object-cover object-[70%_50%] md:object-center"
-          // Height-bound when the screen is narrower than the 8:5 photo at
-          // 70svh / 80svh: size by height, or phones get a blurry file.
-          sizes="(max-width: 767px) 112vh, (max-aspect-ratio: 32/25) 128vh, 100vw"
-        />
+      <section className="relative h-[70svh] w-full overflow-hidden md:h-[80svh]">
+        {/* Plain Image, no fade: the reveal waits for the image itself. */}
+        <ScrollShrinkImage reveal hiddenUntilReveal>
+          <Image
+            src="/images/about/chevreaux-cachemire-steppe.jpg"
+            alt="Femme tenant un chevreau dans un enclos de chèvres cachemire, steppe mongole"
+            fill
+            preload
+            className="object-cover object-[70%_50%] md:object-center"
+            // Height-bound when the screen is narrower than the 8:5 photo at
+            // 70svh / 80svh: size by height, or phones get a blurry file.
+            sizes="(max-width: 767px) 112vh, (max-aspect-ratio: 32/25) 128vh, 100vw"
+          />
+        </ScrollShrinkImage>
       </section>
 
       <section className="bg-white px-4 py-16 text-left text-black md:px-8">
@@ -43,7 +53,7 @@ export default function AboutPage() {
             steppe mongole, et sélectionnées pour leur pureté et leur douceur
             incomparable.
           </p>
-          <p className="mt-6 font-serif text-sm leading-relaxed text-black/80 md:text-base">
+          <p className="mt-6 font-serif text-base leading-relaxed text-black/80 md:text-lg">
             Installés chaussée de Waterloo, nous accueillons chaque visite comme
             une rencontre. En choisissant Royal Cashmere, vous participez à une
             histoire qui soutient les éleveurs nomades et leurs terres
