@@ -268,7 +268,8 @@ export default async function Home() {
               homePage?.storyBannerImage,
               bannerImage,
               "Veste zippée en cachemire Royal Cashmere",
-              2400,
+              // Full-screen and height-bound on phones: needs the 4K source.
+              3840,
             )}
             eyebrow="Notre histoire"
             title="Le meilleur cachemire de Mongolie"
