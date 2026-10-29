@@ -1,12 +1,15 @@
 import PortableTextContent from "@/components/PortableTextContent";
 import SanityImage from "@/components/SanityImage";
 import { formatArticleDate } from "@/lib/sanity/format";
+import { urlFor } from "@/lib/sanity/image";
 import {
   getJournalArticleBySlug,
   getJournalArticleSlugs,
 } from "@/lib/sanity/queries";
-import { createPageMetadata } from "@/lib/seo";
+import type { JournalArticle } from "@/lib/sanity/types";
+import { createPageMetadata, toMetaDescription } from "@/lib/seo";
 import { routes } from "@/lib/routes";
+import { siteConfig } from "@/lib/site";
 import { ctaLinkClassName } from "@/lib/ui";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -34,9 +37,59 @@ export async function generateMetadata({
 
   return createPageMetadata({
     title: article.title,
-    description: article.excerpt?.slice(0, 160),
+    description: toMetaDescription(article.excerpt),
     path: routes.journalArticle(slug),
+    image: article.mainImage
+      ? {
+          url: urlFor(article.mainImage)
+            .width(1200)
+            .height(630)
+            .fit("crop")
+            .auto("format")
+            .url(),
+          width: 1200,
+          height: 630,
+          alt: article.mainImage.alt ?? article.title,
+        }
+      : undefined,
+    article: {
+      publishedTime: article.publishedAt,
+      modifiedTime: article._updatedAt,
+      authors: article.author?.name ? [article.author.name] : undefined,
+    },
   });
+}
+
+// BlogPosting structured data: lets Google show the date, image and author
+// in results and pick the article up for Discover.
+function articleJsonLd(article: JournalArticle, slug: string) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: article.title,
+    description: toMetaDescription(article.excerpt),
+    url: `${siteConfig.url}${routes.journalArticle(slug)}`,
+    mainEntityOfPage: `${siteConfig.url}${routes.journalArticle(slug)}`,
+    ...(article.mainImage
+      ? {
+          image: urlFor(article.mainImage)
+            .width(1600)
+            .auto("format")
+            .url(),
+        }
+      : {}),
+    datePublished: article.publishedAt,
+    dateModified: article._updatedAt,
+    author: article.author?.name
+      ? { "@type": "Person", name: article.author.name }
+      : { "@type": "Organization", name: siteConfig.name },
+    publisher: {
+      "@type": "Organization",
+      name: siteConfig.name,
+      url: siteConfig.url,
+    },
+    inLanguage: "fr-BE",
+  };
 }
 
 export default async function JournalArticlePage({
@@ -53,6 +106,12 @@ export default async function JournalArticlePage({
 
   return (
     <main className="w-full">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(articleJsonLd(article, slug)),
+        }}
+      />
       <article>
         <header className="bg-white px-4 pt-24 pb-10 text-center text-black md:px-8 md:pt-28 md:pb-16">
           <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-[11px] uppercase tracking-wide text-black/50">

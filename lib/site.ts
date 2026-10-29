@@ -1,6 +1,6 @@
 export const siteConfig = {
   name: "Royal Cashmere",
-  url: "https://www.royal-cashmere.eu",
+  url: "https://www.royalcashmere.be",
   defaultLocale: "fr",
   locales: ["fr", "nl", "en"] as const,
   description:

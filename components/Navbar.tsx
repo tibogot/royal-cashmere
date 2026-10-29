@@ -13,6 +13,7 @@ import {
   NEW_IN_COLLECTION_HANDLE,
   SALE_COLLECTION_HANDLE,
 } from "@/lib/collection-handles";
+import { HERO_REVEALED_EVENT } from "@/lib/hero-intro";
 import { routes } from "@/lib/routes";
 import {
   getCollectionsSnapshot,
@@ -40,6 +41,9 @@ const TRANSPARENT_NAV_PATHS: ReadonlySet<string> = new Set([routes.home]);
 // the hero bottom hits the viewport top, the white section is already under the
 // nav and scaleY 0→1 is invisible — only the text color snap is noticeable.
 const NAV_SCROLL_REVEAL_OFFSET = 72;
+const INTRO_SLIDE_DURATION = 0.8;
+// Hero reveal is 1.4s once hydrated; leave room for a slow hydration.
+const INTRO_FALLBACK_MS = 4000;
 
 type NavAppearance = {
   white: boolean;
@@ -61,6 +65,10 @@ export default function Navbar() {
     getServerCollectionsSnapshot,
   );
   const [navSolid, setNavSolid] = useState(!hasTransparentHero);
+  // Only on a full load of the home page: the bar starts above the viewport
+  // (already in the server HTML) and slides down once the hero has revealed.
+  // Client navigations to home never re-run it — the navbar stays mounted.
+  const [introPending, setIntroPending] = useState(hasTransparentHero);
   const headerRef = useRef<HTMLElement>(null);
   const shellRef = useRef<HTMLDivElement>(null);
   const bgRef = useRef<HTMLDivElement>(null);
@@ -357,6 +365,46 @@ export default function Navbar() {
 
   useGSAP(
     () => {
+      const shell = shellRef.current;
+      if (!introPending || !shell) return;
+
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        setIntroPending(false);
+        return;
+      }
+
+      let played = false;
+      const slideIn = () => {
+        if (played) return;
+        played = true;
+        gsap.fromTo(
+          shell,
+          // y: 0 matters: GSAP parses the class's translateY(-100%) into a
+          // pixel `y` on first touch, which would stack with yPercent and
+          // keep the bar off-screen.
+          { y: 0, yPercent: -100 },
+          {
+            yPercent: 0,
+            duration: INTRO_SLIDE_DURATION,
+            ease: "power3.out",
+            onComplete: () => setIntroPending(false),
+          },
+        );
+      };
+
+      window.addEventListener(HERO_REVEALED_EVENT, slideIn);
+      // Never leave the site without a nav if the hero event doesn't come.
+      const fallback = window.setTimeout(slideIn, INTRO_FALLBACK_MS);
+      return () => {
+        window.removeEventListener(HERO_REVEALED_EVENT, slideIn);
+        window.clearTimeout(fallback);
+      };
+    },
+    { scope: headerRef, dependencies: [introPending] },
+  );
+
+  useGSAP(
+    () => {
       const menu = menuRef.current;
       const menuInner = menuInnerRef.current;
       if (!menu || !menuInner) return;
@@ -605,7 +653,11 @@ export default function Navbar() {
     <header ref={headerRef} className="fixed inset-x-0 top-0 z-50">
       <div
         ref={shellRef}
-        className="relative"
+        // motion-safe: with reduced motion the intro is skipped, so the bar
+        // must not start hidden. GSAP's inline transform overrides this.
+        className={`relative ${
+          introPending ? "motion-safe:transform-[translateY(-100%)]" : ""
+        }`}
         onMouseEnter={() => {
           navHoveredRef.current = true;
           setNavHovered(true);

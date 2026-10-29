@@ -1,7 +1,7 @@
 import ProductDetailView from "@/components/ProductDetailView";
 import RecentlyViewedProducts from "@/components/RecentlyViewedProducts";
 import SimilarProducts from "@/components/SimilarProducts";
-import { createPageMetadata } from "@/lib/seo";
+import { createPageMetadata, toMetaDescription } from "@/lib/seo";
 import { getProductByHandle } from "@/lib/shopify/products";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -23,7 +23,7 @@ export async function generateMetadata({
 
   return createPageMetadata({
     title: product.title,
-    description: product.description.slice(0, 160),
+    description: toMetaDescription(product.description),
     path: `/products/${handle}`,
   });
 }

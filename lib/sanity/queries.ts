@@ -7,6 +7,7 @@ import type {
 
 const articleListFields = `
   _id,
+  _updatedAt,
   title,
   slug,
   publishedAt,
@@ -26,7 +27,8 @@ export const articleBySlugQuery = `*[_type == "article" && slug.current == $slug
 }`;
 
 export const articleSlugsQuery = `*[_type == "article" && defined(slug.current)]{
-  "slug": slug.current
+  "slug": slug.current,
+  _updatedAt
 }`;
 
 const hotspotImageFields = `..., "lqip": asset->metadata.lqip`;
@@ -66,11 +68,18 @@ export async function getJournalArticleBySlug(
 }
 
 export async function getJournalArticleSlugs(): Promise<string[]> {
-  const rows = await sanityClient.fetch<{ slug: string }[]>(
+  const rows = await getJournalArticleSitemapEntries();
+  return rows.map((row) => row.slug);
+}
+
+export async function getJournalArticleSitemapEntries(): Promise<
+  { slug: string; _updatedAt: string }[]
+> {
+  const rows = await sanityClient.fetch<{ slug: string; _updatedAt: string }[]>(
     articleSlugsQuery,
     {},
     sanityFetchOptions,
   );
 
-  return rows.map((row) => row.slug).filter(Boolean);
+  return rows.filter((row) => Boolean(row.slug));
 }

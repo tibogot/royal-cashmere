@@ -30,6 +30,7 @@ export type HomePageContent = {
 
 export type JournalArticleListItem = {
   _id: string;
+  _updatedAt: string;
   title: string;
   slug: SanitySlug;
   publishedAt: string;

@@ -14,6 +14,12 @@ type ScrollShrinkImageProps = {
   // Play once when the card enters the viewport instead of scrubbing, with a
   // bottom-to-top clip-path reveal alongside the shrink.
   reveal?: boolean;
+  // With `reveal`: start clipped already in the server HTML. Use it above the
+  // fold, where the image would otherwise flash fully visible before
+  // hydration and then vanish for the reveal.
+  hiddenUntilReveal?: boolean;
+  // With `reveal`: window event dispatched when the reveal finishes.
+  revealedEvent?: string;
 };
 
 /**
@@ -25,6 +31,8 @@ export default function ScrollShrinkImage({
   children,
   from = 1.12,
   reveal = false,
+  hiddenUntilReveal = false,
+  revealedEvent,
 }: ScrollShrinkImageProps) {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -45,6 +53,11 @@ export default function ScrollShrinkImage({
               clipPath: "inset(0% 0% 0% 0%)",
               duration: 1.4,
               ease: "power3.out",
+              onComplete: () => {
+                if (revealedEvent) {
+                  window.dispatchEvent(new Event(revealedEvent));
+                }
+              },
               scrollTrigger: {
                 trigger: card,
                 start: "top 85%",
@@ -73,11 +86,20 @@ export default function ScrollShrinkImage({
 
       return () => mm.revert();
     },
-    { scope: ref, dependencies: [from, reveal] },
+    { scope: ref, dependencies: [from, reveal, revealedEvent] },
   );
 
   return (
-    <div ref={ref} className="absolute inset-0 will-change-transform">
+    <div
+      ref={ref}
+      // motion-safe only: with reduced motion GSAP never runs, so the image
+      // must not start clipped. Once GSAP runs, its inline clip-path wins.
+      className={`absolute inset-0 will-change-transform ${
+        reveal && hiddenUntilReveal
+          ? "motion-safe:[clip-path:inset(100%_0%_0%_0%)]"
+          : ""
+      }`}
+    >
       {children}
     </div>
   );

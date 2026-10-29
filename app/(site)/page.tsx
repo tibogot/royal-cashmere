@@ -4,6 +4,7 @@ import {
   NEW_IN_COLLECTION_HANDLE,
   SALE_COLLECTION_HANDLE,
 } from "@/lib/collection-handles";
+import { HERO_REVEALED_EVENT } from "@/lib/hero-intro";
 import { routes } from "@/lib/routes";
 import { ctaLinkClassName } from "@/lib/ui";
 // import CategoryShowcase from "@/components/CategoryShowcase";
@@ -96,22 +97,28 @@ export default async function Home() {
       <section
         id="home-hero"
         data-transparent-nav
-        className="relative h-svh w-full"
+        className="relative h-svh w-full overflow-hidden"
       >
         <h1 className="sr-only">
           Royal Cashmere — Boutique de cachemire d&apos;exception à Uccle,
           Bruxelles
         </h1>
         {/* <HomeHeroBackground /> */}
-        <Image
-          src={heroImage}
-          alt=""
-          fill
-          preload
-          className="object-cover"
-          sizes="100vw"
-          quality={75}
-        />
+        <ScrollShrinkImage
+          reveal
+          hiddenUntilReveal
+          revealedEvent={HERO_REVEALED_EVENT}
+        >
+          <Image
+            src={heroImage}
+            alt=""
+            fill
+            preload
+            className="object-cover"
+            sizes="100vw"
+            quality={75}
+          />
+        </ScrollShrinkImage>
         {/* <HeroBottomLogo priority raised /> */}
         <div className="absolute inset-x-0 bottom-0 z-10 flex justify-center p-4 md:p-8">
           <Link
@@ -222,7 +229,11 @@ export default async function Home() {
       </section>
 
       <section className="bg-white px-4 py-6 text-left text-black md:flex md:px-8 md:py-10">
-        <div className="hidden md:block md:w-2/3" aria-hidden="true" />
+        <div className="mb-4 md:mb-0 md:w-2/3">
+          <h2 className="max-w-xl font-serif text-2xl uppercase leading-[1.15] md:pr-12 md:text-4xl">
+            Une maison mongole au cœur d&apos;Uccle
+          </h2>
+        </div>
         <div className="md:w-1/3">
           <div className="max-w-xl">
             <p className="font-serif text-base leading-relaxed text-black/80 md:text-lg">
