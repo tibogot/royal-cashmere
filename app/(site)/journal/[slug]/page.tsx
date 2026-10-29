@@ -1,12 +1,17 @@
 import PortableTextContent from "@/components/PortableTextContent";
 import SanityImage from "@/components/SanityImage";
+import ScrollShrinkImage from "@/components/ScrollShrinkImage";
+import SplitTextReveal from "@/components/SplitTextReveal";
 import { formatArticleDate } from "@/lib/sanity/format";
 import { urlFor } from "@/lib/sanity/image";
 import {
   getJournalArticleBySlug,
   getJournalArticleSlugs,
 } from "@/lib/sanity/queries";
-import type { JournalArticle } from "@/lib/sanity/types";
+import type {
+  JournalArticle,
+  SanityImage as SanityImageData,
+} from "@/lib/sanity/types";
 import { createPageMetadata, toMetaDescription } from "@/lib/seo";
 import { routes } from "@/lib/routes";
 import { siteConfig } from "@/lib/site";
@@ -58,6 +63,20 @@ export async function generateMetadata({
       authors: article.author?.name ? [article.author.name] : undefined,
     },
   });
+}
+
+// The hero is 70svh tall on phones and 80svh above md, object-cover. When
+// the screen is narrower than the photo's ratio at that height, the photo
+// fills the height and its rendered width is height × ratio, not 100vw —
+// with "100vw" phones download a small file and stretch it (blurry). The
+// ratio comes from the asset id ("image-<hash>-1600x900-jpg").
+function articleHeroSizes(image: SanityImageData): string {
+  const match = image.asset?._ref.match(/-(\d+)x(\d+)-/);
+  if (!match) return "100vw";
+  const ratio = Number(match[1]) / Number(match[2]);
+  const mobileVh = Math.ceil(70 * ratio);
+  const desktopVh = Math.ceil(80 * ratio);
+  return `(max-width: 767px) max(100vw, ${mobileVh}vh), max(100vw, ${desktopVh}vh)`;
 }
 
 // BlogPosting structured data: lets Google show the date, image and author
@@ -132,20 +151,27 @@ export default async function JournalArticlePage({
             ) : null}
           </div>
 
-          <h1 className="mx-auto mt-6 max-w-5xl font-serif text-5xl uppercase leading-[1.12] md:max-w-6xl md:text-8xl md:leading-[1.08]">
+          <SplitTextReveal
+            as="h1"
+            hiddenUntilReveal
+            className="mx-auto mt-6 max-w-5xl font-serif text-5xl uppercase leading-[1.12] md:max-w-6xl md:text-8xl md:leading-[1.08]"
+          >
             {article.title}
-          </h1>
+          </SplitTextReveal>
         </header>
 
         {article.mainImage ? (
-          <div className="relative h-[70svh] w-full bg-neutral-100 md:h-[80svh]">
-            <SanityImage
-              image={article.mainImage}
-              alt={article.mainImage.alt ?? article.title}
-              sizes="100vw"
-              width={2400}
-              preload
-            />
+          <div className="relative h-[70svh] w-full overflow-hidden md:h-[80svh]">
+            <ScrollShrinkImage reveal hiddenUntilReveal>
+              <SanityImage
+                image={article.mainImage}
+                alt={article.mainImage.alt ?? article.title}
+                sizes={articleHeroSizes(article.mainImage)}
+                width={3840}
+                preload
+                fade={false}
+              />
+            </ScrollShrinkImage>
           </div>
         ) : null}
 

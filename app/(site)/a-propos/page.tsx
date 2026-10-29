@@ -62,34 +62,34 @@ export default function AboutPage() {
           </p>
         </div>
       </section>
-      <div className="flex flex-col gap-12 md:gap-20">
-        <section className="flex w-full flex-col md:h-[50svh] md:flex-row">
-          <div
-            className="hidden md:block md:h-full md:w-1/2"
-            aria-hidden="true"
-          />
-          <div className="relative h-[32svh] w-full md:h-full md:w-1/2">
-            <FadeInImage
-              src="/images/shared/paysage-mongolie.jpg"
-              alt="Paysages de Mongolie"
-              fill
-              className="object-cover"
-              sizes="(max-width: 767px) 100vw, 50vw"
-            />
-          </div>
-        </section>
-
-        <section className="flex w-full flex-col md:min-h-[80svh] md:flex-row pb-20">
-          <div className="relative h-[50svh] w-full md:h-auto md:min-h-[80svh] md:w-1/2">
+      {/* Same side padding as the text sections above. Landscape photo
+          first (right half), then a taller portrait one beside the text.
+          Aspect ratios, not svh heights, so the shapes hold on any screen. */}
+      <div className="flex flex-col gap-12 px-4 md:gap-20 md:px-8">
+        <section className="flex w-full flex-col md:flex-row">
+          <div className="hidden md:block md:w-1/2" aria-hidden="true" />
+          <div className="relative aspect-3/2 w-full md:w-1/2">
             <FadeInImage
               src="/images/about/cachemire.jpg"
               alt="Cachemire Royal Cashmere"
               fill
               className="object-cover"
-              sizes="(max-width: 767px) 100vw, 50vw"
+              sizes="(max-width: 767px) calc(100vw - 2rem), calc(50vw - 2rem)"
             />
           </div>
-          <div className="flex w-full  bg-white px-4 py-4 text-left text-black md:w-1/2 md:px-8 md:pt-0 ">
+        </section>
+
+        <section className="flex w-full flex-col pb-20 md:flex-row">
+          <div className="relative aspect-4/5 w-full md:w-1/2">
+            <FadeInImage
+              src="/images/about/fibre-cachemire-brute.jpg"
+              alt="Femme tenant une poignée de fibre de cachemire brute dans la steppe mongole"
+              fill
+              className="object-cover"
+              sizes="(max-width: 767px) calc(100vw - 2rem), calc(50vw - 2rem)"
+            />
+          </div>
+          <div className="flex w-full bg-white py-4 text-left text-black md:w-1/2 md:pt-0 md:pl-8">
             <div className="max-w-xl">
               {/* <h2 className={sectionHeadingClassName}>
               Cachemire mongol, héritage nomade

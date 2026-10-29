@@ -1,7 +1,8 @@
 import ContactForm from "@/components/ContactForm";
-import FadeInImage from "@/components/FadeInImage";
+import ScrollShrinkImage from "@/components/ScrollShrinkImage";
 import { createPageMetadata } from "@/lib/seo";
 import { siteConfig } from "@/lib/site";
+import Image from "next/image";
 
 export const metadata = createPageMetadata({
   title: "Contact",
@@ -73,14 +74,19 @@ export default function ContactPage() {
             </div>
           </div>
 
-          <div className="relative min-h-160 w-full md:min-h-[calc(100svh-7rem)]">
-            <FadeInImage
-              src="/images/shared/manteau.jpg"
-              alt="Manteau en cachemire Royal Cashmere"
-              fill
-              className="object-cover"
-              sizes="(max-width: 768px) 100vw, 50vw"
-            />
+          <div className="relative min-h-160 w-full overflow-hidden md:min-h-[calc(100svh-7rem)]">
+            {/* Plain Image, no fade: the reveal waits for the image itself.
+                Hidden from the server HTML since it's in view on desktop. */}
+            <ScrollShrinkImage reveal hiddenUntilReveal>
+              <Image
+                src="/images/shared/manteau.jpg"
+                alt="Manteau en cachemire Royal Cashmere"
+                fill
+                loading="eager"
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, 50vw"
+              />
+            </ScrollShrinkImage>
           </div>
         </div>
       </section>
