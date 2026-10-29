@@ -150,8 +150,8 @@ export default async function Home() {
 
       <FeaturedProducts products={sortByCarouselOrder(products)} limit={16} />
 
-      <section className="bg-white px-4 py-6 md:px-8 md:py-10">
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6">
+      <section className="bg-white">
+        <div className="grid grid-cols-1 md:grid-cols-2">
           <Link
             href={routes.collectionByHandle(SALE_COLLECTION_HANDLE)}
             className="group relative block aspect-5/4 cursor-pointer overflow-hidden md:aspect-4/5"
