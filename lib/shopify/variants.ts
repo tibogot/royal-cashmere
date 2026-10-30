@@ -179,6 +179,31 @@ export function getSelectableValues(
   );
 }
 
+// Picking a value keeps the other choices when that combination exists;
+// otherwise it moves to a variant with that value, preferring one in stock.
+export function getSelectionsForChange(
+  variants: ProductVariant[],
+  selections: Record<string, string>,
+  optionName: string,
+  value: string,
+) {
+  const next = { ...selections, [optionName]: value };
+  const exact = findVariantBySelections(variants, next);
+  if (exact?.availableForSale) return next;
+
+  const withValue = variants.filter((variant) =>
+    variant.selectedOptions.some(
+      (option) => option.name === optionName && option.value === value,
+    ),
+  );
+  const fallback =
+    withValue.find((variant) => variant.availableForSale) ??
+    exact ??
+    withValue[0];
+
+  return fallback ? selectionsFromVariant(fallback) : next;
+}
+
 export function getProductImageForSelections(
   product: {
     imageUrl: string;

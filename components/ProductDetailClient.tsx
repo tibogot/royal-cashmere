@@ -12,6 +12,7 @@ import type { ShopifyProductDetail } from "@/lib/shopify/queries";
 import {
   getInitialSelections,
   getProductImageForSelections,
+  getSelectionsForChange,
 } from "@/lib/shopify/variants";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 
@@ -55,10 +56,9 @@ export default function ProductDetailClient({
   }, [product]);
 
   const handleSelectionChange = (optionName: string, value: string) => {
-    setSelections((current) => ({
-      ...current,
-      [optionName]: value,
-    }));
+    setSelections((current) =>
+      getSelectionsForChange(product.variants, current, optionName, value),
+    );
   };
 
   return (

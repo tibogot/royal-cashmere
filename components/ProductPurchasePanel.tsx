@@ -114,13 +114,14 @@ export default function ProductPurchasePanel({
                           key={value}
                           type="button"
                           onClick={() => handleOptionChange(option.name, value)}
-                          disabled={!isAvailable}
                           aria-pressed={isSelected}
                           className={`min-w-11 border px-4 py-2 text-sm transition-colors ${
                             isSelected
                               ? "border-black bg-black text-white"
-                              : "border-black/20 bg-white text-black hover:border-black/50"
-                          } disabled:cursor-not-allowed disabled:border-black/10 disabled:text-black/30`}
+                              : isAvailable
+                                ? "border-black/20 bg-white text-black hover:border-black/50"
+                                : "border-black/10 bg-white text-black/35 hover:border-black/30"
+                          } ${isAvailable ? "" : "line-through"}`}
                         >
                           {value}
                         </button>

@@ -48,11 +48,10 @@ export default function ColorOptionSwatches({
             key={value}
             type="button"
             onClick={() => onSelect(value)}
-            disabled={!isAvailable}
             aria-pressed={isSelected}
             aria-label={value}
             title={value}
-            className="disabled:cursor-not-allowed disabled:opacity-40"
+            className={isAvailable || isSelected ? "" : "opacity-40"}
           >
             <span
               className={`relative block size-14 overflow-hidden bg-white ${
