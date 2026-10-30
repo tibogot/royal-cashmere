@@ -30,6 +30,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
 import Link from "@/components/LocaleLink";
+import HomeLogoLink from "@/components/HomeLogoLink";
 import { useBarePathname, useDictionary } from "@/components/LocaleProvider";
 import type { ClientDictionary } from "@/lib/i18n/dictionaries";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
@@ -746,8 +747,7 @@ export default function Navbar() {
             </ul>
           </div>
 
-          <Link
-            href={routes.home}
+          <HomeLogoLink
             className="absolute top-1/2 left-1/2 z-10 -translate-x-1/2 -translate-y-1/2"
             aria-label={dict.nav.homeAriaLabel}
             onMouseEnter={closeShopMenu}
@@ -762,7 +762,7 @@ export default function Navbar() {
                 className="h-3.5 w-auto nav:h-4"
               />
             </span>
-          </Link>
+          </HomeLogoLink>
 
           <div
             className="relative z-10 flex items-center justify-end gap-4"

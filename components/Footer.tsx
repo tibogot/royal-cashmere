@@ -1,5 +1,6 @@
 import CartNavLink from "@/components/CartNavLink";
 import FooterSearchLink from "@/components/FooterSearchLink";
+import HomeLogoLink from "@/components/HomeLogoLink";
 import Image from "next/image";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import Link from "@/components/LocaleLink";
@@ -132,8 +133,7 @@ export default function Footer({ dictionary }: { dictionary: FooterCopy }) {
         </div>
       </div>
 
-      <Link
-        href={routes.home}
+      <HomeLogoLink
         aria-label={nav.homeAriaLabel}
         className="mt-16 block w-full md:mt-24"
       >
@@ -144,7 +144,7 @@ export default function Footer({ dictionary }: { dictionary: FooterCopy }) {
           height={18}
           className="h-auto w-full brightness-0"
         />
-      </Link>
+      </HomeLogoLink>
 
       <div className="mt-6 flex w-full flex-wrap items-center justify-between gap-x-4 gap-y-2 text-[10px] text-black md:mt-8 md:text-xs">
         <div className="flex items-center gap-4">
