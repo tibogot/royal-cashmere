@@ -1,6 +1,7 @@
 "use client";
 
 import CartPageView from "@/components/CartPageView";
+import { useDictionary } from "@/components/LocaleProvider";
 import PanelCloseButton from "@/components/PanelCloseButton";
 import {
   getCart,
@@ -30,6 +31,7 @@ export default function CartPanel({ open, onClose }: CartPanelProps) {
   const tweenRef = useRef<gsap.core.Timeline | null>(null);
   const [isVisible, setIsVisible] = useState(false);
   const mounted = useMounted();
+  const dict = useDictionary();
 
   const cart = useSyncExternalStore(subscribeCart, getCart, getServerCart);
   const hasFetched = useSyncExternalStore(
@@ -138,7 +140,7 @@ export default function CartPanel({ open, onClose }: CartPanelProps) {
       <button
         type="button"
         ref={overlayRef}
-        aria-label="Fermer le panier"
+        aria-label={dict.cart.close}
         className="absolute inset-0 bg-black/40 opacity-0"
         onClick={onClose}
       />
@@ -153,7 +155,7 @@ export default function CartPanel({ open, onClose }: CartPanelProps) {
       >
         <div className="flex shrink-0 items-center justify-between gap-4 px-4 py-4 md:px-8">
           <h2 id={titleId} className="text-sm uppercase tracking-wide">
-            Panier
+            {dict.cart.title}
             {cart && cart.totalQuantity > 0 ? (
               <span className="text-black/50"> ({cart.totalQuantity})</span>
             ) : null}
@@ -162,7 +164,9 @@ export default function CartPanel({ open, onClose }: CartPanelProps) {
         </div>
 
         {showLoading ? (
-          <p className="mt-6 px-4 text-sm text-black/50 md:px-8">Chargement…</p>
+          <p className="mt-6 px-4 text-sm text-black/50 md:px-8">
+            {dict.cart.loading}
+          </p>
         ) : (
           <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
             <CartPageView cart={cart} variant="panel" onClose={onClose} />

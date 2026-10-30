@@ -1,0 +1,227 @@
+{
+  "common": {
+    "close": "Fermer"
+  },
+  "nav": {
+    "shop": "Boutique",
+    "viewAll": "Tout voir",
+    "journal": "Journal",
+    "about": "À propos",
+    "contact": "Contact",
+    "account": "Mon compte",
+    "search": "Rechercher",
+    "cart": "Panier",
+    "cartWithCount": "Panier ({count})",
+    "wishlist": "WISHLIST",
+    "wishlistWithCount": "WISHLIST ({count})",
+    "homeAriaLabel": "Royal Cashmere – accueil",
+    "openMenu": "Ouvrir le menu",
+    "closeMenu": "Fermer le menu",
+    "showCategories": "Afficher les catégories",
+    "hideCategories": "Masquer les catégories",
+    "featuredImageAlts": {
+      "sweaterAndTrousers": "Pull et pantalon en cachemire Royal Cashmere",
+      "coat": "Manteau en cachemire Royal Cashmere"
+    }
+  },
+  "footer": {
+    "openingHoursTitle": "Horaires d'ouverture",
+    "openingHours": "Du lundi au vendredi de 10 h à 18 h",
+    "addressStreet": "Chaussée de Waterloo 1251B",
+    "addressCity": "Uccle, Belgique",
+    "legalAriaLabel": "Informations légales",
+    "legalNotice": "Mentions légales",
+    "privacyPolicy": "Politique de confidentialité",
+    "terms": "CGV",
+    "cookies": "Cookies"
+  },
+  "search": {
+    "dialogAriaLabel": "Rechercher",
+    "closeAriaLabel": "Fermer la recherche",
+    "inputLabel": "Rechercher un produit",
+    "placeholder": "Rechercher un produit...",
+    "resultsAriaLabel": "Résultats de recherche",
+    "searching": "Recherche en cours…",
+    "viewAllResults": "Voir tous les résultats ({total})",
+    "noResults": "Aucun produit trouvé pour “{query}”.",
+    "popularTitle": "Recherches populaires",
+    "popular": {
+      "womenSweaters": "Pulls femme",
+      "menSweaters": "Pulls homme",
+      "dresses": "Robes",
+      "scarves": "Écharpes"
+    }
+  },
+  "cookieBanner": {
+    "title": "Cookies",
+    "textBeforeLinks": "Nous utilisons des cookies strictement nécessaires au fonctionnement du site (panier, compte client et sécurité). En continuant votre navigation, vous acceptez leur utilisation. Consultez notre",
+    "cookiePolicyLink": "politique relative aux cookies",
+    "betweenLinks": "et notre",
+    "privacyPolicyLink": "politique de confidentialité",
+    "textAfterLinks": ".",
+    "accept": "Accepter",
+    "learnMore": "En savoir plus"
+  },
+  "breadcrumbs": {
+    "ariaLabel": "Fil d'Ariane",
+    "home": "Accueil"
+  },
+  "languageSwitcher": {
+    "ariaLabel": "Langue"
+  },
+  "catalog": {
+    "labels": {
+      "femme": "Femme",
+      "pulls-femme": "Pulls",
+      "pulls-col-roule-femme": "Col roulé",
+      "gilets-femme": "Gilets",
+      "robes-cachemire": "Robes",
+      "jupes-cachemire": "Jupes",
+      "pantalons-femme": "Pantalons",
+      "homme": "Homme",
+      "pulls-homme": "Pulls",
+      "pulls-col-roule-homme": "Col roulé",
+      "gilets-homme": "Gilets",
+      "pantalons-homme": "Pantalons",
+      "accessoires": "Accessoires",
+      "echarpes-cachemire": "Écharpes",
+      "bonnets-cachemire": "Bonnets",
+      "gants-cachemire": "Gants"
+    },
+    "showcaseImageAlts": {
+      "robes-cachemire": "Robes en cachemire Royal Cashmere",
+      "pantalons-femme": "Pantalons en cachemire Royal Cashmere",
+      "echarpes-cachemire": "Écharpes en cachemire Royal Cashmere",
+      "pulls-femme": "Pulls en cachemire Royal Cashmere"
+    },
+    "all": "Tout",
+    "categoriesAriaLabel": "Catégories",
+    "resultsFor": "Résultats pour “{query}”",
+    "productCountOne": "{count} produit",
+    "productCountOther": "{count} produits",
+    "noResults": "Aucun produit ne correspond à votre recherche pour le moment.",
+    "notFound": {
+      "title": "Collection introuvable",
+      "backToShop": "Retour à la boutique"
+    }
+  },
+  "collection": {
+    "shop": {
+      "title": "Boutique",
+      "description": "Découvrez toute la collection Royal Cashmere : pulls, gilets, robes, pantalons et accessoires en pur cachemire de Mongolie, pour femme et homme. Boutique de cachemire d'exception à Uccle, Bruxelles."
+    },
+    "fallbackTitle": "Collection",
+    "fallbackDescription": "Découvrez la collection {title} Royal Cashmere : pièces en cachemire d'exception.",
+    "imageAlts": {
+      "femme": "Pull et pantalon en cachemire pour femme Royal Cashmere",
+      "homme": "Pull en cachemire pour homme Royal Cashmere",
+      "accessoires": "Écharpe en cachemire Royal Cashmere"
+    },
+    "pages": {
+      "femme": {
+        "title": "Vêtements en cachemire pour femme",
+        "description": "Pulls, gilets, robes, jupes et pantalons en pur cachemire de Mongolie pour femme. Découvrez la collection Royal Cashmere en ligne et en boutique à Uccle, Bruxelles.",
+        "intro": "Pulls, gilets, robes, jupes et pantalons en pur cachemire de Mongolie, pensés pour durer d'une saison à l'autre. Chaque pièce est choisie pour sa douceur et la qualité de sa fibre."
+      },
+      "pulls-femme": {
+        "title": "Pulls en cachemire pour femme",
+        "description": "Pulls en cachemire pour femme : col roulé, col V, col rond, coupes amples ou ajustées. Pur cachemire de Mongolie, boutique à Uccle, Bruxelles.",
+        "intro": "Col roulé, col V ou col rond : nos pulls en pur cachemire de Mongolie allient chaleur et légèreté. Une pièce essentielle, à porter seule ou en superposition."
+      },
+      "pulls-col-roule-femme": {
+        "title": "Pulls col roulé en cachemire pour femme",
+        "description": "Pulls col roulé en cachemire pour femme : la chaleur du pur cachemire de Mongolie au plus près du cou. Collection Royal Cashmere, Uccle, Bruxelles.",
+        "intro": "Le col roulé en cachemire protège du froid sans épaissir la silhouette. Un classique de l'hiver, en pur cachemire de Mongolie."
+      },
+      "gilets-femme": {
+        "title": "Gilets et cardigans en cachemire pour femme",
+        "description": "Gilets et cardigans en cachemire pour femme, à boutons ou ouverts. Pur cachemire de Mongolie, boutique Royal Cashmere à Uccle, Bruxelles.",
+        "intro": "Boutonnés ou ouverts, nos gilets en cachemire se superposent facilement et accompagnent les journées de mi-saison comme les soirées d'hiver."
+      },
+      "robes-cachemire": {
+        "title": "Robes en cachemire",
+        "description": "Robes en cachemire pour femme : maille douce et fluide en pur cachemire de Mongolie. Collection Royal Cashmere, boutique à Uccle, Bruxelles.",
+        "intro": "La douceur d'un pull, l'allure d'une robe. Nos robes en maille de cachemire se portent du bureau au dîner, en toute saison froide."
+      },
+      "jupes-cachemire": {
+        "title": "Jupes en cachemire",
+        "description": "Jupes en cachemire pour femme, longues ou mi-longues. Pur cachemire de Mongolie, boutique Royal Cashmere à Uccle, Bruxelles.",
+        "intro": "Une jupe en maille de cachemire, souple et chaude, qui s'associe naturellement à nos pulls pour une silhouette tout en douceur."
+      },
+      "pantalons-femme": {
+        "title": "Pantalons en cachemire pour femme",
+        "description": "Pantalons en cachemire pour femme, droits ou larges. Pur cachemire de Mongolie, boutique Royal Cashmere à Uccle, Bruxelles.",
+        "intro": "Confortables comme un vêtement d'intérieur, assez élégants pour sortir : nos pantalons en cachemire s'assortissent à nos pulls pour un ensemble complet."
+      },
+      "homme": {
+        "title": "Vêtements en cachemire pour homme",
+        "description": "Pulls et gilets en pur cachemire de Mongolie pour homme. Découvrez la collection Royal Cashmere en ligne et en boutique à Uccle, Bruxelles.",
+        "intro": "Des pulls et des gilets en pur cachemire de Mongolie, aux coupes sobres et intemporelles. Plusieurs pièces sont mixtes : consultez le guide des tailles sur chaque fiche."
+      },
+      "pulls-homme": {
+        "title": "Pulls en cachemire pour homme",
+        "description": "Pulls en cachemire pour homme : col roulé, col V, col rond. Pur cachemire de Mongolie, boutique Royal Cashmere à Uccle, Bruxelles.",
+        "intro": "Col roulé, col V ou col rond : des pulls en pur cachemire de Mongolie, chauds et légers, à porter au quotidien comme sous une veste."
+      },
+      "pulls-col-roule-homme": {
+        "title": "Pulls col roulé en cachemire pour homme",
+        "description": "Pulls col roulé en cachemire pour homme, en pur cachemire de Mongolie. Collection Royal Cashmere, boutique à Uccle, Bruxelles.",
+        "intro": "Le col roulé en cachemire, seul ou sous un manteau : une pièce de caractère, en pur cachemire de Mongolie."
+      },
+      "gilets-homme": {
+        "title": "Gilets et cardigans en cachemire pour homme",
+        "description": "Gilets et cardigans en cachemire pour homme. Pur cachemire de Mongolie, boutique Royal Cashmere à Uccle, Bruxelles.",
+        "intro": "Un gilet en cachemire remplace aisément une veste les jours de mi-saison. Coupes sobres, pur cachemire de Mongolie."
+      },
+      "pantalons-homme": {
+        "title": "Pantalons en cachemire pour homme",
+        "description": "Pantalons en cachemire pour homme. Pur cachemire de Mongolie, boutique Royal Cashmere à Uccle, Bruxelles.",
+        "intro": "Le confort du cachemire dans un pantalon à la coupe nette, à porter chez soi comme en ville."
+      },
+      "accessoires": {
+        "title": "Accessoires en cachemire",
+        "description": "Écharpes, bonnets et gants en pur cachemire de Mongolie, pour homme et femme. Accessoires Royal Cashmere, boutique à Uccle, Bruxelles.",
+        "intro": "Écharpes, bonnets et gants en pur cachemire de Mongolie, pour homme et femme. Les accessoires idéaux pour se protéger du froid, ou pour offrir."
+      },
+      "echarpes-cachemire": {
+        "title": "Écharpes en cachemire",
+        "description": "Écharpes et étoles en cachemire pour homme et femme, unies ou à motifs. Pur cachemire de Mongolie, boutique Royal Cashmere à Uccle, Bruxelles.",
+        "intro": "Écharpes et étoles en pur cachemire de Mongolie, pour homme et femme. Légères, chaudes et douces au contact de la peau."
+      },
+      "bonnets-cachemire": {
+        "title": "Bonnets en cachemire",
+        "description": "Bonnets en cachemire pour homme et femme. Pur cachemire de Mongolie, boutique Royal Cashmere à Uccle, Bruxelles.",
+        "intro": "Des bonnets en pur cachemire de Mongolie, pour homme et femme : toute la chaleur du cachemire, sans gratter."
+      },
+      "gants-cachemire": {
+        "title": "Gants en cachemire",
+        "description": "Gants et mitaines en cachemire pour homme et femme. Pur cachemire de Mongolie, boutique Royal Cashmere à Uccle, Bruxelles.",
+        "intro": "Gants et mitaines en pur cachemire de Mongolie, pour homme et femme, à assortir à votre écharpe ou à votre bonnet."
+      }
+    }
+  },
+  "site": {
+    "description": "Boutique de cachemire d'exception à Uccle, Bruxelles. Pulls, écharpes et accessoires en pur cachemire de Mongolie.",
+    "defaultTitle": "{name} | Cachemire d'exception à Uccle, Bruxelles",
+    "shareImageAlt": "Cavalière en manteau de cachemire dans la steppe mongole"
+  },
+  "shellLegalMeta": {
+    "legalNotice": {
+      "title": "Mentions légales",
+      "description": "Mentions légales de Royal Cashmere."
+    },
+    "privacyPolicy": {
+      "title": "Politique de confidentialité",
+      "description": "Politique de confidentialité de Royal Cashmere."
+    },
+    "terms": {
+      "title": "CGV",
+      "description": "Conditions générales de vente de Royal Cashmere."
+    },
+    "cookies": {
+      "title": "Cookies",
+      "description": "Politique relative aux cookies de Royal Cashmere."
+    },
+    "lastUpdated": "Dernière mise à jour :"
+  }
+}

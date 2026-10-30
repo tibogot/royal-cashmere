@@ -18,6 +18,9 @@ import {
   type ShopifyProductNode,
 } from "./queries";
 import { getColorCount, buildColorSwatches } from "./variants";
+import { DEFAULT_LOCALE, type Locale } from "@/lib/i18n/config";
+import { formatMoney } from "@/lib/i18n/format";
+import { shopifyLanguage } from "./language";
 
 const PRODUCTS_PAGE_SIZE = 100;
 
@@ -27,25 +30,10 @@ const PRODUCTS_PAGE_SIZE = 100;
 const SHOPIFY_REVALIDATE = 3600;
 export const SHOPIFY_CACHE_TAG = "shopify-products";
 
-function formatPrice(amount: string, currencyCode: string) {
-  return new Intl.NumberFormat("fr-BE", {
-    style: "currency",
-    currency: currencyCode,
-  }).format(Number(amount));
-}
-
-function formatColorCount(count: number) {
-  if (count <= 0) return null;
-  return count === 1 ? "1 couleur" : `${count} couleurs`;
-}
-
-export function getProductColorLabel(
-  options: { name: string; values: string[] }[],
-) {
-  return formatColorCount(getColorCount(options));
-}
-
-function mapProductNode(node: ShopifyProductNode): ShopifyProduct | null {
+export function mapProductNode(
+  node: ShopifyProductNode,
+  locale: Locale,
+): ShopifyProduct | null {
   if (!node.featuredImage?.url) return null;
 
   const { amount, currencyCode } = node.priceRange.minVariantPrice;
@@ -58,7 +46,7 @@ function mapProductNode(node: ShopifyProductNode): ShopifyProduct | null {
     handle: node.handle,
     imageUrl,
     imageAlt,
-    price: formatPrice(amount, currencyCode),
+    price: formatMoney(locale, amount, currencyCode),
     colorCount: getColorCount(node.options),
     colorSwatches: buildColorSwatches(node.options),
     productType: node.productType,
@@ -66,20 +54,24 @@ function mapProductNode(node: ShopifyProductNode): ShopifyProduct | null {
   };
 }
 
-function mapProductsResponse(data: ProductsQueryResponse["data"]) {
+function mapProductsResponse(
+  data: ProductsQueryResponse["data"],
+  locale: Locale,
+) {
   const edges = data?.products.edges ?? [];
 
   return edges
-    .map(({ node }) => mapProductNode(node))
+    .map(({ node }) => mapProductNode(node, locale))
     .filter((product): product is ShopifyProduct => product !== null);
 }
 
-async function fetchProductsPage(after?: string | null) {
+async function fetchProductsPage(locale: Locale, after?: string | null) {
   const client = getShopifyClient();
   const { data, errors } = (await client.request(ALL_PRODUCTS_QUERY, {
     variables: {
       first: PRODUCTS_PAGE_SIZE,
       after: after ?? null,
+      language: shopifyLanguage(locale),
     },
   })) as ProductsQueryResponse;
 
@@ -88,7 +80,7 @@ async function fetchProductsPage(after?: string | null) {
   }
 
   return {
-    products: mapProductsResponse(data),
+    products: mapProductsResponse(data, locale),
     pageInfo: data?.products.pageInfo ?? {
       hasNextPage: false,
       endCursor: null,
@@ -98,12 +90,17 @@ async function fetchProductsPage(after?: string | null) {
 
 function mapProductDetailNode(
   node: ShopifyProductDetailNode,
+  locale: Locale,
 ): ShopifyProductDetail | null {
   const variants = node.variants.edges
     .map(({ node: variant }) => ({
       id: variant.id,
       availableForSale: variant.availableForSale,
-      price: formatPrice(variant.price.amount, variant.price.currencyCode),
+      price: formatMoney(
+        locale,
+        variant.price.amount,
+        variant.price.currencyCode,
+      ),
       imageUrl: variant.image?.url,
       imageAlt: variant.image?.altText ?? undefined,
       selectedOptions: variant.selectedOptions,
@@ -120,13 +117,19 @@ function mapProductDetailNode(
     handle: node.handle,
     imageUrl: node.featuredImage.url,
     imageAlt: node.featuredImage.altText ?? node.title,
-    price: formatPrice(amount, currencyCode),
+    price: formatMoney(locale, amount, currencyCode),
     colorCount: getColorCount(node.options),
     colorSwatches: buildColorSwatches(node.options),
     productType: node.productType,
     tags: node.tags,
     description: node.description,
     descriptionHtml: node.descriptionHtml,
+    seoDescription: node.seo?.description?.trim() || undefined,
+    details: {
+      composition: node.composition?.value.trim() || undefined,
+      fit: node.fit?.value.trim() || undefined,
+      care: node.care?.value.trim() || undefined,
+    },
     options: node.options.map((option) => ({
       name: option.name,
       values: option.values,
@@ -136,7 +139,10 @@ function mapProductDetailNode(
 }
 
 export const getProductByHandle = unstable_cache(
-  async (handle: string): Promise<ShopifyProductDetail | null> => {
+  async (
+    handle: string,
+    locale: Locale = DEFAULT_LOCALE,
+  ): Promise<ShopifyProductDetail | null> => {
   if (!isShopifyConfigured()) {
     return getPlaceholderProductByHandle(handle);
   }
@@ -144,7 +150,7 @@ export const getProductByHandle = unstable_cache(
   try {
     const client = getShopifyClient();
     const { data, errors } = (await client.request(PRODUCT_BY_HANDLE_QUERY, {
-      variables: { handle },
+      variables: { handle, language: shopifyLanguage(locale) },
     })) as ProductByHandleQueryResponse;
 
     if (errors?.length) {
@@ -155,7 +161,7 @@ export const getProductByHandle = unstable_cache(
     const node = data?.product;
     if (!node) return getPlaceholderProductByHandle(handle);
 
-    const product = mapProductDetailNode(node);
+    const product = mapProductDetailNode(node, locale);
     return product ?? getPlaceholderProductByHandle(handle);
   } catch (error) {
     console.error("Failed to fetch Shopify product:", error);
@@ -167,7 +173,7 @@ export const getProductByHandle = unstable_cache(
 );
 
 export const getAllProducts = unstable_cache(
-  async (): Promise<ShopifyProduct[]> => {
+  async (locale: Locale = DEFAULT_LOCALE): Promise<ShopifyProduct[]> => {
   if (!isShopifyConfigured()) {
     return getPlaceholderProducts();
   }
@@ -177,7 +183,7 @@ export const getAllProducts = unstable_cache(
     let after: string | null = null;
 
     do {
-      const page = await fetchProductsPage(after);
+      const page = await fetchProductsPage(locale, after);
       products.push(...page.products);
       after = page.pageInfo.hasNextPage ? page.pageInfo.endCursor : null;
     } while (after);
@@ -193,7 +199,10 @@ export const getAllProducts = unstable_cache(
 );
 
 export const getFeaturedProducts = unstable_cache(
-  async (limit = 12): Promise<ShopifyProduct[]> => {
+  async (
+    limit = 12,
+    locale: Locale = DEFAULT_LOCALE,
+  ): Promise<ShopifyProduct[]> => {
   if (!isShopifyConfigured()) {
     return getPlaceholderProducts(limit);
   }
@@ -201,7 +210,7 @@ export const getFeaturedProducts = unstable_cache(
   try {
     const client = getShopifyClient();
     const { data, errors } = (await client.request(FEATURED_PRODUCTS_QUERY, {
-      variables: { first: limit },
+      variables: { first: limit, language: shopifyLanguage(locale) },
     })) as ProductsQueryResponse;
 
     if (errors?.length) {
@@ -209,7 +218,7 @@ export const getFeaturedProducts = unstable_cache(
       return getPlaceholderProducts(limit);
     }
 
-    const products = mapProductsResponse(data);
+    const products = mapProductsResponse(data, locale);
 
     return products.length > 0 ? products : getPlaceholderProducts(limit);
   } catch (error) {
@@ -264,11 +273,12 @@ function pickSimilarProducts(
 async function getRecommendedProducts(
   productId: string,
   limit: number,
+  locale: Locale,
 ): Promise<ShopifyProduct[]> {
   const client = getShopifyClient();
   const { data, errors } = (await client.request(
     PRODUCT_RECOMMENDATIONS_QUERY,
-    { variables: { productId } },
+    { variables: { productId, language: shopifyLanguage(locale) } },
   )) as ProductRecommendationsQueryResponse;
 
   if (errors?.length) {
@@ -276,7 +286,7 @@ async function getRecommendedProducts(
   }
 
   return (data?.productRecommendations ?? [])
-    .map((node) => mapProductNode(node))
+    .map((node) => mapProductNode(node, locale))
     .filter((item): item is ShopifyProduct => item !== null)
     .slice(0, limit);
 }
@@ -288,10 +298,11 @@ export type CartCarouselProduct = ShopifyProduct & {
 
 export async function enrichProductsForQuickAdd(
   products: ShopifyProduct[],
+  locale: Locale,
 ): Promise<CartCarouselProduct[]> {
   return Promise.all(
     products.map(async (product) => {
-      const detail = await getProductByHandle(product.handle);
+      const detail = await getProductByHandle(product.handle, locale);
       const variant =
         detail?.variants.find((item) => item.availableForSale) ??
         detail?.variants[0];
@@ -307,15 +318,20 @@ export async function enrichProductsForQuickAdd(
 
 export async function getSimilarProductsByHandle(
   handle: string,
+  locale: Locale,
   options?: { limit?: number; excludeHandles?: string[] },
 ): Promise<ShopifyProduct[]> {
   const limit = options?.limit ?? 4;
   const exclude = new Set(options?.excludeHandles ?? []);
-  const product = await getProductByHandle(handle);
+  const product = await getProductByHandle(handle, locale);
 
   if (!product) return [];
 
-  const similar = await getSimilarProducts(product, limit + exclude.size);
+  const similar = await getSimilarProducts(
+    product,
+    locale,
+    limit + exclude.size,
+  );
 
   return similar
     .filter((item) => !exclude.has(item.handle))
@@ -324,6 +340,7 @@ export async function getSimilarProductsByHandle(
 
 export async function getSimilarProducts(
   product: ShopifyProduct,
+  locale: Locale,
   limit = 4,
 ): Promise<ShopifyProduct[]> {
   if (!isShopifyConfigured()) {
@@ -331,7 +348,11 @@ export async function getSimilarProducts(
   }
 
   try {
-    const recommendations = await getRecommendedProducts(product.id, limit);
+    const recommendations = await getRecommendedProducts(
+      product.id,
+      limit,
+      locale,
+    );
     const filteredRecommendations = recommendations.filter(
       (item) => item.handle !== product.handle,
     );
@@ -340,7 +361,7 @@ export async function getSimilarProducts(
       return filteredRecommendations.slice(0, limit);
     }
 
-    const catalog = await getAllProducts();
+    const catalog = await getAllProducts(locale);
     const fallback = pickSimilarProducts(product, catalog, limit).filter(
       (item) =>
         item.handle !== product.handle &&
@@ -352,19 +373,20 @@ export async function getSimilarProducts(
     return [...filteredRecommendations, ...fallback].slice(0, limit);
   } catch (error) {
     console.error("Failed to fetch similar products:", error);
-    const catalog = await getAllProducts();
+    const catalog = await getAllProducts(locale);
     return pickSimilarProducts(product, catalog, limit);
   }
 }
 
 export async function getProductsByHandles(
   handles: string[],
+  locale: Locale,
 ): Promise<ShopifyProduct[]> {
   const uniqueHandles = [...new Set(handles.filter(Boolean))];
   if (uniqueHandles.length === 0) return [];
 
   const products = await Promise.all(
-    uniqueHandles.map((handle) => getProductByHandle(handle)),
+    uniqueHandles.map((handle) => getProductByHandle(handle, locale)),
   );
 
   return products

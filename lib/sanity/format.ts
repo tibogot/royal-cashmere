@@ -1,9 +1,6 @@
-const dateFormatter = new Intl.DateTimeFormat("fr-BE", {
-  day: "numeric",
-  month: "long",
-  year: "numeric",
-});
+import type { Locale } from "@/lib/i18n/config";
+import { formatLongDate } from "@/lib/i18n/format";
 
-export function formatArticleDate(value: string) {
-  return dateFormatter.format(new Date(value));
+export function formatArticleDate(locale: Locale, value: string) {
+  return formatLongDate(locale, value);
 }

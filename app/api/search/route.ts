@@ -1,4 +1,5 @@
 import { searchProducts } from "@/lib/boutique-filters";
+import { toLocale } from "@/lib/i18n/config";
 import { getAllProducts } from "@/lib/shopify/products";
 import { NextResponse } from "next/server";
 
@@ -13,7 +14,8 @@ export async function GET(request: Request) {
     return NextResponse.json({ products: [], total: 0 });
   }
 
-  const products = await getAllProducts();
+  const locale = toLocale(searchParams.get("locale") ?? undefined);
+  const products = await getAllProducts(locale);
   const matches = searchProducts(products, query);
 
   return NextResponse.json(

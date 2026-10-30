@@ -1,20 +1,27 @@
 import SanityImage from "@/components/SanityImage";
+import type { Locale } from "@/lib/i18n/config";
 import { formatArticleDate } from "@/lib/sanity/format";
 import { routes } from "@/lib/routes";
 import type { JournalArticleListItem } from "@/lib/sanity/types";
-import Link from "next/link";
+import Link from "@/components/LocaleLink";
 
 type JournalArticleCardProps = {
   article: JournalArticleListItem;
+  locale: Locale;
 };
 
-export default function JournalArticleCard({ article }: JournalArticleCardProps) {
+export default function JournalArticleCard({
+  article,
+  locale,
+}: JournalArticleCardProps) {
   const category = article.categories?.[0]?.title;
 
   return (
     <article className="group">
       <Link
         href={routes.journalArticle(article.slug.current)}
+        locale={article.language}
+        lang={article.language === locale ? undefined : article.language}
         className="block"
       >
         <div className="relative aspect-4/5 overflow-hidden bg-neutral-100">
@@ -36,7 +43,7 @@ export default function JournalArticleCard({ article }: JournalArticleCardProps)
             ) : null}
             {article.publishedAt ? (
               <time dateTime={article.publishedAt}>
-                {formatArticleDate(article.publishedAt)}
+                {formatArticleDate(locale, article.publishedAt)}
               </time>
             ) : null}
           </div>

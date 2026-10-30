@@ -1,3 +1,7 @@
+"use client";
+
+import { useDictionary } from "@/components/LocaleProvider";
+
 type PanelCloseButtonProps = {
   onClose: () => void;
   label?: string;
@@ -5,13 +9,15 @@ type PanelCloseButtonProps = {
 
 export default function PanelCloseButton({
   onClose,
-  label = "Fermer",
+  label,
 }: PanelCloseButtonProps) {
+  const { common } = useDictionary();
+
   return (
     <button
       type="button"
       onClick={onClose}
-      aria-label={label}
+      aria-label={label ?? common.close}
       className="flex size-8 cursor-pointer items-center justify-center text-black transition-opacity hover:opacity-60"
     >
       <svg

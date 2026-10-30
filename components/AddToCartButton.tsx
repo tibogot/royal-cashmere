@@ -1,6 +1,7 @@
 "use client";
 
 import { addToCart } from "@/app/actions/cart";
+import { useDictionary, useLocale } from "@/components/LocaleProvider";
 import { ctaLinkClassName } from "@/lib/ui";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
@@ -15,11 +16,13 @@ export default function AddToCartButton({
   availableForSale,
 }: AddToCartButtonProps) {
   const router = useRouter();
+  const locale = useLocale();
+  const dict = useDictionary();
   const [isPending, startTransition] = useTransition();
 
   const handleClick = () => {
     startTransition(async () => {
-      const result = await addToCart(variantId);
+      const result = await addToCart(variantId, locale);
 
       if (!result.ok) {
         window.alert(result.error);
@@ -38,10 +41,10 @@ export default function AddToCartButton({
   };
 
   const label = isPending
-    ? "Ajout en cours…"
+    ? dict.product.adding
     : availableForSale
-      ? "Ajouter au panier"
-      : "Rupture de stock";
+      ? dict.product.addToCart
+      : dict.product.soldOut;
 
   return (
     <div className="mt-10 flex flex-col gap-4">
@@ -59,7 +62,7 @@ export default function AddToCartButton({
         onClick={handleViewCart}
         className={`${ctaLinkClassName} text-black/60`}
       >
-        Voir le panier
+        {dict.product.viewCart}
       </button>
     </div>
   );

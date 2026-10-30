@@ -1,6 +1,6 @@
 "use client";
 
-import { faqFooterText, faqItems } from "@/lib/faq";
+import type { FaqItem } from "@/lib/faq";
 import { useState } from "react";
 
 function ChevronIcon({ open }: { open: boolean }) {
@@ -22,18 +22,28 @@ function ChevronIcon({ open }: { open: boolean }) {
   );
 }
 
-export default function Faq() {
+type FaqProps = {
+  // Passed from the server page rather than read from useDictionary, so the
+  // answers don't ship in every page's client dictionary.
+  copy: {
+    heading: string;
+    items: FaqItem[];
+    footerText: string;
+  };
+};
+
+export default function Faq({ copy }: FaqProps) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   return (
     <section className="bg-white px-4 py-32 text-black md:px-8">
       <div className="mx-auto max-w-3xl">
         <h2 className="text-center font-serif text-3xl uppercase tracking-wide md:text-4xl">
-          FAQ
+          {copy.heading}
         </h2>
 
         <div className="mt-16 border-t border-neutral-200">
-          {faqItems.map((item, index) => {
+          {copy.items.map((item, index) => {
             const isOpen = openIndex === index;
 
             return (
@@ -65,7 +75,7 @@ export default function Faq() {
         </div>
 
         {/* <p className="mt-8 max-w-md text-xs leading-relaxed text-black/50">
-          {faqFooterText}
+          {copy.footerText}
         </p> */}
       </div>
     </section>

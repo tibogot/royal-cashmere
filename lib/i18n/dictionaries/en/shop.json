@@ -1,0 +1,109 @@
+{
+  "product": {
+    "breadcrumbShop": "Shop",
+    "optionColor": "Colour",
+    "optionSize": "Size",
+    "colorCountOne": "{count} colour",
+    "colorCountOther": "{count} colours",
+    "adding": "Adding…",
+    "addToCart": "Add to bag",
+    "soldOut": "Out of stock",
+    "viewCart": "View bag",
+    "description": "Description",
+    "composition": "Composition & origin",
+    "fit": "Fit & sizing",
+    "care": "Care",
+    "deliveryAndReturns": "Delivery & returns",
+    "deliveryText": "Delivery throughout Europe. Delivery times and charges are shown when you place your order. Free collection is available from our boutique in Uccle.",
+    "returnsText": "You have 14 days to return an item in its original condition, unworn and with its tags attached.",
+    "termsLink": "Terms and conditions of sale",
+    "similarTitle": "You may also like",
+    "recentlyViewedTitle": "Recently viewed",
+    "notFoundTitle": "Product not found",
+    "notFoundText": "This product does not exist or is no longer available.",
+    "backToShop": "Back to the shop"
+  },
+  "cart": {
+    "title": "Bag",
+    "close": "Close bag",
+    "loading": "Loading…",
+    "decrease": "Decrease quantity",
+    "increase": "Increase quantity",
+    "remove": "Remove",
+    "empty": "Your bag is empty.",
+    "continueShopping": "Continue shopping",
+    "total": "Total",
+    "checkout": "Checkout",
+    "quickAdding": "Adding…",
+    "quickAdd": "Add",
+    "quickSoldOut": "Sold out",
+    "errors": {
+      "notConfigured": "The shop is not configured.",
+      "notFound": "Bag not found.",
+      "demoProduct": "This demonstration product cannot be added to the bag.",
+      "create": "Unable to create the bag. Check that your Storefront token has the “write_checkouts” permission.",
+      "add": "Unable to add this item to the bag.",
+      "update": "Unable to update the bag.",
+      "remove": "Unable to remove the item from the bag."
+    }
+  },
+  "wishlist": {
+    "title": "Wishlist",
+    "add": "Add to wishlist",
+    "remove": "Remove from wishlist",
+    "empty": "Your wishlist is empty.",
+    "discoverShop": "Explore the shop"
+  },
+  "journal": {
+    "title": "Journal",
+    "empty": "No articles yet. Please check back soon.",
+    "backToJournal": "Back to the journal",
+    "notFoundTitle": "Article not found"
+  },
+  "shopHeadings": {
+    "account": "My account — Royal Cashmere",
+    "signIn": "Sign in — Royal Cashmere"
+  },
+  "account": {
+    "title": "My account",
+    "welcome": "Welcome.",
+    "welcomeNamed": "Welcome, {name}.",
+    "intro": "Here you will find your details and your order history.",
+    "profile": "Profile",
+    "fallbackName": "Royal Cashmere client",
+    "orders": "My orders",
+    "noOrders": "You have not placed an order yet.",
+    "discoverShop": "Explore the shop",
+    "order": "Order",
+    "continueShopping": "Continue shopping",
+    "signOut": "Sign out",
+    "imageAlt": "Royal Cashmere cashmere"
+  },
+  "signIn": {
+    "title": "Sign in",
+    "notConfiguredBefore": "Customer sign-in is not configured yet. Add your Customer Account API credentials to your",
+    "notConfiguredAfter": "file and set the redirect URLs in Shopify Admin (Headless → Customer Account API).",
+    "intro": "Sign in to view your orders and manage your Royal Cashmere account.",
+    "spaceTitle": "Your client account",
+    "benefitOrders": "Order tracking",
+    "benefitHistory": "Purchase history",
+    "benefitDetails": "Account details",
+    "error": "Sign-in failed. Please try again.",
+    "submit": "Sign in",
+    "redirectNote": "You will be redirected to Shopify's secure sign-in page.",
+    "continueShopping": "Continue shopping",
+    "imageAlt": "Royal Cashmere cashmere"
+  },
+  "shopMeta": {
+    "accountTitle": "My account",
+    "accountDescription": "View your orders and manage your Royal Cashmere client account.",
+    "cartTitle": "Bag",
+    "cartDescription": "Your Royal Cashmere bag. Complete your order of exceptional cashmere pieces.",
+    "signInTitle": "Sign in",
+    "signInDescription": "Sign in to your Royal Cashmere account to follow your orders.",
+    "wishlistTitle": "Wishlist",
+    "wishlistDescription": "Your Royal Cashmere selection. Find your favourite cashmere pieces in one place.",
+    "journalTitle": "Journal",
+    "journalDescription": "The Royal Cashmere journal: cashmere care advice, craftsmanship and the story of the Mongolian fibre."
+  }
+}

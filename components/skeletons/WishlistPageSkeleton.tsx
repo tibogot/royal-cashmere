@@ -1,9 +1,17 @@
+"use client";
+
+import { useDictionary } from "@/components/LocaleProvider";
+
+// A client component because loading.tsx gets no params to read the
+// language from; the dictionary comes from the layout's LocaleProvider.
 export default function WishlistPageSkeleton() {
+  const dict = useDictionary();
+
   return (
     <main className="flex w-full flex-1 flex-col">
       <section className="flex-1 bg-white px-4 pt-24 pb-20 text-black md:px-8 md:pt-28 md:pb-32">
         <h1 className="text-center font-serif text-5xl uppercase leading-[1.12] md:text-7xl">
-          Wishlist
+          {dict.wishlist.title}
         </h1>
 
         <div className="mt-10 grid grid-cols-2 gap-x-6 gap-y-12 md:mt-12 lg:grid-cols-4">

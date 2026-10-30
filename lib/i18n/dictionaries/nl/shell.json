@@ -1,0 +1,227 @@
+{
+  "common": {
+    "close": "Sluiten"
+  },
+  "nav": {
+    "shop": "Shop",
+    "viewAll": "Alles bekijken",
+    "journal": "Journal",
+    "about": "Over ons",
+    "contact": "Contact",
+    "account": "Mijn account",
+    "search": "Zoeken",
+    "cart": "Winkelmandje",
+    "cartWithCount": "Winkelmandje ({count})",
+    "wishlist": "VERLANGLIJST",
+    "wishlistWithCount": "VERLANGLIJST ({count})",
+    "homeAriaLabel": "Royal Cashmere – startpagina",
+    "openMenu": "Menu openen",
+    "closeMenu": "Menu sluiten",
+    "showCategories": "Categorieën tonen",
+    "hideCategories": "Categorieën verbergen",
+    "featuredImageAlts": {
+      "sweaterAndTrousers": "Kasjmieren trui en broek van Royal Cashmere",
+      "coat": "Kasjmieren mantel van Royal Cashmere"
+    }
+  },
+  "footer": {
+    "openingHoursTitle": "Openingsuren",
+    "openingHours": "Van maandag tot vrijdag van 10 tot 18 uur",
+    "addressStreet": "Waterloosesteenweg 1251B",
+    "addressCity": "Ukkel, België",
+    "legalAriaLabel": "Juridische informatie",
+    "legalNotice": "Wettelijke vermeldingen",
+    "privacyPolicy": "Privacybeleid",
+    "terms": "Algemene voorwaarden",
+    "cookies": "Cookies"
+  },
+  "search": {
+    "dialogAriaLabel": "Zoeken",
+    "closeAriaLabel": "Zoeken sluiten",
+    "inputLabel": "Zoek een product",
+    "placeholder": "Zoek een product...",
+    "resultsAriaLabel": "Zoekresultaten",
+    "searching": "Bezig met zoeken…",
+    "viewAllResults": "Alle resultaten bekijken ({total})",
+    "noResults": "Geen producten gevonden voor “{query}”.",
+    "popularTitle": "Populaire zoekopdrachten",
+    "popular": {
+      "womenSweaters": "Truien dames",
+      "menSweaters": "Truien heren",
+      "dresses": "Jurken",
+      "scarves": "Sjaals"
+    }
+  },
+  "cookieBanner": {
+    "title": "Cookies",
+    "textBeforeLinks": "Wij gebruiken enkel cookies die strikt noodzakelijk zijn voor de werking van de site (winkelmandje, klantenaccount en beveiliging). Door verder te surfen, aanvaardt u het gebruik ervan. Raadpleeg ons",
+    "cookiePolicyLink": "cookiebeleid",
+    "betweenLinks": "en ons",
+    "privacyPolicyLink": "privacybeleid",
+    "textAfterLinks": ".",
+    "accept": "Aanvaarden",
+    "learnMore": "Meer informatie"
+  },
+  "breadcrumbs": {
+    "ariaLabel": "Kruimelpad",
+    "home": "Home"
+  },
+  "languageSwitcher": {
+    "ariaLabel": "Taal"
+  },
+  "catalog": {
+    "labels": {
+      "femme": "Dames",
+      "pulls-femme": "Truien",
+      "pulls-col-roule-femme": "Coltruien",
+      "gilets-femme": "Gilets",
+      "robes-cachemire": "Jurken",
+      "jupes-cachemire": "Rokken",
+      "pantalons-femme": "Broeken",
+      "homme": "Heren",
+      "pulls-homme": "Truien",
+      "pulls-col-roule-homme": "Coltruien",
+      "gilets-homme": "Gilets",
+      "pantalons-homme": "Broeken",
+      "accessoires": "Accessoires",
+      "echarpes-cachemire": "Sjaals",
+      "bonnets-cachemire": "Mutsen",
+      "gants-cachemire": "Handschoenen"
+    },
+    "showcaseImageAlts": {
+      "robes-cachemire": "Kasjmieren jurken van Royal Cashmere",
+      "pantalons-femme": "Kasjmieren broeken van Royal Cashmere",
+      "echarpes-cachemire": "Kasjmieren sjaals van Royal Cashmere",
+      "pulls-femme": "Kasjmieren truien van Royal Cashmere"
+    },
+    "all": "Alles",
+    "categoriesAriaLabel": "Categorieën",
+    "resultsFor": "Resultaten voor “{query}”",
+    "productCountOne": "{count} product",
+    "productCountOther": "{count} producten",
+    "noResults": "Er zijn momenteel geen producten die aan uw zoekopdracht voldoen.",
+    "notFound": {
+      "title": "Collectie niet gevonden",
+      "backToShop": "Terug naar de shop"
+    }
+  },
+  "collection": {
+    "shop": {
+      "title": "Shop",
+      "description": "Ontdek de volledige collectie van Royal Cashmere: truien, gilets, jurken, broeken en accessoires in zuiver Mongools kasjmier, voor dames en heren. Boetiek voor uitzonderlijk kasjmier in Ukkel, Brussel."
+    },
+    "fallbackTitle": "Collectie",
+    "fallbackDescription": "Ontdek de collectie {title} van Royal Cashmere: stukken in uitzonderlijk kasjmier.",
+    "imageAlts": {
+      "femme": "Kasjmieren trui en broek voor dames van Royal Cashmere",
+      "homme": "Kasjmieren trui voor heren van Royal Cashmere",
+      "accessoires": "Kasjmieren sjaal van Royal Cashmere"
+    },
+    "pages": {
+      "femme": {
+        "title": "Kasjmieren kleding voor dames",
+        "description": "Truien, gilets, jurken, rokken en broeken voor dames in zuiver Mongools kasjmier. Ontdek de collectie van Royal Cashmere online en in onze boetiek in Ukkel, Brussel.",
+        "intro": "Truien, gilets, jurken, rokken en broeken in zuiver Mongools kasjmier, gemaakt om seizoen na seizoen mee te gaan. Elk stuk is gekozen om zijn zachtheid en de kwaliteit van de vezel."
+      },
+      "pulls-femme": {
+        "title": "Kasjmieren truien voor dames",
+        "description": "Kasjmieren truien voor dames: col, V-hals of ronde hals, ruim of aansluitend. Zuiver Mongools kasjmier, boetiek in Ukkel, Brussel.",
+        "intro": "Col, V-hals of ronde hals: onze truien in zuiver Mongools kasjmier zijn warm en toch licht. Een basisstuk, alleen of in laagjes te dragen."
+      },
+      "pulls-col-roule-femme": {
+        "title": "Kasjmieren coltruien voor dames",
+        "description": "Kasjmieren coltruien voor dames: de warmte van zuiver Mongools kasjmier tot aan de hals. Collectie Royal Cashmere, Ukkel, Brussel.",
+        "intro": "Een kasjmieren coltrui houdt de kou buiten zonder het silhouet zwaarder te maken. Een winterklassieker in zuiver Mongools kasjmier."
+      },
+      "gilets-femme": {
+        "title": "Kasjmieren gilets en cardigans voor dames",
+        "description": "Kasjmieren gilets en cardigans voor dames, met knopen of open. Zuiver Mongools kasjmier, boetiek Royal Cashmere in Ukkel, Brussel.",
+        "intro": "Met knopen of open: onze kasjmieren gilets combineert u moeiteloos in laagjes, op zachte tussenseizoensdagen en op winteravonden."
+      },
+      "robes-cachemire": {
+        "title": "Kasjmieren jurken",
+        "description": "Kasjmieren jurken voor dames: zacht, soepel breiwerk in zuiver Mongools kasjmier. Collectie Royal Cashmere, boetiek in Ukkel, Brussel.",
+        "intro": "De zachtheid van een trui, de allure van een jurk. Onze gebreide kasjmieren jurken draagt u van kantoor tot aan het diner, het hele koude seizoen lang."
+      },
+      "jupes-cachemire": {
+        "title": "Kasjmieren rokken",
+        "description": "Kasjmieren rokken voor dames, lang of halflang. Zuiver Mongools kasjmier, boetiek Royal Cashmere in Ukkel, Brussel.",
+        "intro": "Een soepele, warme rok in gebreid kasjmier, die vanzelfsprekend samengaat met onze truien voor een zacht silhouet."
+      },
+      "pantalons-femme": {
+        "title": "Kasjmieren broeken voor dames",
+        "description": "Kasjmieren broeken voor dames, recht of wijd. Zuiver Mongools kasjmier, boetiek Royal Cashmere in Ukkel, Brussel.",
+        "intro": "Comfortabel als loungewear, elegant genoeg om mee uit te gaan: onze kasjmieren broeken passen bij onze truien voor een volledige outfit."
+      },
+      "homme": {
+        "title": "Kasjmieren kleding voor heren",
+        "description": "Truien en gilets voor heren in zuiver Mongools kasjmier. Ontdek de collectie van Royal Cashmere online en in onze boetiek in Ukkel, Brussel.",
+        "intro": "Truien en gilets in zuiver Mongools kasjmier, met sobere, tijdloze snitten. Verschillende stukken zijn unisex: raadpleeg de maattabel op elke productpagina."
+      },
+      "pulls-homme": {
+        "title": "Kasjmieren truien voor heren",
+        "description": "Kasjmieren truien voor heren: col, V-hals of ronde hals. Zuiver Mongools kasjmier, boetiek Royal Cashmere in Ukkel, Brussel.",
+        "intro": "Col, V-hals of ronde hals: truien in zuiver Mongools kasjmier, warm en licht, voor elke dag of onder een jasje."
+      },
+      "pulls-col-roule-homme": {
+        "title": "Kasjmieren coltruien voor heren",
+        "description": "Coltruien voor heren in zuiver Mongools kasjmier. Collectie Royal Cashmere, boetiek in Ukkel, Brussel.",
+        "intro": "De kasjmieren coltrui, alleen of onder een mantel: een stuk met karakter, in zuiver Mongools kasjmier."
+      },
+      "gilets-homme": {
+        "title": "Kasjmieren gilets en cardigans voor heren",
+        "description": "Kasjmieren gilets en cardigans voor heren. Zuiver Mongools kasjmier, boetiek Royal Cashmere in Ukkel, Brussel.",
+        "intro": "Op tussenseizoensdagen vervangt een kasjmieren gilet moeiteloos een jasje. Sobere snitten, zuiver Mongools kasjmier."
+      },
+      "pantalons-homme": {
+        "title": "Kasjmieren broeken voor heren",
+        "description": "Kasjmieren broeken voor heren. Zuiver Mongools kasjmier, boetiek Royal Cashmere in Ukkel, Brussel.",
+        "intro": "Het comfort van kasjmier in een strak gesneden broek, voor thuis en in de stad."
+      },
+      "accessoires": {
+        "title": "Kasjmieren accessoires",
+        "description": "Sjaals, mutsen en handschoenen in zuiver Mongools kasjmier, voor heren en dames. Accessoires van Royal Cashmere, boetiek in Ukkel, Brussel.",
+        "intro": "Sjaals, mutsen en handschoenen in zuiver Mongools kasjmier, voor heren en dames. De ideale accessoires tegen de kou, of om cadeau te doen."
+      },
+      "echarpes-cachemire": {
+        "title": "Kasjmieren sjaals",
+        "description": "Kasjmieren sjaals en stola's voor heren en dames, effen of met motief. Zuiver Mongools kasjmier, boetiek Royal Cashmere in Ukkel, Brussel.",
+        "intro": "Sjaals en stola's in zuiver Mongools kasjmier, voor heren en dames. Licht, warm en zacht op de huid."
+      },
+      "bonnets-cachemire": {
+        "title": "Kasjmieren mutsen",
+        "description": "Kasjmieren mutsen voor heren en dames. Zuiver Mongools kasjmier, boetiek Royal Cashmere in Ukkel, Brussel.",
+        "intro": "Mutsen in zuiver Mongools kasjmier, voor heren en dames: alle warmte van kasjmier, zonder te kriebelen."
+      },
+      "gants-cachemire": {
+        "title": "Kasjmieren handschoenen",
+        "description": "Kasjmieren handschoenen en mitaines voor heren en dames. Zuiver Mongools kasjmier, boetiek Royal Cashmere in Ukkel, Brussel.",
+        "intro": "Handschoenen en mitaines in zuiver Mongools kasjmier, voor heren en dames, bij uw sjaal of muts."
+      }
+    }
+  },
+  "site": {
+    "description": "Boetiek voor uitzonderlijk kasjmier in Ukkel, Brussel. Truien, sjaals en accessoires in zuiver Mongools kasjmier.",
+    "defaultTitle": "{name} | Uitzonderlijk kasjmier in Ukkel, Brussel",
+    "shareImageAlt": "Amazone in een kasjmieren mantel op de Mongoolse steppe"
+  },
+  "shellLegalMeta": {
+    "legalNotice": {
+      "title": "Wettelijke vermeldingen",
+      "description": "Wettelijke vermeldingen van Royal Cashmere."
+    },
+    "privacyPolicy": {
+      "title": "Privacybeleid",
+      "description": "Privacybeleid van Royal Cashmere."
+    },
+    "terms": {
+      "title": "Algemene verkoopvoorwaarden",
+      "description": "Algemene verkoopvoorwaarden van Royal Cashmere."
+    },
+    "cookies": {
+      "title": "Cookies",
+      "description": "Cookiebeleid van Royal Cashmere."
+    },
+    "lastUpdated": "Laatst bijgewerkt:"
+  }
+}

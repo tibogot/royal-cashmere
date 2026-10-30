@@ -1,4 +1,5 @@
 import type { PortableTextBlock } from "@portabletext/types";
+import type { Locale } from "@/lib/i18n/config";
 
 export type SanitySlug = {
   current: string;
@@ -28,11 +29,17 @@ export type HomePageContent = {
   boutiqueVisitImage?: SanityHotspotImage;
 };
 
+export type ArticleTranslation = {
+  language: Locale;
+  slug: string;
+};
+
 export type JournalArticleListItem = {
   _id: string;
   _updatedAt: string;
   title: string;
   slug: SanitySlug;
+  language: Locale;
   publishedAt: string;
   excerpt?: string;
   mainImage?: SanityImage;
@@ -42,4 +49,6 @@ export type JournalArticleListItem = {
 
 export type JournalArticle = JournalArticleListItem & {
   body?: PortableTextBlock[];
+  /** Every language version, this one included; null until it has any. */
+  translations?: ArticleTranslation[] | null;
 };

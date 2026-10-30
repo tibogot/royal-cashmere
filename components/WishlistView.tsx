@@ -1,5 +1,6 @@
 "use client";
 
+import { useDictionary } from "@/components/LocaleProvider";
 import ProductCard from "@/components/ProductCard";
 import { routes } from "@/lib/routes";
 import { ctaLinkClassName } from "@/lib/ui";
@@ -12,7 +13,7 @@ import {
   prefetchWishlistProductsForHandlesKey,
   subscribeWishlistProducts,
 } from "@/lib/wishlist-products-store";
-import Link from "next/link";
+import Link from "@/components/LocaleLink";
 import { useEffect, useSyncExternalStore } from "react";
 
 function WishlistGridSkeleton() {
@@ -30,6 +31,7 @@ function WishlistGridSkeleton() {
 }
 
 export default function WishlistView() {
+  const dict = useDictionary();
   const handlesKey = useSyncExternalStore(
     subscribeToWishlist,
     () => getWishlistHandles().join(","),
@@ -59,12 +61,12 @@ export default function WishlistView() {
   if (products.length === 0) {
     return (
       <div className="mt-12 text-center">
-        <p className="text-sm text-black/70">Votre wishlist est vide.</p>
+        <p className="text-sm text-black/70">{dict.wishlist.empty}</p>
         <Link
           href={routes.shop}
           className={`${ctaLinkClassName} mt-8 inline-block`}
         >
-          Découvrir la boutique
+          {dict.wishlist.discoverShop}
         </Link>
       </div>
     );

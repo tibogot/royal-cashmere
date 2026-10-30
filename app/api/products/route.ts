@@ -1,3 +1,4 @@
+import { toLocale } from "@/lib/i18n/config";
 import { getProductsByHandles } from "@/lib/shopify/products";
 import { NextResponse } from "next/server";
 
@@ -19,7 +20,8 @@ export async function GET(request: Request) {
     return NextResponse.json({ products: [] });
   }
 
-  const products = await getProductsByHandles(handles);
+  const locale = toLocale(searchParams.get("locale") ?? undefined);
+  const products = await getProductsByHandles(handles, locale);
   const productsByHandle = new Map(
     products.map((product) => [product.handle, product]),
   );

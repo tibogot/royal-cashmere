@@ -24,6 +24,10 @@ import {
   type CustomerSession,
 } from "./session";
 import { cookies } from "next/headers";
+import { DEFAULT_LOCALE, withLocale, type Locale } from "@/lib/i18n/config";
+import { routes } from "@/lib/routes";
+
+const DEFAULT_RETURN_TO = withLocale(routes.account, DEFAULT_LOCALE);
 
 type TokenResponse = {
   access_token: string;
@@ -132,7 +136,7 @@ export async function refreshAndPersistCustomerSession() {
   return nextSession;
 }
 
-export async function buildAuthorizationUrl(returnTo: string) {
+export async function buildAuthorizationUrl(returnTo: string, locale: Locale) {
   const config = await getOpenIdConfiguration();
   const codeVerifier = generateCodeVerifier();
   const codeChallenge = generateCodeChallenge(codeVerifier);
@@ -158,7 +162,8 @@ export async function buildAuthorizationUrl(returnTo: string) {
   authorizationUrl.searchParams.set("redirect_uri", getAuthCallbackUrl());
   authorizationUrl.searchParams.set("state", state);
   authorizationUrl.searchParams.set("nonce", nonce);
-  authorizationUrl.searchParams.set("locale", "fr");
+  // Shopify's sign-in screen, in the language the customer was reading.
+  authorizationUrl.searchParams.set("locale", locale);
   authorizationUrl.searchParams.set("region_country", "BE");
   authorizationUrl.searchParams.set("code_challenge", codeChallenge);
   authorizationUrl.searchParams.set("code_challenge_method", "S256");
@@ -182,7 +187,7 @@ export async function completeAuthorizationCallback(searchParams: URLSearchParam
   const cookieStore = await cookies();
   const storedState = cookieStore.get(OAUTH_STATE_COOKIE)?.value;
   const codeVerifier = cookieStore.get(OAUTH_CODE_VERIFIER_COOKIE)?.value;
-  const returnTo = cookieStore.get(OAUTH_RETURN_TO_COOKIE)?.value ?? "/compte";
+  const returnTo = cookieStore.get(OAUTH_RETURN_TO_COOKIE)?.value ?? DEFAULT_RETURN_TO;
 
   cookieStore.delete(OAUTH_STATE_COOKIE);
   cookieStore.delete(OAUTH_NONCE_COOKIE);
@@ -200,7 +205,7 @@ export async function completeAuthorizationCallback(searchParams: URLSearchParam
   const tokens = await exchangeAuthorizationCode(code, codeVerifier);
   await setCustomerSession(toCustomerSession(tokens));
 
-  return returnTo.startsWith("/") ? returnTo : "/compte";
+  return returnTo.startsWith("/") ? returnTo : DEFAULT_RETURN_TO;
 }
 
 export async function buildLogoutUrl() {

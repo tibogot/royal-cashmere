@@ -1,0 +1,128 @@
+{
+  "home": {
+    "metaDescription": "An exceptional cashmere boutique in Uccle, Brussels: jumpers, scarves and accessories in pure Mongolian cashmere.",
+    "heroHeading": "Royal Cashmere — Exceptional cashmere boutique in Uccle, Brussels",
+    "newInCta": "Shop new arrivals",
+    "introHeading": "Exceptional cashmere from Mongolia",
+    "saleHeading": "Sale",
+    "saleCta": "Shop the sale",
+    "bestsellersHeading": "Bestsellers",
+    "bestsellersCta": "Shop bestsellers",
+    "storyHeading": "A Mongolian house in the heart of Uccle",
+    "storyText": "Royal Cashmere is a cashmere boutique in Uccle, Brussels. Our owner is Mongolian, and our pieces are made from the finest Mongolian cashmere: soft, warm and made to last. Jumpers, dresses, ponchos, scarves, shawls, beanies and fingerless gloves — each piece is chosen for its fineness, its softness and the way it endures. You will find them in the boutique and online, with delivery across Europe.",
+    "storyCta": "Discover our story",
+    "bannerEyebrow": "Our story",
+    "bannerTitle": "The finest Mongolian cashmere",
+    "bannerDescription": "Mongolian cashmere is renowned as among the finest in the world. Our owner, herself Mongolian, chose to bring it to Brussels: pieces of rare softness, made to stay with you for years to come. Find them in our Uccle boutique or online.",
+    "bannerCta": "Discover the piece",
+    "visitText": "Come and see us at the boutique, Chaussée de Waterloo 1251B in Uccle. Feel the fabric, try the pieces on and let us advise you: nothing compares to the touch of genuine Mongolian cashmere.",
+    "visitCta": "Visit us",
+    "saleImageAlt": "Royal Cashmere cashmere jumper",
+    "bestsellersImageAlt": "Royal Cashmere cashmere tracksuits",
+    "bannerImageAlt": "Royal Cashmere zip-up cashmere jacket",
+    "newInImageAlt": "Royal Cashmere cashmere polo and joggers set",
+    "boutiqueVisitImageAlt": "Royal Cashmere cashmere outfit"
+  },
+  "about": {
+    "metaTitle": "About",
+    "metaDescription": "Royal Cashmere in Uccle, Brussels: our story, craftsmanship and commitment to sustainability. Exceptional cashmere and silk from the Mongolian steppe, at our boutique on Chaussée de Waterloo.",
+    "heading": "A house of exceptional cashmere, rooted in Brussels",
+    "heroImageAlt": "Woman holding a kid goat in a pen of cashmere goats on the Mongolian steppe",
+    "introFirst": "Welcome to Royal Cashmere, a boutique of exceptional cashmere in Uccle, Brussels, where sustainability and style are woven together. We offer exquisite pieces in cashmere and silk, born of the timeless landscapes of the Mongolian steppe and chosen for their purity and incomparable softness.",
+    "introSecond": "From our home on Chaussée de Waterloo, we welcome every visit as a meeting. In choosing Royal Cashmere, you become part of a story that supports nomadic herders and their ancestral lands, while investing in a timeless wardrobe made to last.",
+    "cashmereImageAlt": "Royal Cashmere cashmere",
+    "fibreImageAlt": "Woman holding a handful of raw cashmere fibre on the Mongolian steppe",
+    "heritageFirst": "On the high plateaus of Mongolia, cashmere is born of an age-old bond between herders, their flocks and steppes of rare beauty. We select our fibres at the source, favouring supply chains that respect the nomads and their environment, so that the generations to come inherit a sustainable future.",
+    "heritageSecond": "Our pieces are crafted with meticulous attention to detail, for unrivalled quality, a wonderfully soft touch and true durability from day to day. Each one reflects our commitment to preserving the beauty of nature and honouring the rich heritage of Mongolian nomadic culture.",
+    "collectionsImageAlt": "Royal Cashmere collections"
+  },
+  "contact": {
+    "metaTitle": "Contact",
+    "metaDescription": "Contact Royal Cashmere in Uccle, Brussels. An exceptional cashmere boutique — address, opening hours and telephone.",
+    "heading": "Contact — Royal Cashmere Brussels",
+    "storeName": "Royal Cashmere Brussels",
+    "addressLabel": "Address",
+    "country": "Belgium",
+    "phoneLabel": "Telephone",
+    "emailLabel": "Email",
+    "hoursLabel": "Opening hours",
+    "hours": "Monday to Friday, 10 am to 6 pm",
+    "imageAlt": "Royal Cashmere cashmere coat",
+    "formErrors": {
+      "notConfigured": "Our contact form is not available yet. In the meantime, please give us a call.",
+      "sendFailed": "Your message could not be sent. Please try again or call us directly.",
+      "generic": "Something went wrong. Please try again.",
+      "name": "Please enter your name.",
+      "email": "Please enter a valid email address.",
+      "message": "Your message must be at least 10 characters long."
+    }
+  },
+  "contactForm": {
+    "success": "Thank you for your message. Our team will be in touch shortly.",
+    "emailLabel": "Email",
+    "emailPlaceholder": "Email *",
+    "nameLabel": "Name",
+    "namePlaceholder": "Name *",
+    "messageLabel": "Message",
+    "messagePlaceholder": "Message *",
+    "companyLabel": "Company",
+    "sending": "Sending…",
+    "submit": "Send"
+  },
+  "faq": {
+    "heading": "FAQ",
+    "items": [
+      {
+        "question": "Where does your cashmere come from?",
+        "answer": "Our cashmere comes from the high plateaus of Mongolia, renowned for the fineness and exceptional softness of their fibres. Every batch is carefully selected to ensure remarkable purity and quality."
+      },
+      {
+        "question": "How can I recognise quality cashmere?",
+        "answer": "Exceptional cashmere stands out for its softness to the touch, the lightness of its yarn and the evenness of its knit. Our pieces are made from long, fine fibres, chosen for how well they hold their shape and for lasting comfort."
+      },
+      {
+        "question": "How should I care for a cashmere garment?",
+        "answer": "We recommend hand washing in cold water with a gentle detergent, or dry cleaning. Dry flat, away from direct sunlight, and store your pieces folded to preserve their shape and softness."
+      },
+      {
+        "question": "Are your products made ethically?",
+        "answer": "Royal Cashmere is committed to a responsible approach, from the sourcing of raw materials to respect for the artisans and partners we work with. Lasting quality and high ethical standards guide every one of our collections."
+      },
+      {
+        "question": "Do you deliver within Europe?",
+        "answer": "Yes, we deliver across Europe. Delivery times and costs are shown when you place your order. You can also collect your purchases directly from our boutique in Uccle."
+      },
+      {
+        "question": "Can I return an item if it does not suit me?",
+        "answer": "Returns are accepted under the terms of our returns policy. Items must be returned in their original condition, unworn and with their labels attached. Do get in touch if you need any help."
+      }
+    ],
+    "footerText": "Royal Cashmere boutique — Chaussée de Waterloo 1251B, Uccle. Open Monday to Friday, 10 am to 6 pm."
+  },
+  "showcase": {
+    "discover": "Discover",
+    "viewAll": "View all",
+    "nextProducts": "Next products",
+    "previousProducts": "Previous products",
+    "collectionsHeading": "Royal Cashmere Collections",
+    "collectionsIntro": "Dresses, jumpers, trousers and scarves — each collection reveals the softness of pure Mongolian cashmere, designed to carry you through the seasons.",
+    "previousCollection": "Previous collection",
+    "nextCollection": "Next collection",
+    "galleryLabel": "Interactive gallery",
+    "galleryNavLabel": "Collections",
+    "gallery": {
+      "robes": "Dresses",
+      "chales": "Shawls",
+      "bonnets": "Beanies",
+      "pulls": "Jumpers",
+      "pantalons": "Trousers",
+      "echarpes": "Scarves",
+      "manteaux": "Coats",
+      "gants": "Gloves",
+      "ponchos": "Ponchos",
+      "cardigans": "Cardigans",
+      "cachemire": "Cashmere",
+      "maille": "Knitwear"
+    }
+  }
+}

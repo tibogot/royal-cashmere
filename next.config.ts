@@ -8,21 +8,33 @@ import {
 
 const shopPath = `/collection/${ALL_PRODUCTS_HANDLE}`;
 
+// Mirrors LOCALES in lib/i18n/config. These run before proxy.ts, so the
+// unprefixed sources go straight to French instead of hopping through it.
+const LANG = ":lang(fr|nl|en)";
+
 const nextConfig: NextConfig = {
   // The shop and the collections index used to be separate pages; every
   // listing is now a collection, with the shop at /collection/tout.
   async redirects() {
-    return [
-      { source: "/boutique", destination: shopPath, permanent: true },
-      { source: "/collection", destination: shopPath, permanent: true },
+    const moves: [string, string][] = [
+      ["/boutique", shopPath],
+      ["/collection", shopPath],
       ...Object.entries(legacyCollectionRedirects).map(
-        ([oldHandle, newHandle]) => ({
-          source: `/collection/${oldHandle}`,
-          destination: `/collection/${newHandle}`,
-          permanent: true,
-        }),
+        ([oldHandle, newHandle]): [string, string] => [
+          `/collection/${oldHandle}`,
+          `/collection/${newHandle}`,
+        ],
       ),
     ];
+
+    return moves.flatMap(([source, destination]) => [
+      { source, destination: `/fr${destination}`, permanent: true },
+      {
+        source: `/${LANG}${source}`,
+        destination: `/:lang${destination}`,
+        permanent: true,
+      },
+    ]);
   },
   experimental: {
     inlineCss: true,

@@ -1,6 +1,7 @@
 "use client";
 
 import CartQuickAddCard from "@/components/CartQuickAddCard";
+import { useDictionary } from "@/components/LocaleProvider";
 import ProductCard from "@/components/ProductCard";
 import { routes } from "@/lib/routes";
 import { ctaLinkClassName } from "@/lib/ui";
@@ -10,7 +11,7 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { Draggable } from "gsap/Draggable";
 import { InertiaPlugin } from "gsap/InertiaPlugin";
-import Link from "next/link";
+import Link from "@/components/LocaleLink";
 import { useRef } from "react";
 
 gsap.registerPlugin(Draggable, InertiaPlugin, useGSAP);
@@ -36,6 +37,7 @@ export default function FeaturedProductsCarousel({
   quickAdd = false,
   ctaOnRight = false,
 }: FeaturedProductsCarouselProps) {
+  const copy = useDictionary().showcase;
   const containerRef = useRef<HTMLDivElement>(null);
   const viewportRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
@@ -135,7 +137,7 @@ export default function FeaturedProductsCarousel({
             href={routes.shop}
             className={`${ctaLinkClassName} inline-block`}
           >
-            Tout voir
+            {copy.viewAll}
           </Link>
         )}
 
@@ -145,7 +147,7 @@ export default function FeaturedProductsCarousel({
               href={routes.shop}
               className={`${ctaLinkClassName} inline-block`}
             >
-              Tout voir
+              {copy.viewAll}
             </Link>
           ) : null}
 
@@ -154,7 +156,7 @@ export default function FeaturedProductsCarousel({
               <button
                 type="button"
                 onClick={() => scroll("next")}
-                aria-label="Produits suivants"
+                aria-label={copy.nextProducts}
                 className="flex size-8 select-none items-center justify-center transition-opacity hover:opacity-60"
               >
                 <svg
@@ -175,7 +177,7 @@ export default function FeaturedProductsCarousel({
               <button
                 type="button"
                 onClick={() => scroll("prev")}
-                aria-label="Produits précédents"
+                aria-label={copy.previousProducts}
                 className="flex size-8 select-none items-center justify-center bg-black text-white transition-opacity hover:opacity-80"
               >
                 <svg

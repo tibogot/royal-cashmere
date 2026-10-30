@@ -3,11 +3,12 @@
 import { removeFromCart, updateCartLine } from "@/app/actions/cart";
 import CartLineItem from "@/components/CartLineItem";
 import CartSimilarProducts from "@/components/CartSimilarProducts";
+import { useDictionary, useLocale } from "@/components/LocaleProvider";
 import { routes } from "@/lib/routes";
 import { ctaLinkClassName } from "@/lib/ui";
 import type { Cart } from "@/lib/shopify/cart";
 import { getCart, refreshCart } from "@/lib/cart-store";
-import Link from "next/link";
+import Link from "@/components/LocaleLink";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 type CartViewProps = {
@@ -38,6 +39,8 @@ export default function CartView({
   variant = "page",
   onClose,
 }: CartViewProps) {
+  const locale = useLocale();
+  const dict = useDictionary();
   const [cart, setCart] = useState<Cart | null>(initialCart);
   const cartRef = useRef(cart);
   const mutationQueueRef = useRef(Promise.resolve());
@@ -85,9 +88,7 @@ export default function CartView({
           const result = await action();
 
           if (!result.ok) {
-            window.alert(
-              result.error ?? "Impossible de mettre à jour le panier.",
-            );
+            window.alert(result.error ?? dict.cart.errors.update);
           } else {
             window.dispatchEvent(new Event("cart-updated"));
           }
@@ -98,7 +99,7 @@ export default function CartView({
           // Keep queue alive if a mutation fails unexpectedly.
         });
     },
-    [syncCartFromServer],
+    [syncCartFromServer, dict],
   );
 
   const handleDecrease = (lineId: string) => {
@@ -115,7 +116,7 @@ export default function CartView({
 
     runCartMutation(
       updateLineQuantity(current, lineId, line.quantity - 1),
-      () => updateCartLine(lineId, line.quantity - 1),
+      () => updateCartLine(lineId, line.quantity - 1, locale),
     );
   };
 
@@ -128,7 +129,7 @@ export default function CartView({
 
     runCartMutation(
       updateLineQuantity(current, lineId, line.quantity + 1),
-      () => updateCartLine(lineId, line.quantity + 1),
+      () => updateCartLine(lineId, line.quantity + 1, locale),
     );
   };
 
@@ -137,7 +138,7 @@ export default function CartView({
 
     const nextCart = updateLineQuantity(cart, lineId, 0);
     runCartMutation(nextCart.lines.length ? nextCart : null, () =>
-      removeFromCart(lineId),
+      removeFromCart(lineId, locale),
     );
   };
 
@@ -150,13 +151,13 @@ export default function CartView({
           <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain">
             <div className="px-4 pb-4 md:px-8">
               <div className="pt-4 text-center">
-                <p className="text-sm text-black/70">Votre panier est vide.</p>
+                <p className="text-sm text-black/70">{dict.cart.empty}</p>
                 <Link
                   href={routes.shop}
                   onClick={onClose}
                   className={`${ctaLinkClassName} mt-6 inline-block`}
                 >
-                  Continuer vos achats
+                  {dict.cart.continueShopping}
                 </Link>
               </div>
               <div className="mt-6">
@@ -170,13 +171,13 @@ export default function CartView({
 
     return (
       <div className="mt-12 text-center">
-        <p className="text-sm text-black/70">Votre panier est vide.</p>
+        <p className="text-sm text-black/70">{dict.cart.empty}</p>
         <Link
           href={routes.shop}
           onClick={onClose}
           className={`${ctaLinkClassName} mt-8 inline-block`}
         >
-          Continuer vos achats
+          {dict.cart.continueShopping}
         </Link>
       </div>
     );
@@ -212,7 +213,7 @@ export default function CartView({
           isPanel ? "text-sm" : "text-base"
         }`}
       >
-        <span>Total</span>
+        <span>{dict.cart.total}</span>
         <span className="font-medium">{cart.totalPrice}</span>
       </p>
 
@@ -224,7 +225,7 @@ export default function CartView({
             : "ml-auto select-none bg-black px-10 py-4 text-sm uppercase tracking-wide text-white transition-opacity hover:opacity-80"
         }
       >
-        Passer commande
+        {dict.cart.checkout}
       </a>
     </div>
   );

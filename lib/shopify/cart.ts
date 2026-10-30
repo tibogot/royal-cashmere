@@ -1,4 +1,8 @@
+import type { Locale } from "@/lib/i18n/config";
+import { getDictionary, type Dictionary } from "@/lib/i18n/dictionaries";
+import { formatMoney } from "@/lib/i18n/format";
 import { getShopifyClient, isShopifyConfigured } from "./client";
+import { shopifyLanguage } from "./language";
 import { isColorOption, isSizeOption } from "./variants";
 
 export const CART_COOKIE_NAME = "shopify_cart_id";
@@ -101,7 +105,7 @@ type CartQueryResponse = {
 };
 
 const CART_CREATE_MUTATION = `
-  mutation CartCreate($input: CartInput!) {
+  mutation CartCreate($input: CartInput!, $language: LanguageCode) @inContext(country: BE, language: $language) {
     cartCreate(input: $input) {
       cart {
         id
@@ -117,7 +121,7 @@ const CART_CREATE_MUTATION = `
 `;
 
 const CART_LINES_ADD_MUTATION = `
-  mutation CartLinesAdd($cartId: ID!, $lines: [CartLineInput!]!) {
+  mutation CartLinesAdd($cartId: ID!, $lines: [CartLineInput!]!, $language: LanguageCode) @inContext(country: BE, language: $language) {
     cartLinesAdd(cartId: $cartId, lines: $lines) {
       cart {
         id
@@ -133,7 +137,7 @@ const CART_LINES_ADD_MUTATION = `
 `;
 
 const CART_LINES_UPDATE_MUTATION = `
-  mutation CartLinesUpdate($cartId: ID!, $lines: [CartLineUpdateInput!]!) {
+  mutation CartLinesUpdate($cartId: ID!, $lines: [CartLineUpdateInput!]!, $language: LanguageCode) @inContext(country: BE, language: $language) {
     cartLinesUpdate(cartId: $cartId, lines: $lines) {
       cart {
         id
@@ -149,7 +153,7 @@ const CART_LINES_UPDATE_MUTATION = `
 `;
 
 const CART_LINES_REMOVE_MUTATION = `
-  mutation CartLinesRemove($cartId: ID!, $lineIds: [ID!]!) {
+  mutation CartLinesRemove($cartId: ID!, $lineIds: [ID!]!, $language: LanguageCode) @inContext(country: BE, language: $language) {
     cartLinesRemove(cartId: $cartId, lineIds: $lineIds) {
       cart {
         id
@@ -165,7 +169,7 @@ const CART_LINES_REMOVE_MUTATION = `
 `;
 
 const CART_QUERY = `
-  query GetCart($cartId: ID!) {
+  query GetCart($cartId: ID!, $language: LanguageCode) @inContext(country: BE, language: $language) {
     cart(id: $cartId) {
       id
       checkoutUrl
@@ -216,13 +220,6 @@ const CART_QUERY = `
   }
 `;
 
-function formatPrice(amount: string, currencyCode: string) {
-  return new Intl.NumberFormat("fr-BE", {
-    style: "currency",
-    currency: currencyCode,
-  }).format(Number(amount));
-}
-
 function formatUserErrors(
   userErrors: { message: string }[] | undefined,
   fallback: string,
@@ -233,6 +230,7 @@ function formatUserErrors(
 
 function mapCartNode(
   node: NonNullable<CartQueryResponse["data"]>["cart"],
+  locale: Locale,
 ): Cart | null {
   if (!node) return null;
 
@@ -266,11 +264,11 @@ function mapCartNode(
         imageUrl: merchandise.image?.url ?? "/images/placeholders/produit.png",
         imageAlt:
           merchandise.image?.altText ?? merchandise.product.title,
-        price: formatPrice(
+        price: formatMoney(locale, 
           merchandise.price.amount,
           merchandise.price.currencyCode,
         ),
-        lineTotal: formatPrice(lineCost.amount, lineCost.currencyCode),
+        lineTotal: formatMoney(locale, lineCost.amount, lineCost.currencyCode),
         variantId: merchandise.id,
       } satisfies CartLine;
     })
@@ -280,7 +278,7 @@ function mapCartNode(
     id: node.id,
     checkoutUrl: node.checkoutUrl,
     totalQuantity: node.totalQuantity,
-    totalPrice: formatPrice(amount, currencyCode),
+    totalPrice: formatMoney(locale, amount, currencyCode),
     lines,
   };
 }
@@ -300,10 +298,22 @@ export function isPlaceholderVariantId(variantId: string) {
   return variantId.startsWith("placeholder-");
 }
 
-async function createCart(variantId: string) {
+// Each mutation's fallback copy, in the visitor's language.
+type CartErrorMessages = Dictionary["cart"]["errors"];
+
+async function getCartErrorMessages(locale: Locale): Promise<CartErrorMessages> {
+  return (await getDictionary(locale)).cart.errors;
+}
+
+async function createCart(
+  variantId: string,
+  locale: Locale,
+  messages: CartErrorMessages,
+) {
   const client = getShopifyClient();
   const { data, errors } = (await client.request(CART_CREATE_MUTATION, {
     variables: {
+      language: shopifyLanguage(locale),
       input: {
         lines: [{ merchandiseId: variantId, quantity: 1 }],
       },
@@ -321,7 +331,7 @@ async function createCart(variantId: string) {
   const payload = data?.cartCreate;
   const userError = formatUserErrors(
     payload?.userErrors,
-    "Impossible de créer le panier. Vérifiez que votre token Storefront dispose des droits « write_checkouts ».",
+    messages.create,
   );
 
   if (!payload?.cart) {
@@ -337,10 +347,16 @@ async function createCart(variantId: string) {
   };
 }
 
-async function addLinesToCart(cartId: string, variantId: string) {
+async function addLinesToCart(
+  locale: Locale,
+  cartId: string,
+  variantId: string,
+  messages: CartErrorMessages,
+) {
   const client = getShopifyClient();
   const { data, errors } = (await client.request(CART_LINES_ADD_MUTATION, {
     variables: {
+      language: shopifyLanguage(locale),
       cartId,
       lines: [{ merchandiseId: variantId, quantity: 1 }],
     },
@@ -357,7 +373,7 @@ async function addLinesToCart(cartId: string, variantId: string) {
   const payload = data?.cartLinesAdd;
   const userError = formatUserErrors(
     payload?.userErrors,
-    "Impossible d'ajouter au panier.",
+    messages.add,
   );
 
   if (!payload?.cart) {
@@ -374,13 +390,16 @@ async function addLinesToCart(cartId: string, variantId: string) {
 }
 
 async function updateLineQuantity(
+  locale: Locale,
   cartId: string,
   lineId: string,
   quantity: number,
+  messages: CartErrorMessages,
 ) {
   const client = getShopifyClient();
   const { data, errors } = (await client.request(CART_LINES_UPDATE_MUTATION, {
     variables: {
+      language: shopifyLanguage(locale),
       cartId,
       lines: [{ id: lineId, quantity }],
     },
@@ -397,7 +416,7 @@ async function updateLineQuantity(
   const payload = data?.cartLinesUpdate;
   const userError = formatUserErrors(
     payload?.userErrors,
-    "Impossible de mettre à jour le panier.",
+    messages.update,
   );
 
   if (!payload?.cart) {
@@ -413,10 +432,16 @@ async function updateLineQuantity(
   };
 }
 
-async function removeLinesFromCart(cartId: string, lineIds: string[]) {
+async function removeLinesFromCart(
+  locale: Locale,
+  cartId: string,
+  lineIds: string[],
+  messages: CartErrorMessages,
+) {
   const client = getShopifyClient();
   const { data, errors } = (await client.request(CART_LINES_REMOVE_MUTATION, {
     variables: {
+      language: shopifyLanguage(locale),
       cartId,
       lineIds,
     },
@@ -433,7 +458,7 @@ async function removeLinesFromCart(cartId: string, lineIds: string[]) {
   const payload = data?.cartLinesRemove;
   const userError = formatUserErrors(
     payload?.userErrors,
-    "Impossible de retirer l'article du panier.",
+    messages.remove,
   );
 
   if (!payload?.cart) {
@@ -449,13 +474,16 @@ async function removeLinesFromCart(cartId: string, lineIds: string[]) {
   };
 }
 
-export async function getCartById(cartId: string): Promise<Cart | null> {
+export async function getCartById(
+  cartId: string,
+  locale: Locale,
+): Promise<Cart | null> {
   if (!isShopifyConfigured()) return null;
 
   try {
     const client = getShopifyClient();
     const { data, errors } = (await client.request(CART_QUERY, {
-      variables: { cartId },
+      variables: { cartId, language: shopifyLanguage(locale) },
     })) as CartQueryResponse;
 
     if (errors?.length) {
@@ -463,7 +491,7 @@ export async function getCartById(cartId: string): Promise<Cart | null> {
       return null;
     }
 
-    return mapCartNode(data?.cart ?? null);
+    return mapCartNode(data?.cart ?? null, locale);
   } catch (error) {
     console.error("Failed to fetch Shopify cart:", error);
     return null;
@@ -472,47 +500,59 @@ export async function getCartById(cartId: string): Promise<Cart | null> {
 
 export async function addVariantToCart(
   variantId: string,
+  locale: Locale,
   existingCartId?: string,
 ) {
+  const messages = await getCartErrorMessages(locale);
+
   if (!isShopifyConfigured()) {
-    return { ok: false as const, error: "Boutique non configurée." };
+    return { ok: false as const, error: messages.notConfigured };
   }
 
   if (isPlaceholderVariantId(variantId)) {
     return {
       ok: false as const,
-      error: "Ce produit de démonstration ne peut pas être ajouté au panier.",
+      error: messages.demoProduct,
     };
   }
 
   if (existingCartId) {
-    const addResult = await addLinesToCart(existingCartId, variantId);
+    const addResult = await addLinesToCart(locale, existingCartId, variantId, messages);
     if (addResult.ok) return addResult;
   }
 
-  return createCart(variantId);
+  return createCart(variantId, locale, messages);
 }
 
 export async function updateCartLineQuantity(
   cartId: string,
   lineId: string,
   quantity: number,
+  locale: Locale,
 ) {
+  const messages = await getCartErrorMessages(locale);
+
   if (!isShopifyConfigured()) {
-    return { ok: false as const, error: "Boutique non configurée." };
+    return { ok: false as const, error: messages.notConfigured };
   }
 
   if (quantity < 1) {
-    return removeCartLines(cartId, [lineId]);
+    return removeCartLines(cartId, [lineId], locale);
   }
 
-  return updateLineQuantity(cartId, lineId, quantity);
+  return updateLineQuantity(locale, cartId, lineId, quantity, messages);
 }
 
-export async function removeCartLines(cartId: string, lineIds: string[]) {
+export async function removeCartLines(
+  cartId: string,
+  lineIds: string[],
+  locale: Locale,
+) {
+  const messages = await getCartErrorMessages(locale);
+
   if (!isShopifyConfigured()) {
-    return { ok: false as const, error: "Boutique non configurée." };
+    return { ok: false as const, error: messages.notConfigured };
   }
 
-  return removeLinesFromCart(cartId, lineIds);
+  return removeLinesFromCart(locale, cartId, lineIds, messages);
 }

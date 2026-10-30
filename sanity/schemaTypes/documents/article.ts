@@ -25,19 +25,15 @@ export const article = defineType({
       options: {source: 'title', maxLength: 96},
       validation: (rule) => rule.required(),
     }),
+    // Written by the document-internationalization plugin: pick the language
+    // when creating the article, and add translations from the "Translations"
+    // menu at the top of the document rather than by changing this field.
     defineField({
       name: 'language',
       title: 'Language',
       type: 'string',
       group: 'meta',
-      options: {
-        list: [
-          {title: 'English', value: 'en'},
-          {title: 'French', value: 'fr'},
-          {title: 'Dutch', value: 'nl'},
-        ],
-        layout: 'radio',
-      },
+      readOnly: true,
       initialValue: 'fr',
       validation: (rule) => rule.required(),
     }),

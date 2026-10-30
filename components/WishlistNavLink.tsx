@@ -1,10 +1,12 @@
 "use client";
 
 import HeartIcon from "@/components/HeartIcon";
+import { useDictionary } from "@/components/LocaleProvider";
+import { interpolate } from "@/lib/i18n/dictionaries";
 import { routes } from "@/lib/routes";
 import { getWishlistCount, getWishlistHandles, subscribeToWishlist } from "@/lib/wishlist";
 import { prefetchWishlistProducts } from "@/lib/wishlist-products-store";
-import Link from "next/link";
+import Link from "@/components/LocaleLink";
 import { useEffect, useSyncExternalStore } from "react";
 
 type WishlistNavLinkProps = {
@@ -19,6 +21,7 @@ export default function WishlistNavLink({
   onClick,
   ...props
 }: WishlistNavLinkProps) {
+  const { nav } = useDictionary();
   const count = useSyncExternalStore(
     subscribeToWishlist,
     getWishlistCount,
@@ -36,7 +39,8 @@ export default function WishlistNavLink({
     prefetchWishlistProducts(handles);
   }, [handlesKey]);
 
-  const label = count > 0 ? `WISHLIST (${count})` : "WISHLIST";
+  const label =
+    count > 0 ? interpolate(nav.wishlistWithCount, { count }) : nav.wishlist;
 
   if (variant === "icon") {
     return (

@@ -1,3 +1,4 @@
+import { documentLocale } from "@/lib/i18n/document-locale";
 import type { Cart } from "@/lib/shopify/cart";
 import type { CartCarouselProduct } from "@/lib/shopify/products";
 
@@ -16,12 +17,13 @@ const cache = new Map<string, CacheEntry>();
 const inFlight = new Map<string, Promise<void>>();
 const listeners = new Set<() => void>();
 
+// Keyed by language too: quick-add cards show translated titles and prices.
 function getHandlesKey(productHandles: string[]): string {
-  return productHandles.length > 0 ? productHandles.join(",") : "__empty__";
+  return `${documentLocale()}:${productHandles.length > 0 ? productHandles.join(",") : "__empty__"}`;
 }
 
 function buildSimilarUrl(productHandles: string[]): string {
-  const params = new URLSearchParams({ limit: "4" });
+  const params = new URLSearchParams({ limit: "4", locale: documentLocale() });
 
   if (productHandles.length > 0) {
     params.set("handle", productHandles[0]);
@@ -96,15 +98,13 @@ export function subscribeSimilarProducts(callback: () => void): () => void {
 export function getSimilarProductsForHandlesKey(
   handlesKey: string,
 ): CartCarouselProduct[] {
-  const key = handlesKey === "__empty__" ? "__empty__" : handlesKey;
-  return getEntry(key).products;
+  return getEntry(`${documentLocale()}:${handlesKey}`).products;
 }
 
 export function getSimilarProductsHasFetchedForHandlesKey(
   handlesKey: string,
 ): boolean {
-  const key = handlesKey === "__empty__" ? "__empty__" : handlesKey;
-  return getEntry(key).hasFetched;
+  return getEntry(`${documentLocale()}:${handlesKey}`).hasFetched;
 }
 
 export function getServerSimilarProducts(): CartCarouselProduct[] {

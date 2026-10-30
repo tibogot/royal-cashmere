@@ -3,6 +3,7 @@
 import CollectionCarouselCard, {
   collectionCarouselCardWidthClass,
 } from "@/components/CollectionCarouselCard";
+import { useDictionary } from "@/components/LocaleProvider";
 import type { ShopifyCollection } from "@/lib/shopify/queries";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
@@ -17,15 +18,16 @@ type CollectionsSectionProps = {
 };
 
 function CollectionsIntro() {
+  const copy = useDictionary().showcase;
+
   return (
     <div className="flex max-w-md flex-col items-center text-center md:max-w-lg">
       <h1 className="font-serif text-3xl uppercase leading-[1.12] sm:text-4xl md:text-5xl md:leading-[1.1] lg:text-6xl">
-        Royal Cashmere Collections
+        {copy.collectionsHeading}
       </h1>
 
       <p className="mt-6 font-serif text-sm font-light leading-relaxed text-neutral-800 md:mt-8 md:text-base">
-        Robes, pulls, pantalons et écharpes — chaque collection révèle la
-        douceur du pur cachemire mongol, pensée pour accompagner vos saisons.
+        {copy.collectionsIntro}
       </p>
     </div>
   );
@@ -34,6 +36,7 @@ function CollectionsIntro() {
 export default function CollectionsSection({
   collections,
 }: CollectionsSectionProps) {
+  const copy = useDictionary().showcase;
   const containerRef = useRef<HTMLDivElement>(null);
   const viewportRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
@@ -131,6 +134,7 @@ export default function CollectionsSection({
             <CollectionCarouselCard
               key={collection.id}
               collection={collection}
+              ctaLabel={copy.discover}
               className="w-full"
             />
           ))}
@@ -159,6 +163,7 @@ export default function CollectionsSection({
               <CollectionCarouselCard
                 key={collection.id}
                 collection={collection}
+                ctaLabel={copy.discover}
                 preventClickAfterDrag
               />
             ))}
@@ -169,7 +174,7 @@ export default function CollectionsSection({
           <button
             type="button"
             onClick={() => scroll("prev")}
-            aria-label="Collection précédente"
+            aria-label={copy.previousCollection}
             className="flex size-8 select-none items-center justify-center bg-black text-white transition-opacity hover:opacity-80"
           >
             <svg
@@ -190,7 +195,7 @@ export default function CollectionsSection({
           <button
             type="button"
             onClick={() => scroll("next")}
-            aria-label="Collection suivante"
+            aria-label={copy.nextCollection}
             className="flex size-8 select-none items-center justify-center transition-opacity hover:opacity-60"
           >
             <svg

@@ -1,3 +1,4 @@
+import { documentLocale } from "@/lib/i18n/document-locale";
 import type { ShopifyProduct } from "@/lib/shopify/queries";
 
 type CacheEntry = {
@@ -15,12 +16,14 @@ const cache = new Map<string, CacheEntry>();
 const inFlight = new Map<string, Promise<void>>();
 const listeners = new Set<() => void>();
 
+// Keys carry the page language, so products fetched on the French site are
+// not reused after switching to Dutch.
 export function keyFromHandles(handles: string[]): string {
-  return handles.length > 0 ? handles.join(",") : "__empty__";
+  return `${documentLocale()}:${handles.length > 0 ? handles.join(",") : "__empty__"}`;
 }
 
 export function keyFromHandlesKey(handlesKey: string): string {
-  return handlesKey.length > 0 ? handlesKey : "__empty__";
+  return `${documentLocale()}:${handlesKey.length > 0 ? handlesKey : "__empty__"}`;
 }
 
 function getEntry(key: string): CacheEntry {
@@ -44,7 +47,10 @@ async function fetchProductsForKey(
         return;
       }
 
-      const params = new URLSearchParams({ handles: handles.join(",") });
+      const params = new URLSearchParams({
+        handles: handles.join(","),
+        locale: documentLocale(),
+      });
       const response = await fetch(`/api/products?${params.toString()}`, {
         cache: "no-store",
       });

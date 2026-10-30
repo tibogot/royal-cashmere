@@ -90,7 +90,7 @@ const PRODUCT_FIELDS = `
 `;
 
 export const FEATURED_PRODUCTS_QUERY = `
-  query FeaturedProducts($first: Int!) {
+  query FeaturedProducts($first: Int!, $language: LanguageCode) @inContext(country: BE, language: $language) {
     products(first: $first, sortKey: CREATED_AT, reverse: true) {
       pageInfo {
         hasNextPage
@@ -106,7 +106,7 @@ export const FEATURED_PRODUCTS_QUERY = `
 `;
 
 export const ALL_PRODUCTS_QUERY = `
-  query AllProducts($first: Int!, $after: String) {
+  query AllProducts($first: Int!, $after: String, $language: LanguageCode) @inContext(country: BE, language: $language) {
     products(first: $first, after: $after, sortKey: CREATED_AT, reverse: true) {
       pageInfo {
         hasNextPage
@@ -135,17 +135,34 @@ export type ProductVariant = {
   selectedOptions: { name: string; value: string }[];
 };
 
+// Plain-text product metafields (namespace "custom", type multi_line_text_field).
+// Each needs "Storefront API access" enabled on its definition in Shopify admin.
+export type ProductDetailFields = {
+  composition?: string;
+  fit?: string;
+  care?: string;
+};
+
 export type ShopifyProductDetail = ShopifyProduct & {
   description: string;
   descriptionHtml: string;
+  // The search-result description set in Shopify, when there is one.
+  seoDescription?: string;
+  details?: ProductDetailFields;
   options: ProductOption[];
   variants: ProductVariant[];
 };
+
+type ShopifyMetafieldNode = { value: string } | null;
 
 type ShopifyProductDetailNode = Omit<ShopifyProductNode, "options"> & {
   options: ShopifyProductOptionNode[];
   description: string;
   descriptionHtml: string;
+  seo: { description: string | null } | null;
+  composition: ShopifyMetafieldNode;
+  fit: ShopifyMetafieldNode;
+  care: ShopifyMetafieldNode;
   variants: {
     edges: {
       node: {
@@ -176,11 +193,23 @@ type ProductByHandleQueryResponse = {
 };
 
 export const PRODUCT_BY_HANDLE_QUERY = `
-  query ProductByHandle($handle: String!) {
+  query ProductByHandle($handle: String!, $language: LanguageCode) @inContext(country: BE, language: $language) {
     product(handle: $handle) {
       ${PRODUCT_FIELDS}
       description
       descriptionHtml
+      seo {
+        description
+      }
+      composition: metafield(namespace: "custom", key: "composition") {
+        value
+      }
+      fit: metafield(namespace: "custom", key: "fit") {
+        value
+      }
+      care: metafield(namespace: "custom", key: "care") {
+        value
+      }
       variants(first: 100) {
         edges {
           node {
@@ -213,7 +242,7 @@ type ProductRecommendationsQueryResponse = {
 };
 
 export const PRODUCT_RECOMMENDATIONS_QUERY = `
-  query ProductRecommendations($productId: ID!) {
+  query ProductRecommendations($productId: ID!, $language: LanguageCode) @inContext(country: BE, language: $language) {
     productRecommendations(productId: $productId) {
       ${PRODUCT_FIELDS}
     }
@@ -269,7 +298,7 @@ type CollectionsQueryResponse = {
 };
 
 export const COLLECTIONS_QUERY = `
-  query Collections($first: Int!) {
+  query Collections($first: Int!, $language: LanguageCode) @inContext(country: BE, language: $language) {
     collections(first: $first, sortKey: TITLE) {
       edges {
         node {
@@ -314,7 +343,7 @@ type CollectionByHandleQueryResponse = {
 };
 
 export const COLLECTION_BY_HANDLE_QUERY = `
-  query CollectionByHandle($handle: String!, $first: Int!, $after: String) {
+  query CollectionByHandle($handle: String!, $first: Int!, $after: String, $language: LanguageCode) @inContext(country: BE, language: $language) {
     collection(handle: $handle) {
       id
       title

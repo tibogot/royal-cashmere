@@ -1,6 +1,7 @@
 "use client";
 
 import FeaturedProductsCarousel from "@/components/FeaturedProductsCarousel";
+import { useDictionary } from "@/components/LocaleProvider";
 import {
   addRecentlyViewed,
   getDisplayRecentlyViewedHandles,
@@ -40,6 +41,7 @@ function RecentlyViewedSkeleton() {
 export default function RecentlyViewedProducts({
   currentHandle,
 }: RecentlyViewedProductsProps) {
+  const dict = useDictionary();
   const [handlesKey, setHandlesKey] = useState("__empty__");
 
   useEffect(() => {
@@ -70,7 +72,7 @@ export default function RecentlyViewedProducts({
   return (
     <section className="bg-white px-4 pt-6 pb-20 text-black md:px-8 md:pt-10 md:pb-32">
       <h2 className="mb-10 font-serif text-2xl uppercase md:mb-12 md:text-3xl">
-        Vu récemment
+        {dict.product.recentlyViewedTitle}
       </h2>
       {hasFetched ? (
         <FeaturedProductsCarousel products={products} showViewAll={false} />

@@ -1,11 +1,12 @@
 "use client";
 
+import { useDictionary } from "@/components/LocaleProvider";
 import ShopifyProductImage from "@/components/ShopifyProductImage";
 import { SHOPIFY_IMAGE_WIDTH } from "@/lib/shopify/image";
 import { routes } from "@/lib/routes";
 import { ctaLinkClassName } from "@/lib/ui";
 import type { CartLine } from "@/lib/shopify/cart";
-import Link from "next/link";
+import Link from "@/components/LocaleLink";
 
 type CartLineItemProps = {
   line: CartLine;
@@ -68,6 +69,7 @@ export default function CartLineItem({
   onIncrease,
   onRemove,
 }: CartLineItemProps) {
+  const dict = useDictionary();
   const isPanel = variant === "panel";
 
   if (isPanel) {
@@ -105,10 +107,10 @@ export default function CartLineItem({
           </div>
 
           {line.colorValue ? (
-            <VariantOptionLine label="Couleur" value={line.colorValue} />
+            <VariantOptionLine label={dict.product.optionColor} value={line.colorValue} />
           ) : null}
           {line.sizeValue ? (
-            <VariantOptionLine label="Taille" value={line.sizeValue} />
+            <VariantOptionLine label={dict.product.optionSize} value={line.sizeValue} />
           ) : null}
 
           <div className="mt-2.5 flex items-center justify-between gap-4">
@@ -116,7 +118,7 @@ export default function CartLineItem({
               <button
                 type="button"
                 onClick={onDecrease}
-                aria-label="Diminuer la quantité"
+                aria-label={dict.cart.decrease}
                 className="flex size-7 items-center justify-center border border-black/20 text-sm transition-opacity hover:opacity-60"
               >
                 −
@@ -127,7 +129,7 @@ export default function CartLineItem({
               <button
                 type="button"
                 onClick={onIncrease}
-                aria-label="Augmenter la quantité"
+                aria-label={dict.cart.increase}
                 className="flex size-7 items-center justify-center border border-black/20 text-sm transition-opacity hover:opacity-60"
               >
                 +
@@ -139,7 +141,7 @@ export default function CartLineItem({
               onClick={onRemove}
               className={ctaLinkClassName}
             >
-              Retirer
+              {dict.cart.remove}
             </button>
           </div>
         </div>
@@ -173,10 +175,10 @@ export default function CartLineItem({
           {line.title}
         </Link>
         {line.colorValue ? (
-          <VariantOptionLine label="Couleur" value={line.colorValue} />
+          <VariantOptionLine label={dict.product.optionColor} value={line.colorValue} />
         ) : null}
         {line.sizeValue ? (
-          <VariantOptionLine label="Taille" value={line.sizeValue} />
+          <VariantOptionLine label={dict.product.optionSize} value={line.sizeValue} />
         ) : null}
         {!line.colorValue && !line.sizeValue && line.variantTitle ? (
           <p className="mt-1 text-sm text-black/50">{line.variantTitle}</p>
@@ -186,7 +188,7 @@ export default function CartLineItem({
           <button
             type="button"
             onClick={onDecrease}
-            aria-label="Diminuer la quantité"
+            aria-label={dict.cart.decrease}
             className="flex size-8 items-center justify-center border border-black/20 text-sm transition-opacity hover:opacity-60"
           >
             −
@@ -197,7 +199,7 @@ export default function CartLineItem({
           <button
             type="button"
             onClick={onIncrease}
-            aria-label="Augmenter la quantité"
+            aria-label={dict.cart.increase}
             className="flex size-8 items-center justify-center border border-black/20 text-sm transition-opacity hover:opacity-60"
           >
             +
@@ -209,7 +211,7 @@ export default function CartLineItem({
           onClick={onRemove}
           className={`${ctaLinkClassName} mt-4`}
         >
-          Retirer
+          {dict.cart.remove}
         </button>
       </div>
 

@@ -2,7 +2,10 @@
 
 import PanelCloseButton from "@/components/PanelCloseButton";
 import ShopifyProductImage from "@/components/ShopifyProductImage";
-import { popularSearches } from "@/lib/categories";
+import { getPopularSearches } from "@/lib/categories";
+import { useDictionary, useLocale } from "@/components/LocaleProvider";
+import { withLocale } from "@/lib/i18n/config";
+import { interpolate } from "@/lib/i18n/dictionaries";
 import { routes } from "@/lib/routes";
 import { SHOPIFY_IMAGE_WIDTH } from "@/lib/shopify/image";
 import type { ShopifyProduct } from "@/lib/shopify/queries";
@@ -10,7 +13,7 @@ import { ctaLinkClassName } from "@/lib/ui";
 import { useMounted } from "@/lib/useMounted";
 import { useOverlayScrollLock } from "@/lib/useOverlayScrollLock";
 import gsap from "gsap";
-import Link from "next/link";
+import Link from "@/components/LocaleLink";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -31,6 +34,8 @@ type SearchResponse = {
 
 export default function SearchPanel({ open, onClose }: SearchPanelProps) {
   const router = useRouter();
+  const locale = useLocale();
+  const { search } = useDictionary();
   const panelRef = useRef<HTMLDivElement>(null);
   const overlayRef = useRef<HTMLButtonElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -159,7 +164,7 @@ export default function SearchPanel({ open, onClose }: SearchPanelProps) {
     const timer = window.setTimeout(async () => {
       try {
         const response = await fetch(
-          `/api/search?q=${encodeURIComponent(trimmedQuery)}`,
+          `/api/search?q=${encodeURIComponent(trimmedQuery)}&locale=${locale}`,
           { signal: controller.signal },
         );
 
@@ -188,17 +193,19 @@ export default function SearchPanel({ open, onClose }: SearchPanelProps) {
       window.clearTimeout(timer);
       controller.abort();
     };
-  }, [showLiveSearch, trimmedQuery]);
+  }, [showLiveSearch, trimmedQuery, locale]);
 
   const navigateToAllResults = () => {
     onClose();
 
     if (!trimmedQuery) {
-      router.push(routes.shop);
+      router.push(withLocale(routes.shop, locale));
       return;
     }
 
-    router.push(`${routes.shop}?q=${encodeURIComponent(trimmedQuery)}`);
+    router.push(
+      withLocale(`${routes.shop}?q=${encodeURIComponent(trimmedQuery)}`, locale),
+    );
   };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -213,7 +220,7 @@ export default function SearchPanel({ open, onClose }: SearchPanelProps) {
       <button
         type="button"
         ref={overlayRef}
-        aria-label="Fermer la recherche"
+        aria-label={search.closeAriaLabel}
         className="absolute inset-0 bg-black/40 opacity-0"
         onClick={onClose}
       />
@@ -222,7 +229,7 @@ export default function SearchPanel({ open, onClose }: SearchPanelProps) {
         ref={panelRef}
         role="dialog"
         aria-modal="true"
-        aria-label="Rechercher"
+        aria-label={search.dialogAriaLabel}
         className="absolute inset-y-0 right-0 flex h-dvh max-h-dvh w-full max-w-md flex-col overflow-y-auto bg-white text-black shadow-2xl"
         data-lenis-prevent
       >
@@ -232,7 +239,7 @@ export default function SearchPanel({ open, onClose }: SearchPanelProps) {
 
         <form onSubmit={handleSubmit} className="px-4 md:px-8">
           <label htmlFor="search-query" className="sr-only">
-            Rechercher un produit
+            {search.inputLabel}
           </label>
           <input
             ref={inputRef}
@@ -242,7 +249,7 @@ export default function SearchPanel({ open, onClose }: SearchPanelProps) {
             enterKeyHint="search"
             value={query}
             onChange={(event) => setQuery(event.target.value)}
-            placeholder="Rechercher un produit..."
+            placeholder={search.placeholder}
             className="w-full cursor-text border-b border-black/20 bg-transparent py-3 text-sm text-black outline-none placeholder:text-black/40 md:text-base"
             autoComplete="off"
             role="combobox"
@@ -255,12 +262,12 @@ export default function SearchPanel({ open, onClose }: SearchPanelProps) {
             <div
               id="search-results"
               role="listbox"
-              aria-label="Résultats de recherche"
+              aria-label={search.resultsAriaLabel}
               aria-live="polite"
               className="mt-8"
             >
               {isSearching ? (
-                <p className="text-sm text-black/50">Recherche en cours…</p>
+                <p className="text-sm text-black/50">{search.searching}</p>
               ) : results.length > 0 ? (
                 <>
                   <ul className="flex flex-col gap-4">
@@ -298,12 +305,12 @@ export default function SearchPanel({ open, onClose }: SearchPanelProps) {
                     type="submit"
                     className={`${ctaLinkClassName} mt-8 font-sans transition-opacity hover:opacity-60`}
                   >
-                    Voir tous les résultats ({total})
+                    {interpolate(search.viewAllResults, { total })}
                   </button>
                 </>
               ) : (
                 <p className="text-sm text-black/60">
-                  Aucun produit trouvé pour &ldquo;{trimmedQuery}&rdquo;.
+                  {interpolate(search.noResults, { query: trimmedQuery })}
                 </p>
               )}
             </div>
@@ -313,10 +320,10 @@ export default function SearchPanel({ open, onClose }: SearchPanelProps) {
         {!showLiveSearch ? (
           <div className="mt-12 border-t border-black/10 px-4 pt-10 md:px-8">
             <p className="text-xs uppercase tracking-wide text-black">
-              Recherches populaires
+              {search.popularTitle}
             </p>
             <ul className="mt-4 flex flex-col gap-2">
-              {popularSearches.map(({ label, href }) => (
+              {getPopularSearches(search.popular).map(({ label, href }) => (
                 <li key={href}>
                   <Link
                     href={href}

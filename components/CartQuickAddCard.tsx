@@ -1,13 +1,14 @@
 "use client";
 
 import { addToCart } from "@/app/actions/cart";
+import { useDictionary, useLocale } from "@/components/LocaleProvider";
 import ProductColorSwatches from "@/components/ProductColorSwatches";
 import ProductImageWishlist from "@/components/ProductImageWishlist";
 import ShopifyProductImage from "@/components/ShopifyProductImage";
 import { routes } from "@/lib/routes";
 import type { CartCarouselProduct } from "@/lib/shopify/products";
 import { Draggable } from "gsap/Draggable";
-import Link from "next/link";
+import Link from "@/components/LocaleLink";
 import { useTransition } from "react";
 
 type CartQuickAddCardProps = {
@@ -22,6 +23,8 @@ export default function CartQuickAddCard({
   preventClickAfterDrag = false,
 }: CartQuickAddCardProps) {
   const [isPending, startTransition] = useTransition();
+  const locale = useLocale();
+  const dict = useDictionary();
   const isCompact = layout === "compact";
 
   const articleClassName = isCompact
@@ -49,7 +52,7 @@ export default function CartQuickAddCard({
     }
 
     startTransition(async () => {
-      const result = await addToCart(product.defaultVariantId);
+      const result = await addToCart(product.defaultVariantId, locale);
 
       if (!result.ok) {
         window.alert(result.error);
@@ -62,10 +65,10 @@ export default function CartQuickAddCard({
   };
 
   const addLabel = isPending
-    ? "Ajout…"
+    ? dict.cart.quickAdding
     : product.availableForSale
-      ? "Ajouter"
-      : "Rupture";
+      ? dict.cart.quickAdd
+      : dict.cart.quickSoldOut;
 
   return (
     <article className={articleClassName}>

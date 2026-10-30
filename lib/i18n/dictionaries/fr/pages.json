@@ -1,0 +1,128 @@
+{
+  "home": {
+    "metaDescription": "Boutique de cachemire d'exception à Uccle, Bruxelles : pulls, écharpes et accessoires en pur cachemire de Mongolie.",
+    "heroHeading": "Royal Cashmere — Boutique de cachemire d'exception à Uccle, Bruxelles",
+    "newInCta": "Voir les nouveautés",
+    "introHeading": "Le cachemire d'exception venu de Mongolie",
+    "saleHeading": "Soldes",
+    "saleCta": "Voir les soldes",
+    "bestsellersHeading": "Bestsellers",
+    "bestsellersCta": "Voir les best-sellers",
+    "storyHeading": "Une maison mongole au cœur d'Uccle",
+    "storyText": "Royal Cashmere est une boutique de cachemire installée à Uccle, à Bruxelles. Notre propriétaire est mongole, et nos pièces sont réalisées dans le meilleur cachemire de Mongolie : doux, chaud et fait pour durer. Pulls, robes, ponchos, écharpes, châles, bonnets et mitaines : chaque pièce est choisie pour sa finesse, sa douceur et sa tenue dans le temps. Vous les retrouvez à la boutique comme en ligne, avec la livraison en Europe.",
+    "storyCta": "Découvrir notre histoire",
+    "bannerEyebrow": "Notre histoire",
+    "bannerTitle": "Le meilleur cachemire de Mongolie",
+    "bannerDescription": "Le cachemire de Mongolie est réputé parmi les plus fins au monde. Notre propriétaire, mongole elle-même, a choisi de le faire découvrir à Bruxelles : des pièces d'une douceur rare, pensées pour vous accompagner longtemps. À retrouver en boutique à Uccle comme en ligne.",
+    "bannerCta": "Découvrir la pièce",
+    "visitText": "Passez nous voir à la boutique, chaussée de Waterloo 1251B à Uccle. Touchez la matière, essayez les pièces et laissez-vous conseiller : rien ne remplace le toucher d'un vrai cachemire de Mongolie.",
+    "visitCta": "Nous rendre visite",
+    "saleImageAlt": "Pull en cachemire Royal Cashmere",
+    "bestsellersImageAlt": "Ensembles jogging en cachemire Royal Cashmere",
+    "bannerImageAlt": "Veste zippée en cachemire Royal Cashmere",
+    "newInImageAlt": "Ensemble polo et jogging en cachemire Royal Cashmere",
+    "boutiqueVisitImageAlt": "Ensemble en cachemire Royal Cashmere"
+  },
+  "about": {
+    "metaTitle": "À propos",
+    "metaDescription": "Royal Cashmere à Uccle, Bruxelles : histoire, savoir-faire et engagement durable. Cachemire et soie d'exception de la steppe mongole, boutique à la chaussée de Waterloo.",
+    "heading": "Une maison de cachemire d'exception, ancrée à Bruxelles",
+    "heroImageAlt": "Femme tenant un chevreau dans un enclos de chèvres cachemire, steppe mongole",
+    "introFirst": "Nous vous présentons Royal Cashmere, boutique de cachemire d'exception à Uccle, à Bruxelles, où la durabilité s'entrelace avec le style. Nous proposons des pièces exquises en cachemire et en soie, issues des paysages intemporels de la steppe mongole, et sélectionnées pour leur pureté et leur douceur incomparable.",
+    "introSecond": "Installés chaussée de Waterloo, nous accueillons chaque visite comme une rencontre. En choisissant Royal Cashmere, vous participez à une histoire qui soutient les éleveurs nomades et leurs terres ancestrales, tout en investissant dans un vestiaire intemporel, pensé pour durer.",
+    "cashmereImageAlt": "Cachemire Royal Cashmere",
+    "fibreImageAlt": "Femme tenant une poignée de fibre de cachemire brute dans la steppe mongole",
+    "heritageFirst": "Sur les hauts plateaux de Mongolie, le cachemire naît d'un lien ancestral entre les éleveurs, leurs troupeaux et des steppes d'une beauté rare. Nous sélectionnons nos fibres à la source, en privilégiant des filières respectueuses des nomades et de leur environnement, pour un avenir durable des générations à venir.",
+    "heritageSecond": "Nos créations sont conçues avec une attention méticuleuse aux détails, garantissant une qualité inégalée, une grande douceur au toucher et une durabilité réelle au quotidien. Chaque pièce reflète notre engagement à préserver la beauté de la nature et à honorer le riche héritage de la culture nomade mongole.",
+    "collectionsImageAlt": "Collections Royal Cashmere"
+  },
+  "contact": {
+    "metaTitle": "Contact",
+    "metaDescription": "Contactez Royal Cashmere à Uccle, Bruxelles. Boutique de cachemire d'exception — adresse, horaires et téléphone.",
+    "heading": "Contact — Royal Cashmere Bruxelles",
+    "storeName": "Royal Cashmere Bruxelles",
+    "addressLabel": "Adresse",
+    "country": "Belgique",
+    "phoneLabel": "Téléphone",
+    "emailLabel": "E-mail",
+    "hoursLabel": "Horaires d'ouverture",
+    "hours": "Du lundi au vendredi de 10 h à 18 h",
+    "imageAlt": "Manteau en cachemire Royal Cashmere",
+    "formErrors": {
+      "notConfigured": "Le formulaire de contact n'est pas encore configuré. Contactez-nous par téléphone en attendant.",
+      "sendFailed": "L'envoi du message a échoué. Veuillez réessayer ou nous appeler directement.",
+      "generic": "Une erreur est survenue. Veuillez réessayer.",
+      "name": "Veuillez indiquer votre nom.",
+      "email": "Veuillez indiquer une adresse e-mail valide.",
+      "message": "Votre message doit contenir au moins 10 caractères."
+    }
+  },
+  "contactForm": {
+    "success": "Merci pour votre message. Notre équipe vous répondra dans les plus brefs délais.",
+    "emailLabel": "E-mail",
+    "emailPlaceholder": "E-mail *",
+    "nameLabel": "Nom",
+    "namePlaceholder": "Nom *",
+    "messageLabel": "Message",
+    "messagePlaceholder": "Message *",
+    "companyLabel": "Entreprise",
+    "sending": "Envoi en cours…",
+    "submit": "Envoyer"
+  },
+  "faq": {
+    "heading": "FAQ",
+    "items": [
+      {
+        "question": "D'où provient votre cachemire ?",
+        "answer": "Notre cachemire provient des hauts plateaux de Mongolie, réputés pour la finesse et la douceur exceptionnelle de leurs fibres. Chaque lot est sélectionné avec exigence pour garantir une pureté et une qualité remarquables."
+      },
+      {
+        "question": "Comment reconnaître un cachemire de qualité ?",
+        "answer": "Un cachemire d'exception se distingue par la douceur au toucher, la légèreté du fil et la régularité de la maille. Nos pièces sont confectionnées à partir de fibres longues et fines, sélectionnées pour leur tenue et leur confort durable."
+      },
+      {
+        "question": "Comment entretenir un vêtement en cachemire ?",
+        "answer": "Nous recommandons un lavage à la main à l'eau froide avec une lessive douce, ou un nettoyage à sec. Séchez à plat, à l'abri du soleil direct, et rangez vos pièces pliées pour préserver leur forme et leur douceur."
+      },
+      {
+        "question": "Vos produits sont-ils fabriqués de manière éthique ?",
+        "answer": "Royal Cashmere s'engage pour une approche responsable, du sourcing des matières premières au respect des artisans et partenaires avec lesquels nous collaborons. La qualité durable et l'exigence éthique guident chacune de nos collections."
+      },
+      {
+        "question": "Proposez-vous la livraison en Europe ?",
+        "answer": "Oui, nous proposons la livraison en Europe. Les délais et frais de livraison sont indiqués lors du passage de commande. Vous pouvez également retirer vos achats directement dans notre boutique d'Uccle."
+      },
+      {
+        "question": "Puis-je retourner un produit s'il ne me convient pas ?",
+        "answer": "Les retours sont acceptés dans les conditions prévues par notre politique de retour. Les articles doivent être retournés dans leur état d'origine, non portés et avec leurs étiquettes. Contactez-nous pour toute assistance."
+      }
+    ],
+    "footerText": "Boutique Royal Cashmere — Chaussée de Waterloo 1251B, Uccle. Ouverte du lundi au vendredi, de 10 h à 18 h."
+  },
+  "showcase": {
+    "discover": "Découvrir",
+    "viewAll": "Tout voir",
+    "nextProducts": "Produits suivants",
+    "previousProducts": "Produits précédents",
+    "collectionsHeading": "Royal Cashmere Collections",
+    "collectionsIntro": "Robes, pulls, pantalons et écharpes — chaque collection révèle la douceur du pur cachemire mongol, pensée pour accompagner vos saisons.",
+    "previousCollection": "Collection précédente",
+    "nextCollection": "Collection suivante",
+    "galleryLabel": "Galerie interactive",
+    "galleryNavLabel": "Collections",
+    "gallery": {
+      "robes": "Robes",
+      "chales": "Châles",
+      "bonnets": "Bonnets",
+      "pulls": "Pulls",
+      "pantalons": "Pantalons",
+      "echarpes": "Écharpes",
+      "manteaux": "Manteaux",
+      "gants": "Gants",
+      "ponchos": "Ponchos",
+      "cardigans": "Cardigans",
+      "cachemire": "Cachemire",
+      "maille": "Maille"
+    }
+  }
+}

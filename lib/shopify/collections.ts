@@ -14,8 +14,11 @@ import {
   NEW_IN_COLLECTION_HANDLE,
   SALE_COLLECTION_HANDLE,
 } from "@/lib/collection-handles";
+import { DEFAULT_LOCALE, type Locale } from "@/lib/i18n/config";
+import { getDictionary } from "@/lib/i18n/dictionaries";
 import { getShopifyClient, isShopifyConfigured } from "./client";
-import { getAllProducts, SHOPIFY_CACHE_TAG } from "./products";
+import { shopifyLanguage } from "./language";
+import { getAllProducts, mapProductNode, SHOPIFY_CACHE_TAG } from "./products";
 import {
   COLLECTION_BY_HANDLE_QUERY,
   COLLECTIONS_QUERY,
@@ -24,41 +27,11 @@ import {
   type ShopifyCollection,
   type ShopifyCollectionListNode,
   type ShopifyProduct,
-  type ShopifyProductNode,
 } from "./queries";
-import { buildColorSwatches, getColorCount } from "./variants";
 
 const COLLECTIONS_PAGE_SIZE = 50;
 const COLLECTION_PRODUCTS_PAGE_SIZE = 100;
 const SHOPIFY_REVALIDATE = 3600;
-
-function formatPrice(amount: string, currencyCode: string) {
-  return new Intl.NumberFormat("fr-BE", {
-    style: "currency",
-    currency: currencyCode,
-  }).format(Number(amount));
-}
-
-function mapProductNode(node: ShopifyProductNode): ShopifyProduct | null {
-  if (!node.featuredImage?.url) return null;
-
-  const { amount, currencyCode } = node.priceRange.minVariantPrice;
-  const imageUrl = node.featuredImage.url;
-  const imageAlt = node.featuredImage.altText ?? node.title;
-
-  return {
-    id: node.id,
-    title: node.title,
-    handle: node.handle,
-    imageUrl,
-    imageAlt,
-    price: formatPrice(amount, currencyCode),
-    colorCount: getColorCount(node.options),
-    colorSwatches: buildColorSwatches(node.options),
-    productType: node.productType,
-    tags: node.tags,
-  };
-}
 
 function mapCollectionNode(node: ShopifyCollectionListNode): ShopifyCollection {
   const productImage = node.products.edges[0]?.node.featuredImage;
@@ -75,13 +48,16 @@ function mapCollectionNode(node: ShopifyCollectionListNode): ShopifyCollection {
 }
 
 export const getCollections = unstable_cache(
-  async (): Promise<ShopifyCollection[]> => {
+  async (locale: Locale = DEFAULT_LOCALE): Promise<ShopifyCollection[]> => {
   if (!isShopifyConfigured()) return [];
 
   try {
     const client = getShopifyClient();
     const { data, errors } = (await client.request(COLLECTIONS_QUERY, {
-      variables: { first: COLLECTIONS_PAGE_SIZE },
+      variables: {
+        first: COLLECTIONS_PAGE_SIZE,
+        language: shopifyLanguage(locale),
+      },
     })) as CollectionsQueryResponse;
 
     if (errors?.length) {
@@ -110,6 +86,7 @@ export type ShopifyCollectionWithProducts = ShopifyCollection & {
 export const getCollectionByHandle = unstable_cache(
   async (
     handle: string,
+    locale: Locale = DEFAULT_LOCALE,
   ): Promise<ShopifyCollectionWithProducts | null> => {
   if (!isShopifyConfigured()) return null;
 
@@ -127,6 +104,7 @@ export const getCollectionByHandle = unstable_cache(
             handle,
             first: COLLECTION_PRODUCTS_PAGE_SIZE,
             after,
+            language: shopifyLanguage(locale),
           },
         },
       )) as CollectionByHandleQueryResponse;
@@ -149,7 +127,7 @@ export const getCollectionByHandle = unstable_cache(
 
       products.push(
         ...collection.products.edges
-          .map(({ node }) => mapProductNode(node))
+          .map(({ node }) => mapProductNode(node, locale))
           .filter((product): product is ShopifyProduct => product !== null),
       );
 
@@ -174,8 +152,15 @@ export const getCollectionByHandle = unstable_cache(
 );
 
 // The category menus: catalog sections and sub-collections that have products.
-export async function getCatalogNav(): Promise<CatalogNavSection[]> {
-  return buildCatalogNav(await getAllProducts());
+// /api/collections serves the French labels; the client relabels them.
+export async function getCatalogNav(
+  locale: Locale = DEFAULT_LOCALE,
+): Promise<CatalogNavSection[]> {
+  const [products, dictionary] = await Promise.all([
+    getAllProducts(locale),
+    getDictionary(locale),
+  ]);
+  return buildCatalogNav(products, dictionary);
 }
 
 // Shopify collections the menus link to, in this order, when they have
@@ -186,10 +171,12 @@ const NAV_COLLECTION_HANDLES = [
   GIFTS_COLLECTION_HANDLE,
 ];
 
-export async function getShopNav(): Promise<ShopNav> {
+export async function getShopNav(
+  locale: Locale = DEFAULT_LOCALE,
+): Promise<ShopNav> {
   const [sections, shopifyCollections] = await Promise.all([
-    getCatalogNav(),
-    getCollections(),
+    getCatalogNav(locale),
+    getCollections(locale),
   ]);
 
   const collections = NAV_COLLECTION_HANDLES.flatMap((handle) => {
@@ -238,21 +225,24 @@ export type CollectionPageData = ShopifyCollectionWithProducts & {
 // else the Shopify collection with that handle (Soldes, Nouveautés…).
 export async function getCollectionPageData(
   handle: string,
+  locale: Locale = DEFAULT_LOCALE,
 ): Promise<CollectionPageData | null> {
+  const dictionary = await getDictionary(locale);
+
   if (handle === ALL_PRODUCTS_HANDLE) {
     return {
       id: ALL_PRODUCTS_HANDLE,
       handle: ALL_PRODUCTS_HANDLE,
-      title: "Boutique",
-      products: await getAllProducts(),
+      title: dictionary.collection.shop.title,
+      products: await getAllProducts(locale),
     };
   }
 
-  const catalog = findCatalogCollection(handle);
-  if (!catalog) return getCollectionByHandle(handle);
+  const catalog = findCatalogCollection(handle, dictionary);
+  if (!catalog) return getCollectionByHandle(handle, locale);
 
   const collection = catalog.collection ?? catalog.section;
-  const products = (await getAllProducts()).filter((product) =>
+  const products = (await getAllProducts(locale)).filter((product) =>
     collection.matches(product),
   );
 

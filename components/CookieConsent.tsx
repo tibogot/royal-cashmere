@@ -2,10 +2,12 @@
 
 import { getCookieConsent, setCookieConsent } from "@/lib/cookie-consent";
 import { routes } from "@/lib/routes";
-import Link from "next/link";
+import Link from "@/components/LocaleLink";
+import { useDictionary } from "@/components/LocaleProvider";
 import { useEffect, useState } from "react";
 
 export default function CookieConsent() {
+  const { cookieBanner } = useDictionary();
   const [visible, setVisible] = useState(false);
   const [entered, setEntered] = useState(false);
 
@@ -44,29 +46,27 @@ export default function CookieConsent() {
         id="cookie-consent-title"
         className="text-xs uppercase tracking-wide"
       >
-        Cookies
+        {cookieBanner.title}
       </p>
       <p
         id="cookie-consent-description"
         className="mt-3 font-serif text-sm leading-relaxed text-black/80"
       >
-        Nous utilisons des cookies strictement nécessaires au fonctionnement du
-        site (panier, compte client et sécurité). En continuant votre
-        navigation, vous acceptez leur utilisation. Consultez notre{" "}
+        {cookieBanner.textBeforeLinks}{" "}
         <Link
           href={routes.cookies}
           className="underline underline-offset-2 transition-opacity hover:opacity-60"
         >
-          politique relative aux cookies
+          {cookieBanner.cookiePolicyLink}
         </Link>
-        {" "}et notre{" "}
+        {" "}{cookieBanner.betweenLinks}{" "}
         <Link
           href={routes.privacy}
           className="underline underline-offset-2 transition-opacity hover:opacity-60"
         >
-          politique de confidentialité
+          {cookieBanner.privacyPolicyLink}
         </Link>
-        .
+        {cookieBanner.textAfterLinks}
       </p>
 
       <div className="mt-5 flex flex-wrap items-center gap-3">
@@ -75,13 +75,13 @@ export default function CookieConsent() {
           onClick={handleAccept}
           className="inline-flex flex-1 items-center justify-center border border-black bg-black px-5 py-2.5 text-xs uppercase tracking-wide text-white transition-opacity hover:opacity-80"
         >
-          Accepter
+          {cookieBanner.accept}
         </button>
         <Link
           href={routes.cookies}
           className="inline-flex flex-1 items-center justify-center border border-black/20 px-5 py-2.5 text-xs uppercase tracking-wide transition-opacity hover:opacity-60"
         >
-          En savoir plus
+          {cookieBanner.learnMore}
         </Link>
       </div>
     </div>

@@ -1,7 +1,11 @@
+"use client";
+
+import { useDictionary } from "@/components/LocaleProvider";
+import { interpolate } from "@/lib/i18n/dictionaries";
 import { isLightSwatchColor } from "@/lib/shopify/color-swatch";
 import type { ProductColorSwatch } from "@/lib/shopify/queries";
 import { routes } from "@/lib/routes";
-import Link from "next/link";
+import Link from "@/components/LocaleLink";
 
 type ProductColorSwatchesProps = {
   swatches: ProductColorSwatch[];
@@ -12,12 +16,19 @@ export default function ProductColorSwatches({
   swatches,
   productHandle,
 }: ProductColorSwatchesProps) {
+  const dict = useDictionary();
+
   if (swatches.length === 0) return null;
 
   return (
     <div
       className="mt-1.5 flex flex-wrap gap-2"
-      aria-label={`${swatches.length} couleur${swatches.length > 1 ? "s" : ""}`}
+      aria-label={interpolate(
+        swatches.length > 1
+          ? dict.product.colorCountOther
+          : dict.product.colorCountOne,
+        { count: swatches.length },
+      )}
     >
       {swatches.map((swatch) => {
         const className = `block size-4 shrink-0 rounded-full transition-opacity hover:opacity-70 ${

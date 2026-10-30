@@ -1,21 +1,26 @@
 import { ALL_PRODUCTS_HANDLE } from "@/lib/collection-handles";
 
+/**
+ * Paths without their language. `LocaleLink` (and `withLocale` on the server)
+ * puts `/fr`, `/nl` or `/en` in front. The French slugs these replaced are
+ * permanently redirected in proxy.ts — see LEGACY_PATHS.
+ */
 export const routes = {
   home: "/",
-  about: "/a-propos",
+  about: "/about",
   journal: "/journal",
   shop: `/collection/${ALL_PRODUCTS_HANDLE}`,
   contact: "/contact",
-  search: "/recherche",
-  signIn: "/connexion",
-  account: "/compte",
+  search: "/search",
+  signIn: "/sign-in",
+  account: "/account",
   authLogin: "/api/auth/login",
   authLogout: "/api/auth/logout",
-  cart: "/panier",
+  cart: "/cart",
   wishlist: "/wishlist",
-  legal: "/mentions-legales",
-  privacy: "/politique-de-confidentialite",
-  terms: "/cgv",
+  legal: "/legal-notice",
+  privacy: "/privacy-policy",
+  terms: "/terms",
   cookies: "/cookies",
   collectionByHandle: (handle: string) => `/collection/${handle}`,
   journalArticle: (slug: string) => `/journal/${slug}`,

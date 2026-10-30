@@ -7,7 +7,8 @@ import {
 } from "@/lib/collection-handles";
 import { routes } from "@/lib/routes";
 import FadeInImage from "@/components/FadeInImage";
-import Link from "next/link";
+import { useDictionary } from "@/components/LocaleProvider";
+import Link from "@/components/LocaleLink";
 
 type BoutiqueNavMenuProps = {
   nav: ShopNav;
@@ -56,6 +57,7 @@ function FeaturedCard({ href, title, imageSrc, imageAlt }: FeaturedCardProps) {
 
 export default function BoutiqueNavMenu({ nav }: BoutiqueNavMenuProps) {
   const { sections, collections } = nav;
+  const dict = useDictionary();
   const firstSection = sections[0];
   // Gifts take the second card while the collection is live (the holidays),
   // then Nouveautés, then the second section.
@@ -69,9 +71,9 @@ export default function BoutiqueNavMenu({ nav }: BoutiqueNavMenuProps) {
       href: firstSection
         ? routes.collectionByHandle(firstSection.handle)
         : routes.shop,
-      title: firstSection?.label ?? "Boutique",
+      title: firstSection?.label ?? dict.nav.shop,
       imageSrc: "/images/shared/pull-et-pantalon.jpg",
-      imageAlt: "Pull et pantalon en cachemire Royal Cashmere",
+      imageAlt: dict.nav.featuredImageAlts.sweaterAndTrousers,
     },
     ...(secondCardLink
       ? [
@@ -79,7 +81,7 @@ export default function BoutiqueNavMenu({ nav }: BoutiqueNavMenuProps) {
             href: routes.collectionByHandle(secondCardLink.handle),
             title: secondCardLink.label,
             imageSrc: "/images/shared/manteau.jpg",
-            imageAlt: "Manteau en cachemire Royal Cashmere",
+            imageAlt: dict.nav.featuredImageAlts.coat,
           },
         ]
       : []),
@@ -88,7 +90,7 @@ export default function BoutiqueNavMenu({ nav }: BoutiqueNavMenuProps) {
   return (
     <div className="grid items-start gap-8 px-4 pb-10 pt-2 md:grid-cols-[minmax(0,1fr)_auto] md:px-8 lg:gap-20">
       <nav
-        aria-label="Boutique"
+        aria-label={dict.nav.shop}
         className="flex flex-wrap gap-x-12 gap-y-8 py-2 lg:gap-x-16"
       >
         {sections.map((section) => (
@@ -113,7 +115,7 @@ export default function BoutiqueNavMenu({ nav }: BoutiqueNavMenuProps) {
 
         <div className="flex flex-col gap-3">
           <Link href={routes.shop} className={linkClassName}>
-            Tout voir
+            {dict.nav.viewAll}
           </Link>
           {collections.map((collection) => (
             <Link

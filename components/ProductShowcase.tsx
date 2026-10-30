@@ -1,11 +1,20 @@
 import CollectionCarouselCard from "@/components/CollectionCarouselCard";
+import type { Locale } from "@/lib/i18n/config";
 import { getCatalogNav } from "@/lib/shopify/collections";
 
 const SHOWCASE_COLLECTION_COUNT = 3;
 
+type ProductShowcaseProps = {
+  locale: Locale;
+  ctaLabel: string;
+};
+
 // One card per catalog section (Femme, Homme, Accessoires).
-export default async function ProductShowcase() {
-  const sections = (await getCatalogNav()).slice(0, SHOWCASE_COLLECTION_COUNT);
+export default async function ProductShowcase({
+  locale,
+  ctaLabel,
+}: ProductShowcaseProps) {
+  const sections = (await getCatalogNav(locale)).slice(0, SHOWCASE_COLLECTION_COUNT);
 
   if (sections.length === 0) return null;
 
@@ -22,6 +31,7 @@ export default async function ProductShowcase() {
               imageUrl: section.image,
               imageAlt: section.imageAlt,
             }}
+            ctaLabel={ctaLabel}
             className="w-full min-w-0"
             overlay
             imageSizes="(max-width: 768px) 100vw, 33vw"

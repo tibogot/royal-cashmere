@@ -3,11 +3,15 @@
 // and refreshes whenever the cart changes.
 
 import { prefetchSimilarProductsForCart } from "@/lib/cart-similar-store";
+import type { Locale } from "@/lib/i18n/config";
+import { documentLocale } from "@/lib/i18n/document-locale";
 import type { Cart } from "@/lib/shopify/cart";
 
 let cart: Cart | null = null;
 let hasFetched = false;
 let inFlight: Promise<void> | null = null;
+// Line titles and prices come back in the page language; a switch refetches.
+let cartLocale: Locale | null = null;
 const listeners = new Set<() => void>();
 
 function emit() {
@@ -17,9 +21,13 @@ function emit() {
 async function fetchCart(): Promise<void> {
   if (inFlight) return inFlight;
 
+  const locale = documentLocale();
+
   inFlight = (async () => {
     try {
-      const response = await fetch("/api/cart", { cache: "no-store" });
+      const response = await fetch(`/api/cart?locale=${locale}`, {
+        cache: "no-store",
+      });
       if (!response.ok) {
         cart = null;
         return;
@@ -27,6 +35,7 @@ async function fetchCart(): Promise<void> {
 
       const data = (await response.json()) as { cart: Cart | null };
       cart = data.cart;
+      cartLocale = locale;
       prefetchSimilarProductsForCart(cart);
     } catch {
       // Keep the last known cart on network errors.
@@ -41,7 +50,7 @@ async function fetchCart(): Promise<void> {
 }
 
 function ensureFetched() {
-  if (!hasFetched && !inFlight) {
+  if ((!hasFetched || cartLocale !== documentLocale()) && !inFlight) {
     void fetchCart();
   }
 }

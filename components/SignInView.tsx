@@ -1,27 +1,31 @@
+import type { Dictionary } from "@/lib/i18n/dictionaries";
 import { routes } from "@/lib/routes";
 import { ctaLinkClassName } from "@/lib/ui";
-import Link from "next/link";
+import Link from "@/components/LocaleLink";
 
 type SignInViewProps = {
   configured: boolean;
   hasError?: boolean;
+  copy: Dictionary["signIn"];
 };
 
 const primaryCtaClassName =
   "inline-flex w-full max-w-sm select-none items-center justify-center bg-black px-8 py-4 text-sm uppercase tracking-wide text-white transition-opacity hover:opacity-80";
 
-export default function SignInView({ configured, hasError }: SignInViewProps) {
+export default function SignInView({
+  configured,
+  hasError,
+  copy,
+}: SignInViewProps) {
   if (!configured) {
     return (
       <div className="space-y-8 text-left">
         <p className="font-serif text-2xl uppercase leading-snug tracking-wide md:text-3xl">
-          Se connecter
+          {copy.title}
         </p>
         <p className="max-w-md font-sans text-sm leading-relaxed text-black/70 md:text-base">
-          La connexion client n&apos;est pas encore configurée. Ajoutez vos
-          identifiants Customer Account API dans votre fichier{" "}
-          <code className="text-black">.env</code> et configurez les URLs de
-          redirection dans Shopify Admin (Headless → Customer Account API).
+          {copy.notConfiguredBefore}{" "}
+          <code className="text-black">.env</code> {copy.notConfiguredAfter}
         </p>
       </div>
     );
@@ -31,28 +35,27 @@ export default function SignInView({ configured, hasError }: SignInViewProps) {
     <div className="space-y-10 text-left">
       <div className="space-y-4">
         <p className="font-serif text-2xl uppercase leading-snug tracking-wide md:text-3xl">
-          Se connecter
+          {copy.title}
         </p>
         <p className="max-w-md font-serif text-sm leading-relaxed text-black/70 md:text-base">
-          Connectez-vous pour consulter vos commandes et gérer votre compte
-          Royal Cashmere.
+          {copy.intro}
         </p>
       </div>
 
       <div className="border-t border-black/10 pt-8">
         <p className="text-xs uppercase tracking-wide text-black/50">
-          Votre espace client
+          {copy.spaceTitle}
         </p>
         <ul className="mt-4 space-y-3 font-serif text-sm text-black/80 md:text-base">
-          <li>Suivi de vos commandes</li>
-          <li>Historique d&apos;achats</li>
-          <li>Informations de compte</li>
+          <li>{copy.benefitOrders}</li>
+          <li>{copy.benefitHistory}</li>
+          <li>{copy.benefitDetails}</li>
         </ul>
       </div>
 
       {hasError ? (
         <p className="font-sans text-sm text-red-700" role="alert">
-          La connexion a échoué. Veuillez réessayer.
+          {copy.error}
         </p>
       ) : null}
 
@@ -64,15 +67,15 @@ export default function SignInView({ configured, hasError }: SignInViewProps) {
           href={`${routes.authLogin}?return_to=${encodeURIComponent(routes.account)}`}
           className={primaryCtaClassName}
         >
-          Se connecter
+          {copy.submit}
         </a>
 
         <p className="max-w-sm text-xs leading-relaxed text-black/50">
-          Vous serez redirigé vers la page de connexion sécurisée Shopify.
+          {copy.redirectNote}
         </p>
 
         <Link href={routes.shop} className={`${ctaLinkClassName} font-sans`}>
-          Continuer vos achats
+          {copy.continueShopping}
         </Link>
       </div>
     </div>

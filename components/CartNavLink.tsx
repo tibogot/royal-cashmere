@@ -1,6 +1,8 @@
 "use client";
 
 import CartIcon from "@/components/CartIcon";
+import { useDictionary } from "@/components/LocaleProvider";
+import { interpolate } from "@/lib/i18n/dictionaries";
 import {
   getCartCount,
   getServerCartCount,
@@ -20,6 +22,7 @@ export default function CartNavLink({
   onClick,
   ...props
 }: CartNavLinkProps) {
+  const { nav } = useDictionary();
   const count = useSyncExternalStore(
     subscribeCartCount,
     getCartCount,
@@ -35,7 +38,8 @@ export default function CartNavLink({
     window.dispatchEvent(new Event("cart-open"));
   };
 
-  const label = count > 0 ? `Panier (${count})` : "Panier";
+  const label =
+    count > 0 ? interpolate(nav.cartWithCount, { count }) : nav.cart;
 
   if (variant === "icon") {
     return (

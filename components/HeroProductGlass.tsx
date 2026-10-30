@@ -1,5 +1,5 @@
 import FadeInImage from "@/components/FadeInImage";
-import Link from "next/link";
+import Link from "@/components/LocaleLink";
 import ProductImageWishlist from "@/components/ProductImageWishlist";
 import { routes } from "@/lib/routes";
 import type { ShopifyProduct } from "@/lib/shopify/queries";

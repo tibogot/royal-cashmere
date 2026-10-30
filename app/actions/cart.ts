@@ -8,6 +8,8 @@ import {
   updateCartLineQuantity,
 } from "@/lib/shopify/cart";
 import { isShopifyConfigured } from "@/lib/shopify/client";
+import { toLocale, type Locale } from "@/lib/i18n/config";
+import { getDictionary } from "@/lib/i18n/dictionaries";
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 
@@ -29,18 +31,24 @@ async function setCartCookie(cartId: string) {
   });
 }
 
+// The language comes from the client, so it is re-validated rather than
+// trusted; error messages are returned in it.
+async function cartErrors(locale: Locale) {
+  return (await getDictionary(toLocale(locale))).cart.errors;
+}
+
 async function clearCartCookie() {
   const cookieStore = await cookies();
   cookieStore.delete(getCartCookieOptions().name);
 }
 
-export async function getCart() {
+export async function getCart(locale: Locale) {
   if (!isShopifyConfigured()) return null;
 
   const cartId = await getCartIdFromCookies();
   if (!cartId) return null;
 
-  const cart = await getCartById(cartId);
+  const cart = await getCartById(cartId, toLocale(locale));
   if (!cart) {
     await clearCartCookie();
     return null;
@@ -49,30 +57,33 @@ export async function getCart() {
   return cart;
 }
 
-export async function getCartCount() {
-  const cart = await getCart();
+export async function getCartCount(locale: Locale) {
+  const cart = await getCart(locale);
   return cart?.totalQuantity ?? 0;
 }
 
-export async function addToCart(variantId: string) {
+export async function addToCart(variantId: string, locale: Locale) {
   if (!isShopifyConfigured()) {
-    return { ok: false as const, error: "Boutique non configurée." };
+    return {
+      ok: false as const,
+      error: (await cartErrors(locale)).notConfigured,
+    };
   }
 
   const existingCartId = await getCartIdFromCookies();
-  const result = await addVariantToCart(variantId, existingCartId);
+  const result = await addVariantToCart(variantId, locale, existingCartId);
 
   if (!result.ok) {
     if (existingCartId) {
       await clearCartCookie();
-      const retryResult = await addVariantToCart(variantId);
+      const retryResult = await addVariantToCart(variantId, locale);
 
       if (!retryResult.ok) {
         return retryResult;
       }
 
       await setCartCookie(retryResult.cartId);
-      revalidatePath("/panier");
+      revalidatePath("/[lang]/cart", "page");
 
       return {
         ok: true as const,
@@ -84,7 +95,7 @@ export async function addToCart(variantId: string) {
   }
 
   await setCartCookie(result.cartId);
-  revalidatePath("/panier");
+  revalidatePath("/[lang]/cart", "page");
 
   return {
     ok: true as const,
@@ -92,23 +103,35 @@ export async function addToCart(variantId: string) {
   };
 }
 
-export async function updateCartLine(lineId: string, quantity: number) {
+export async function updateCartLine(
+  lineId: string,
+  quantity: number,
+  locale: Locale,
+) {
   if (!isShopifyConfigured()) {
-    return { ok: false as const, error: "Boutique non configurée." };
+    return {
+      ok: false as const,
+      error: (await cartErrors(locale)).notConfigured,
+    };
   }
 
   const cartId = await getCartIdFromCookies();
   if (!cartId) {
-    return { ok: false as const, error: "Panier introuvable." };
+    return { ok: false as const, error: (await cartErrors(locale)).notFound };
   }
 
-  const result = await updateCartLineQuantity(cartId, lineId, quantity);
+  const result = await updateCartLineQuantity(
+    cartId,
+    lineId,
+    quantity,
+    locale,
+  );
 
   if (!result.ok) {
     return result;
   }
 
-  revalidatePath("/panier");
+  revalidatePath("/[lang]/cart", "page");
 
   return {
     ok: true as const,
@@ -116,17 +139,20 @@ export async function updateCartLine(lineId: string, quantity: number) {
   };
 }
 
-export async function removeFromCart(lineId: string) {
+export async function removeFromCart(lineId: string, locale: Locale) {
   if (!isShopifyConfigured()) {
-    return { ok: false as const, error: "Boutique non configurée." };
+    return {
+      ok: false as const,
+      error: (await cartErrors(locale)).notConfigured,
+    };
   }
 
   const cartId = await getCartIdFromCookies();
   if (!cartId) {
-    return { ok: false as const, error: "Panier introuvable." };
+    return { ok: false as const, error: (await cartErrors(locale)).notFound };
   }
 
-  const result = await removeCartLines(cartId, [lineId]);
+  const result = await removeCartLines(cartId, [lineId], locale);
 
   if (!result.ok) {
     return result;
@@ -136,7 +162,7 @@ export async function removeFromCart(lineId: string) {
     await clearCartCookie();
   }
 
-  revalidatePath("/panier");
+  revalidatePath("/[lang]/cart", "page");
 
   return {
     ok: true as const,

@@ -9,13 +9,16 @@ import type { ShopifyCollection } from "@/lib/shopify/queries";
 import { Draggable } from "gsap/Draggable";
 import FadeInImage from "@/components/FadeInImage";
 import ScrollShrinkImage from "@/components/ScrollShrinkImage";
-import Link from "next/link";
+import Link from "@/components/LocaleLink";
 
 export const collectionCarouselCardWidthClass =
   "w-[78vw] shrink-0 sm:w-88 md:w-96 lg:w-md xl:w-lg";
 
 type CollectionCarouselCardProps = {
   collection: ShopifyCollection;
+  // "Découvrir" in the page's language. A prop rather than useDictionary:
+  // this card also renders as a Server Component (ProductShowcase).
+  ctaLabel: string;
   preventClickAfterDrag?: boolean;
   className?: string;
   imageSizes?: string;
@@ -25,6 +28,7 @@ type CollectionCarouselCardProps = {
 
 export default function CollectionCarouselCard({
   collection,
+  ctaLabel,
   preventClickAfterDrag = false,
   className = collectionCarouselCardWidthClass,
   imageSizes = "(max-width: 640px) 78vw, (max-width: 1024px) 352px, 512px",
@@ -55,7 +59,7 @@ export default function CollectionCarouselCard({
             </h3>
 
             <span className="animated-underline mt-2 hidden w-fit text-xs uppercase tracking-wide text-black group-hover:block md:mt-3">
-              Découvrir
+              {ctaLabel}
             </span>
           </div>
         ) : null}
@@ -93,7 +97,7 @@ export default function CollectionCarouselCard({
                 {collection.title}
               </h3>
               <span className={`${ctaLinkClassName} text-white!`}>
-                Découvrir
+                {ctaLabel}
               </span>
             </div>
           ) : null}

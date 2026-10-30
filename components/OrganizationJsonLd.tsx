@@ -1,7 +1,8 @@
-import { defaultShareImage } from "@/lib/seo";
+import { INTL_LOCALE, type Locale } from "@/lib/i18n/config";
+import { defaultShareImage, siteCopy } from "@/lib/seo";
 import { siteConfig } from "@/lib/site";
 
-export default function OrganizationJsonLd() {
+export default function OrganizationJsonLd({ locale }: { locale: Locale }) {
   const jsonLd = [
     {
       "@context": "https://schema.org",
@@ -9,8 +10,8 @@ export default function OrganizationJsonLd() {
       "@id": `${siteConfig.url}/#boutique`,
       name: siteConfig.name,
       url: siteConfig.url,
-      description: siteConfig.description,
-      image: `${siteConfig.url}${defaultShareImage.url}`,
+      description: siteCopy(locale).description,
+      image: `${siteConfig.url}${defaultShareImage(locale).url}`,
       telephone: siteConfig.contact.phone,
       address: {
         "@type": "PostalAddress",
@@ -31,7 +32,7 @@ export default function OrganizationJsonLd() {
       "@id": `${siteConfig.url}/#site`,
       name: siteConfig.name,
       url: siteConfig.url,
-      inLanguage: "fr-BE",
+      inLanguage: INTL_LOCALE[locale],
       publisher: { "@id": `${siteConfig.url}/#boutique` },
     },
   ];

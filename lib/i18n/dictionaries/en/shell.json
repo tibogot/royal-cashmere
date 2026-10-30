@@ -1,0 +1,227 @@
+{
+  "common": {
+    "close": "Close"
+  },
+  "nav": {
+    "shop": "Shop",
+    "viewAll": "View all",
+    "journal": "Journal",
+    "about": "About",
+    "contact": "Contact",
+    "account": "My account",
+    "search": "Search",
+    "cart": "Bag",
+    "cartWithCount": "Bag ({count})",
+    "wishlist": "WISHLIST",
+    "wishlistWithCount": "WISHLIST ({count})",
+    "homeAriaLabel": "Royal Cashmere home",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "showCategories": "Show categories",
+    "hideCategories": "Hide categories",
+    "featuredImageAlts": {
+      "sweaterAndTrousers": "Royal Cashmere cashmere jumper and trousers",
+      "coat": "Royal Cashmere cashmere coat"
+    }
+  },
+  "footer": {
+    "openingHoursTitle": "Opening hours",
+    "openingHours": "Monday to Friday, 10am to 6pm",
+    "addressStreet": "Chaussée de Waterloo 1251B",
+    "addressCity": "Uccle, Belgium",
+    "legalAriaLabel": "Legal information",
+    "legalNotice": "Legal notice",
+    "privacyPolicy": "Privacy policy",
+    "terms": "Terms & conditions",
+    "cookies": "Cookies"
+  },
+  "search": {
+    "dialogAriaLabel": "Search",
+    "closeAriaLabel": "Close search",
+    "inputLabel": "Search for a product",
+    "placeholder": "Search for a product...",
+    "resultsAriaLabel": "Search results",
+    "searching": "Searching…",
+    "viewAllResults": "View all results ({total})",
+    "noResults": "No products found for “{query}”.",
+    "popularTitle": "Popular searches",
+    "popular": {
+      "womenSweaters": "Women's jumpers",
+      "menSweaters": "Men's jumpers",
+      "dresses": "Dresses",
+      "scarves": "Scarves"
+    }
+  },
+  "cookieBanner": {
+    "title": "Cookies",
+    "textBeforeLinks": "We only use cookies that are strictly necessary for the site to work (shopping bag, customer account and security). By continuing to browse, you accept their use. Please see our",
+    "cookiePolicyLink": "cookie policy",
+    "betweenLinks": "and our",
+    "privacyPolicyLink": "privacy policy",
+    "textAfterLinks": ".",
+    "accept": "Accept",
+    "learnMore": "Learn more"
+  },
+  "breadcrumbs": {
+    "ariaLabel": "Breadcrumb",
+    "home": "Home"
+  },
+  "languageSwitcher": {
+    "ariaLabel": "Language"
+  },
+  "catalog": {
+    "labels": {
+      "femme": "Women",
+      "pulls-femme": "Jumpers",
+      "pulls-col-roule-femme": "Roll necks",
+      "gilets-femme": "Cardigans",
+      "robes-cachemire": "Dresses",
+      "jupes-cachemire": "Skirts",
+      "pantalons-femme": "Trousers",
+      "homme": "Men",
+      "pulls-homme": "Jumpers",
+      "pulls-col-roule-homme": "Roll necks",
+      "gilets-homme": "Cardigans",
+      "pantalons-homme": "Trousers",
+      "accessoires": "Accessories",
+      "echarpes-cachemire": "Scarves",
+      "bonnets-cachemire": "Hats",
+      "gants-cachemire": "Gloves"
+    },
+    "showcaseImageAlts": {
+      "robes-cachemire": "Royal Cashmere cashmere dresses",
+      "pantalons-femme": "Royal Cashmere cashmere trousers",
+      "echarpes-cachemire": "Royal Cashmere cashmere scarves",
+      "pulls-femme": "Royal Cashmere cashmere jumpers"
+    },
+    "all": "All",
+    "categoriesAriaLabel": "Categories",
+    "resultsFor": "Results for “{query}”",
+    "productCountOne": "{count} product",
+    "productCountOther": "{count} products",
+    "noResults": "No products match your search at the moment.",
+    "notFound": {
+      "title": "Collection not found",
+      "backToShop": "Back to the shop"
+    }
+  },
+  "collection": {
+    "shop": {
+      "title": "Shop",
+      "description": "Discover the full Royal Cashmere collection: jumpers, cardigans, dresses, trousers and accessories in pure Mongolian cashmere, for women and men. An exceptional cashmere boutique in Uccle, Brussels."
+    },
+    "fallbackTitle": "Collection",
+    "fallbackDescription": "Discover the Royal Cashmere {title} collection: exceptional cashmere pieces.",
+    "imageAlts": {
+      "femme": "Royal Cashmere women's cashmere jumper and trousers",
+      "homme": "Royal Cashmere men's cashmere jumper",
+      "accessoires": "Royal Cashmere cashmere scarf"
+    },
+    "pages": {
+      "femme": {
+        "title": "Women's cashmere clothing",
+        "description": "Women's jumpers, cardigans, dresses, skirts and trousers in pure Mongolian cashmere. Discover the Royal Cashmere collection online and at our boutique in Uccle, Brussels.",
+        "intro": "Jumpers, cardigans, dresses, skirts and trousers in pure Mongolian cashmere, made to last from one season to the next. Every piece is chosen for its softness and the quality of its fibre."
+      },
+      "pulls-femme": {
+        "title": "Women's cashmere jumpers",
+        "description": "Women's cashmere jumpers: roll neck, V-neck or crew neck, relaxed or fitted. Pure Mongolian cashmere, boutique in Uccle, Brussels.",
+        "intro": "Roll neck, V-neck or crew neck: our pure Mongolian cashmere jumpers are both warm and light. An essential piece, worn on its own or layered."
+      },
+      "pulls-col-roule-femme": {
+        "title": "Women's cashmere roll-neck jumpers",
+        "description": "Women's cashmere roll-neck jumpers: the warmth of pure Mongolian cashmere, right up to the neck. The Royal Cashmere collection, Uccle, Brussels.",
+        "intro": "A cashmere roll neck keeps out the cold without adding bulk. A winter classic, in pure Mongolian cashmere."
+      },
+      "gilets-femme": {
+        "title": "Women's cashmere cardigans",
+        "description": "Women's cashmere cardigans, buttoned or open-front. Pure Mongolian cashmere, Royal Cashmere boutique in Uccle, Brussels.",
+        "intro": "Buttoned or open, our cashmere cardigans layer effortlessly, from mild in-between days to winter evenings."
+      },
+      "robes-cachemire": {
+        "title": "Cashmere dresses",
+        "description": "Women's cashmere dresses: a soft, fluid knit in pure Mongolian cashmere. The Royal Cashmere collection, boutique in Uccle, Brussels.",
+        "intro": "The softness of a jumper, the elegance of a dress. Our cashmere knit dresses take you from the office to dinner, all through the colder months."
+      },
+      "jupes-cachemire": {
+        "title": "Cashmere skirts",
+        "description": "Women's cashmere skirts, long or midi. Pure Mongolian cashmere, Royal Cashmere boutique in Uccle, Brussels.",
+        "intro": "A supple, warm cashmere knit skirt that pairs naturally with our jumpers for a soft, easy silhouette."
+      },
+      "pantalons-femme": {
+        "title": "Women's cashmere trousers",
+        "description": "Women's cashmere trousers, straight or wide-leg. Pure Mongolian cashmere, Royal Cashmere boutique in Uccle, Brussels.",
+        "intro": "As comfortable as loungewear, elegant enough to go out in: our cashmere trousers match our jumpers for a complete look."
+      },
+      "homme": {
+        "title": "Men's cashmere clothing",
+        "description": "Men's jumpers and cardigans in pure Mongolian cashmere. Discover the Royal Cashmere collection online and at our boutique in Uccle, Brussels.",
+        "intro": "Jumpers and cardigans in pure Mongolian cashmere, with understated, timeless cuts. Several pieces are unisex: check the size guide on each product page."
+      },
+      "pulls-homme": {
+        "title": "Men's cashmere jumpers",
+        "description": "Men's cashmere jumpers: roll neck, V-neck or crew neck. Pure Mongolian cashmere, Royal Cashmere boutique in Uccle, Brussels.",
+        "intro": "Roll neck, V-neck or crew neck: jumpers in pure Mongolian cashmere, warm and light, to wear every day or under a jacket."
+      },
+      "pulls-col-roule-homme": {
+        "title": "Men's cashmere roll-neck jumpers",
+        "description": "Men's roll-neck jumpers in pure Mongolian cashmere. The Royal Cashmere collection, boutique in Uccle, Brussels.",
+        "intro": "The cashmere roll neck, on its own or under a coat: a piece with character, in pure Mongolian cashmere."
+      },
+      "gilets-homme": {
+        "title": "Men's cashmere cardigans",
+        "description": "Men's cashmere cardigans. Pure Mongolian cashmere, Royal Cashmere boutique in Uccle, Brussels.",
+        "intro": "On mild in-between days, a cashmere cardigan easily takes the place of a jacket. Understated cuts, pure Mongolian cashmere."
+      },
+      "pantalons-homme": {
+        "title": "Men's cashmere trousers",
+        "description": "Men's cashmere trousers. Pure Mongolian cashmere, Royal Cashmere boutique in Uccle, Brussels.",
+        "intro": "The comfort of cashmere in a pair of clean-cut trousers, to wear at home or in town."
+      },
+      "accessoires": {
+        "title": "Cashmere accessories",
+        "description": "Scarves, hats and gloves in pure Mongolian cashmere, for men and women. Royal Cashmere accessories, boutique in Uccle, Brussels.",
+        "intro": "Scarves, hats and gloves in pure Mongolian cashmere, for men and women. The perfect accessories to keep out the cold, or to give as a gift."
+      },
+      "echarpes-cachemire": {
+        "title": "Cashmere scarves",
+        "description": "Cashmere scarves and wraps for men and women, plain or patterned. Pure Mongolian cashmere, Royal Cashmere boutique in Uccle, Brussels.",
+        "intro": "Scarves and wraps in pure Mongolian cashmere, for men and women. Light, warm and soft against the skin."
+      },
+      "bonnets-cachemire": {
+        "title": "Cashmere hats",
+        "description": "Cashmere beanies for men and women. Pure Mongolian cashmere, Royal Cashmere boutique in Uccle, Brussels.",
+        "intro": "Beanies in pure Mongolian cashmere, for men and women: all the warmth of cashmere, without the itch."
+      },
+      "gants-cachemire": {
+        "title": "Cashmere gloves",
+        "description": "Cashmere gloves and fingerless mitts for men and women. Pure Mongolian cashmere, Royal Cashmere boutique in Uccle, Brussels.",
+        "intro": "Gloves and fingerless mitts in pure Mongolian cashmere, for men and women, to match your scarf or hat."
+      }
+    }
+  },
+  "site": {
+    "description": "An exceptional cashmere boutique in Uccle, Brussels. Jumpers, scarves and accessories in pure Mongolian cashmere.",
+    "defaultTitle": "{name} | Exceptional cashmere in Uccle, Brussels",
+    "shareImageAlt": "A horsewoman in a cashmere coat on the Mongolian steppe"
+  },
+  "shellLegalMeta": {
+    "legalNotice": {
+      "title": "Legal notice",
+      "description": "Royal Cashmere legal notice."
+    },
+    "privacyPolicy": {
+      "title": "Privacy policy",
+      "description": "Royal Cashmere privacy policy."
+    },
+    "terms": {
+      "title": "Terms and conditions",
+      "description": "Royal Cashmere general terms and conditions of sale."
+    },
+    "cookies": {
+      "title": "Cookies",
+      "description": "Royal Cashmere cookie policy."
+    },
+    "lastUpdated": "Last updated:"
+  }
+}

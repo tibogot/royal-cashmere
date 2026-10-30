@@ -1,10 +1,12 @@
 "use client";
 
 import type { ShopNav } from "@/lib/catalog";
+import { useDictionary } from "@/components/LocaleProvider";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { routes } from "@/lib/routes";
 import { useOverlayScrollLock } from "@/lib/useOverlayScrollLock";
 import gsap from "gsap";
-import Link from "next/link";
+import Link from "@/components/LocaleLink";
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
@@ -16,13 +18,6 @@ type MobileNavMenuProps = {
 };
 
 const MENU_ANIM_DURATION = 0.45;
-
-const otherLinks = [
-  { label: "Journal", href: routes.journal },
-  { label: "À propos", href: routes.about },
-  { label: "Contact", href: routes.contact },
-  { label: "Mon compte", href: routes.account },
-] as const;
 
 const closeButtonClassName =
   "text-xs uppercase tracking-wide transition-opacity hover:opacity-60";
@@ -56,6 +51,13 @@ export default function MobileNavMenu({
   const sections = nav?.sections ?? [];
   const collections = nav?.collections ?? [];
   const pathname = usePathname();
+  const dict = useDictionary();
+  const otherLinks = [
+    { label: dict.nav.journal, href: routes.journal },
+    { label: dict.nav.about, href: routes.about },
+    { label: dict.nav.contact, href: routes.contact },
+    { label: dict.nav.account, href: routes.account },
+  ];
   const panelRef = useRef<HTMLDivElement>(null);
   const previousPathnameRef = useRef(pathname);
   const tweenRef = useRef<gsap.core.Timeline | null>(null);
@@ -141,10 +143,10 @@ export default function MobileNavMenu({
         <button
           type="button"
           onClick={handleClose}
-          aria-label="Fermer le menu"
+          aria-label={dict.nav.closeMenu}
           className={`flex h-8 w-fit items-center ${closeButtonClassName}`}
         >
-          Fermer
+          {dict.common.close}
         </button>
 
         <nav className="mt-8 flex flex-1 flex-col">
@@ -153,12 +155,12 @@ export default function MobileNavMenu({
             <li>
               <div className="flex items-center justify-between">
                 <Link href={routes.shop} onClick={handleClose} className={linkClassName}>
-                  Boutique
+                  {dict.nav.shop}
                 </Link>
                 <button
                   type="button"
                   onClick={() => setBoutiqueOpen((v) => !v)}
-                  aria-label={boutiqueOpen ? "Masquer les catégories" : "Afficher les catégories"}
+                  aria-label={boutiqueOpen ? dict.nav.hideCategories : dict.nav.showCategories}
                   className="flex h-6 w-6 items-center justify-center text-sm leading-none transition-opacity hover:opacity-60"
                 >
                   {boutiqueOpen ? "−" : "+"}
@@ -171,7 +173,7 @@ export default function MobileNavMenu({
                 <ul className="mt-3 flex flex-col gap-3 border-l border-black/15 pl-3">
                   <li>
                     <Link href={routes.shop} onClick={handleClose} className={subLinkClassName}>
-                      Tout
+                      {dict.catalog.all}
                     </Link>
                   </li>
                   {sections.map((section) => (
@@ -224,6 +226,8 @@ export default function MobileNavMenu({
             ))}
           </ul>
         </nav>
+
+        <LanguageSwitcher className="mt-8" linkClassName={linkClassName} />
       </div>
     </div>,
     document.body,

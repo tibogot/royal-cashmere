@@ -4,11 +4,16 @@ import BurgerButton from "@/components/BurgerButton";
 import BoutiqueNavMenu from "@/components/BoutiqueNavMenu";
 import CartNavLink from "@/components/CartNavLink";
 import CartPanel from "@/components/CartPanel";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 import MobileNavMenu from "@/components/MobileNavMenu";
 import SearchIcon from "@/components/SearchIcon";
 import SearchPanel from "@/components/SearchPanel";
 import WishlistNavLink from "@/components/WishlistNavLink";
-import { ACCESSORIES_SECTION_HANDLE, type ShopNav } from "@/lib/catalog";
+import {
+  ACCESSORIES_SECTION_HANDLE,
+  localizeShopNav,
+  type ShopNav,
+} from "@/lib/catalog";
 import {
   NEW_IN_COLLECTION_HANDLE,
   SALE_COLLECTION_HANDLE,
@@ -24,9 +29,10 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from "react";
+import Link from "@/components/LocaleLink";
+import { useBarePathname, useDictionary } from "@/components/LocaleProvider";
+import type { ClientDictionary } from "@/lib/i18n/dictionaries";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
@@ -56,18 +62,25 @@ export default function Navbar() {
   // render sees "/index" instead of "/". Left as is, the HTML ships as if
   // this weren't the home page — nav visible with black links — and the
   // client then corrects it after hydration, which is a visible flash.
-  const rawPathname = usePathname();
-  const pathname = rawPathname === "/index" ? routes.home : rawPathname;
+  // Compared without the language, so /fr and /fr/index both read as home.
+  const barePathname = useBarePathname();
+  const dict = useDictionary();
+  const pathname = barePathname === "/index" ? routes.home : barePathname;
   const hasTransparentHero = TRANSPARENT_NAV_PATHS.has(pathname);
   const [searchOpen, setSearchOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [shopMenuOpen, setShopMenuOpen] = useState(false);
   const [navHovered, setNavHovered] = useState(false);
-  const shopNav = useSyncExternalStore(
+  const storeNav = useSyncExternalStore(
     subscribeCollections,
     getCollectionsSnapshot,
     getServerCollectionsSnapshot,
+  );
+  // Memoised: shopNav is a GSAP dependency, so it must keep its identity.
+  const shopNav = useMemo(
+    () => localizeShopNav(storeNav, dict.catalog.labels),
+    [storeNav, dict.catalog.labels],
   );
   const [navSolid, setNavSolid] = useState(!hasTransparentHero);
   // Only on a full load of the home page: the bar starts above the viewport
@@ -700,7 +713,7 @@ export default function Navbar() {
               <button
                 type="button"
                 onClick={handleSearchOpen}
-                aria-label="Rechercher"
+                aria-label={dict.nav.search}
                 className={navIconButtonClassName}
                 data-nav-link
               >
@@ -715,7 +728,7 @@ export default function Navbar() {
                   className={navLinkClassName}
                   data-nav-link
                 >
-                  Boutique
+                  {dict.nav.shop}
                 </Link>
               </li>
             </ul>
@@ -723,7 +736,7 @@ export default function Navbar() {
               className="hidden items-center nav:flex nav:gap-4"
               onMouseEnter={closeShopMenu}
             >
-              {[...getShortcutLinks(shopNav), ...leftLinks].map(({ label, href }) => (
+              {[...getShortcutLinks(shopNav), ...getLeftLinks(dict.nav)].map(({ label, href }) => (
                 <li key={label}>
                   <Link href={href} className={navLinkClassName} data-nav-link>
                     {label}
@@ -736,7 +749,7 @@ export default function Navbar() {
           <Link
             href={routes.home}
             className="absolute top-1/2 left-1/2 z-10 -translate-x-1/2 -translate-y-1/2"
-            aria-label="Royal Cashmere accueil"
+            aria-label={dict.nav.homeAriaLabel}
             onMouseEnter={closeShopMenu}
           >
             <span ref={logoRef} className="inline-flex">
@@ -757,16 +770,25 @@ export default function Navbar() {
           >
             <ul className="hidden items-center nav:flex nav:gap-4">
               <li>
+                {/* inline-flex: sits on the same text baseline as the
+                    links beside it rather than centring as a block. */}
+                <LanguageSwitcher
+                  className="inline-flex! gap-2!"
+                  linkClassName={navLinkClassName}
+                  navLink
+                />
+              </li>
+              <li>
                 <button
                   type="button"
                   onClick={handleSearchOpen}
                   className={navLinkClassName}
                   data-nav-link
                 >
-                  Rechercher
+                  {dict.nav.search}
                 </button>
               </li>
-              {rightLinks.map(({ label, href }) => (
+              {getRightLinks(dict.nav).map(({ label, href }) => (
                 <li key={label}>
                   <Link href={href} className={navLinkClassName} data-nav-link>
                     {label}
@@ -840,10 +862,14 @@ function getShortcutLinks({ sections, collections }: ShopNav) {
   );
 }
 
-const leftLinks = [
-  { label: "Journal", href: routes.journal },
-  { label: "À propos", href: routes.about },
-  { label: "Contact", href: routes.contact },
-] as const;
+function getLeftLinks(nav: ClientDictionary["nav"]) {
+  return [
+    { label: nav.journal, href: routes.journal },
+    { label: nav.about, href: routes.about },
+    { label: nav.contact, href: routes.contact },
+  ];
+}
 
-const rightLinks = [{ label: "Mon compte", href: routes.account }] as const;
+function getRightLinks(nav: ClientDictionary["nav"]) {
+  return [{ label: nav.account, href: routes.account }];
+}

@@ -1,0 +1,128 @@
+{
+  "home": {
+    "metaDescription": "Boetiek voor uitzonderlijke kasjmier in Ukkel, Brussel: truien, sjaals en accessoires in zuivere Mongoolse kasjmier.",
+    "heroHeading": "Royal Cashmere — Boetiek voor uitzonderlijke kasjmier in Ukkel, Brussel",
+    "newInCta": "Bekijk de nieuwigheden",
+    "introHeading": "Uitzonderlijke kasjmier uit Mongolië",
+    "saleHeading": "Solden",
+    "saleCta": "Bekijk de solden",
+    "bestsellersHeading": "Bestsellers",
+    "bestsellersCta": "Bekijk de bestsellers",
+    "storyHeading": "Een Mongools huis in het hart van Ukkel",
+    "storyText": "Royal Cashmere is een kasjmierboetiek in Ukkel, Brussel. Onze eigenares is een Mongoolse, en onze stukken worden gemaakt van de beste Mongoolse kasjmier: zacht, warm en gemaakt om lang mee te gaan. Truien, jurken, poncho's, sjaals, omslagdoeken, mutsen en vingerloze handschoenen: elk stuk wordt gekozen om zijn fijnheid, zijn zachtheid en de manier waarop het de tijd doorstaat. U vindt ze in de boetiek en online, met levering in heel Europa.",
+    "storyCta": "Ontdek ons verhaal",
+    "bannerEyebrow": "Ons verhaal",
+    "bannerTitle": "De beste Mongoolse kasjmier",
+    "bannerDescription": "Mongoolse kasjmier geldt als een van de fijnste ter wereld. Onze eigenares, zelf Mongoolse, wilde die in Brussel laten ontdekken: stukken van een zeldzame zachtheid, gemaakt om u lang te vergezellen. Te vinden in onze boetiek in Ukkel en online.",
+    "bannerCta": "Ontdek het stuk",
+    "visitText": "Kom langs in onze boetiek, Waterloosesteenweg 1251B in Ukkel. Voel de stof, pas de stukken en laat u adviseren: niets evenaart het gevoel van echte Mongoolse kasjmier.",
+    "visitCta": "Bezoek ons",
+    "saleImageAlt": "Kasjmieren trui van Royal Cashmere",
+    "bestsellersImageAlt": "Kasjmieren joggingpakken van Royal Cashmere",
+    "bannerImageAlt": "Kasjmieren vest met rits van Royal Cashmere",
+    "newInImageAlt": "Kasjmieren set met polo en joggingbroek van Royal Cashmere",
+    "boutiqueVisitImageAlt": "Kasjmieren ensemble van Royal Cashmere"
+  },
+  "about": {
+    "metaTitle": "Over ons",
+    "metaDescription": "Royal Cashmere in Ukkel, Brussel: ons verhaal, ons vakmanschap en ons duurzaam engagement. Uitzonderlijke kasjmier en zijde uit de Mongoolse steppe, in onze boetiek aan de Waterloosesteenweg.",
+    "heading": "Een huis van uitzonderlijke kasjmier, verankerd in Brussel",
+    "heroImageAlt": "Vrouw met een geitenjong in een omheining met kasjmiergeiten, Mongoolse steppe",
+    "introFirst": "Maak kennis met Royal Cashmere, een boetiek voor uitzonderlijke kasjmier in Ukkel, Brussel, waar duurzaamheid en stijl met elkaar verweven zijn. Wij bieden verfijnde stukken in kasjmier en zijde, afkomstig uit de tijdloze landschappen van de Mongoolse steppe en geselecteerd om hun zuiverheid en ongeëvenaarde zachtheid.",
+    "introSecond": "Vanuit onze boetiek aan de Waterloosesteenweg verwelkomen wij elk bezoek als een ontmoeting. Wie voor Royal Cashmere kiest, wordt deel van een verhaal dat nomadische herders en hun voorouderlijke gronden steunt, en investeert tegelijk in een tijdloze garderobe die gemaakt is om lang mee te gaan.",
+    "cashmereImageAlt": "Kasjmier van Royal Cashmere",
+    "fibreImageAlt": "Vrouw met een handvol ruwe kasjmiervezel in de Mongoolse steppe",
+    "heritageFirst": "Op de hoogvlakten van Mongolië ontstaat kasjmier uit een eeuwenoude band tussen de herders, hun kuddes en steppen van een zeldzame schoonheid. Wij selecteren onze vezels aan de bron en kiezen bij voorkeur voor productieketens die de nomaden en hun omgeving respecteren, zodat ook de komende generaties een duurzame toekomst wacht.",
+    "heritageSecond": "Onze creaties worden vervaardigd met nauwgezette aandacht voor detail, voor een ongeëvenaarde kwaliteit, een heerlijk zachte aanraking en een echte duurzaamheid in het dagelijks leven. Elk stuk weerspiegelt ons engagement om de schoonheid van de natuur te bewaren en het rijke erfgoed van de Mongoolse nomadencultuur te eren.",
+    "collectionsImageAlt": "Collecties van Royal Cashmere"
+  },
+  "contact": {
+    "metaTitle": "Contact",
+    "metaDescription": "Neem contact op met Royal Cashmere in Ukkel, Brussel. Boetiek voor uitzonderlijke kasjmier — adres, openingsuren en telefoonnummer.",
+    "heading": "Contact — Royal Cashmere Brussel",
+    "storeName": "Royal Cashmere Brussel",
+    "addressLabel": "Adres",
+    "country": "België",
+    "phoneLabel": "Telefoon",
+    "emailLabel": "E-mail",
+    "hoursLabel": "Openingsuren",
+    "hours": "Van maandag tot vrijdag van 10 tot 18 uur",
+    "imageAlt": "Kasjmieren mantel van Royal Cashmere",
+    "formErrors": {
+      "notConfigured": "Het contactformulier is nog niet beschikbaar. Neem in tussentijd telefonisch contact met ons op.",
+      "sendFailed": "Uw bericht kon niet worden verzonden. Probeer het opnieuw of bel ons rechtstreeks.",
+      "generic": "Er is iets misgegaan. Probeer het opnieuw.",
+      "name": "Vul uw naam in.",
+      "email": "Vul een geldig e-mailadres in.",
+      "message": "Uw bericht moet minstens 10 tekens bevatten."
+    }
+  },
+  "contactForm": {
+    "success": "Bedankt voor uw bericht. Ons team neemt zo snel mogelijk contact met u op.",
+    "emailLabel": "E-mail",
+    "emailPlaceholder": "E-mail *",
+    "nameLabel": "Naam",
+    "namePlaceholder": "Naam *",
+    "messageLabel": "Bericht",
+    "messagePlaceholder": "Bericht *",
+    "companyLabel": "Bedrijf",
+    "sending": "Bezig met verzenden…",
+    "submit": "Verzenden"
+  },
+  "faq": {
+    "heading": "FAQ",
+    "items": [
+      {
+        "question": "Waar komt uw kasjmier vandaan?",
+        "answer": "Onze kasjmier komt van de hoogvlakten van Mongolië, die bekendstaan om de fijnheid en uitzonderlijke zachtheid van hun vezels. Elke partij wordt zorgvuldig geselecteerd om een opmerkelijke zuiverheid en kwaliteit te garanderen."
+      },
+      {
+        "question": "Hoe herkent u kwaliteitsvolle kasjmier?",
+        "answer": "Uitzonderlijke kasjmier onderscheidt zich door een zachte aanraking, een licht garen en een regelmatige brei. Onze stukken worden vervaardigd uit lange, fijne vezels, geselecteerd omdat ze hun vorm behouden en blijvend comfort bieden."
+      },
+      {
+        "question": "Hoe onderhoudt u een kledingstuk in kasjmier?",
+        "answer": "Wij raden aan om met de hand te wassen in koud water met een zacht wasmiddel, of het stuk chemisch te laten reinigen. Laat plat drogen, uit direct zonlicht, en berg uw stukken opgevouwen op om hun vorm en zachtheid te bewaren."
+      },
+      {
+        "question": "Worden uw producten op een ethische manier gemaakt?",
+        "answer": "Royal Cashmere kiest voor een verantwoorde aanpak, van de aankoop van de grondstoffen tot het respect voor de ambachtslui en partners met wie wij samenwerken. Duurzame kwaliteit en hoge ethische normen staan centraal in elk van onze collecties."
+      },
+      {
+        "question": "Levert u in Europa?",
+        "answer": "Ja, wij leveren in heel Europa. De levertermijnen en verzendkosten worden bij het plaatsen van uw bestelling vermeld. U kunt uw aankopen ook rechtstreeks afhalen in onze boetiek in Ukkel."
+      },
+      {
+        "question": "Kan ik een product terugsturen als het mij niet bevalt?",
+        "answer": "Retours worden aanvaard onder de voorwaarden van ons retourbeleid. Artikelen moeten in hun oorspronkelijke staat worden teruggestuurd, ongedragen en met hun labels. Neem gerust contact met ons op als u hulp nodig hebt."
+      }
+    ],
+    "footerText": "Boetiek Royal Cashmere — Waterloosesteenweg 1251B, Ukkel. Open van maandag tot vrijdag, van 10 tot 18 uur."
+  },
+  "showcase": {
+    "discover": "Ontdekken",
+    "viewAll": "Alles bekijken",
+    "nextProducts": "Volgende producten",
+    "previousProducts": "Vorige producten",
+    "collectionsHeading": "Royal Cashmere Collecties",
+    "collectionsIntro": "Jurken, truien, broeken en sjaals — elke collectie onthult de zachtheid van zuivere Mongoolse kasjmier, ontworpen om u door de seizoenen te begeleiden.",
+    "previousCollection": "Vorige collectie",
+    "nextCollection": "Volgende collectie",
+    "galleryLabel": "Interactieve galerij",
+    "galleryNavLabel": "Collecties",
+    "gallery": {
+      "robes": "Jurken",
+      "chales": "Omslagdoeken",
+      "bonnets": "Mutsen",
+      "pulls": "Truien",
+      "pantalons": "Broeken",
+      "echarpes": "Sjaals",
+      "manteaux": "Mantels",
+      "gants": "Handschoenen",
+      "ponchos": "Poncho's",
+      "cardigans": "Cardigans",
+      "cachemire": "Kasjmier",
+      "maille": "Breigoed"
+    }
+  }
+}

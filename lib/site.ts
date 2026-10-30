@@ -3,8 +3,8 @@ export const siteConfig = {
   url: "https://www.royalcashmere.be",
   defaultLocale: "fr",
   locales: ["fr", "nl", "en"] as const,
-  description:
-    "Boutique de cachemire d'exception à Uccle, Bruxelles. Pulls, écharpes et accessoires en pur cachemire de Mongolie.",
+  // The site description is per language: `site.description` in the
+  // dictionaries, read through siteCopy() in lib/seo.
   contact: {
     street: "Chaussée de Waterloo 1251B",
     postalCode: "1180",

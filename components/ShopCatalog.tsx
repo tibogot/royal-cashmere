@@ -1,9 +1,11 @@
 "use client";
 
+import { useDictionary } from "@/components/LocaleProvider";
 import ProductCard from "@/components/ProductCard";
 import { searchProducts } from "@/lib/boutique-filters";
+import { interpolate } from "@/lib/i18n/dictionaries";
 import type { ShopifyProduct } from "@/lib/shopify/queries";
-import Link from "next/link";
+import Link from "@/components/LocaleLink";
 import { useSearchParams } from "next/navigation";
 import { useMemo } from "react";
 
@@ -23,6 +25,7 @@ export default function ShopCatalog({
   products,
   categoryLinks = [],
 }: ShopCatalogProps) {
+  const { catalog } = useDictionary();
   const searchParams = useSearchParams();
   const query = searchParams.get("q") ?? "";
 
@@ -35,13 +38,13 @@ export default function ShopCatalog({
     <>
       {query ? (
         <p className="mt-10 text-center text-sm text-black/60 md:mt-12">
-          Résultats pour &ldquo;{query}&rdquo;
+          {interpolate(catalog.resultsFor, { query })}
         </p>
       ) : null}
 
       <div className="mt-10 flex flex-col gap-6 border-b border-black/10 pb-6 md:mt-12 md:flex-row md:items-end md:justify-between">
         {categoryLinks.length > 0 ? (
-          <nav aria-label="Catégories" className="flex flex-wrap gap-x-6 gap-y-3">
+          <nav aria-label={catalog.categoriesAriaLabel}className="flex flex-wrap gap-x-6 gap-y-3">
             {categoryLinks.map((link) => (
               <Link
                 key={link.href}
@@ -62,8 +65,12 @@ export default function ShopCatalog({
         )}
 
         <p className="text-sm text-black/50">
-          {filteredProducts.length}{" "}
-          {filteredProducts.length === 1 ? "produit" : "produits"}
+          {interpolate(
+            filteredProducts.length === 1
+              ? catalog.productCountOne
+              : catalog.productCountOther,
+            { count: filteredProducts.length },
+          )}
         </p>
       </div>
 
@@ -79,7 +86,7 @@ export default function ShopCatalog({
         </div>
       ) : (
         <p className="mt-16 text-center text-sm text-black/60">
-          Aucun produit ne correspond à votre recherche pour le moment.
+          {catalog.noResults}
         </p>
       )}
     </>

@@ -3,7 +3,7 @@ import ShopifyProductImage from "@/components/ShopifyProductImage";
 import WishlistHeartButton from "@/components/WishlistHeartButton";
 import { routes } from "@/lib/routes";
 import { Draggable } from "gsap/Draggable";
-import Link from "next/link";
+import Link from "@/components/LocaleLink";
 import type { ShopifyProduct } from "@/lib/shopify/queries";
 
 type ProductCardProps = {

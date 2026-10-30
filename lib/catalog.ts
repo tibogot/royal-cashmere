@@ -1,3 +1,4 @@
+import type { Dictionary } from "@/lib/i18n/dictionaries";
 import type { ShopifyProduct } from "@/lib/shopify/queries";
 
 // The shop's category tree. These collections aren't set up in Shopify: each
@@ -10,8 +11,31 @@ import type { ShopifyProduct } from "@/lib/shopify/queries";
 // - Kind: the product type (Pull, Gilet, Robe, Jupe, Pantalon, Écharpe,
 //   Bonnet, Gants) or the same word as a tag. Add `col-roule` to turtlenecks.
 // - Accessories are unisex and listed once, whatever the audience tag.
+//
+// The copy (menu labels, H1s, meta descriptions, intros, image alts) lives in
+// the dictionaries, keyed by handle: `catalog.labels` (shipped to the client
+// for the menus) and `collection.pages` / `collection.imageAlts` (server only).
 
 type CatalogProduct = Pick<ShopifyProduct, "title" | "productType" | "tags">;
+
+// Every handle in the tree must have its copy in French, or this won't compile.
+type CatalogHandle = keyof Dictionary["catalog"]["labels"] &
+  keyof Dictionary["collection"]["pages"];
+type CatalogSectionHandle = CatalogHandle &
+  keyof Dictionary["collection"]["imageAlts"];
+
+export type CatalogCopy = Pick<Dictionary, "catalog" | "collection">;
+
+type CatalogNode = {
+  handle: CatalogHandle;
+  matches: (product: CatalogProduct) => boolean;
+};
+
+type CatalogSectionNode = CatalogNode & {
+  handle: CatalogSectionHandle;
+  image: string;
+  children: CatalogNode[];
+};
 
 export type CatalogCollection = {
   handle: string;
@@ -105,8 +129,8 @@ function isTurtleneck(product: CatalogProduct) {
 export const ACCESSORIES_SECTION_HANDLE = "accessoires";
 
 function section(
-  config: Omit<CatalogSection, "matches">,
-): CatalogSection {
+  config: Omit<CatalogSectionNode, "matches">,
+): CatalogSectionNode {
   return {
     ...config,
     // A section lists everything its sub-collections do, so a product's
@@ -116,36 +140,17 @@ function section(
   };
 }
 
-export const catalogSections: CatalogSection[] = [
+const catalogTree: CatalogSectionNode[] = [
   section({
     handle: "femme",
-    label: "Femme",
-    title: "Vêtements en cachemire pour femme",
-    description:
-      "Pulls, gilets, robes, jupes et pantalons en pur cachemire de Mongolie pour femme. Découvrez la collection Royal Cashmere en ligne et en boutique à Uccle, Bruxelles.",
-    intro:
-      "Pulls, gilets, robes, jupes et pantalons en pur cachemire de Mongolie, pensés pour durer d'une saison à l'autre. Chaque pièce est choisie pour sa douceur et la qualité de sa fibre.",
     image: "/images/shared/pull-et-pantalon.jpg",
-    imageAlt: "Pull et pantalon en cachemire pour femme Royal Cashmere",
     children: [
       {
         handle: "pulls-femme",
-        label: "Pulls",
-        title: "Pulls en cachemire pour femme",
-        description:
-          "Pulls en cachemire pour femme : col roulé, col V, col rond, coupes amples ou ajustées. Pur cachemire de Mongolie, boutique à Uccle, Bruxelles.",
-        intro:
-          "Col roulé, col V ou col rond : nos pulls en pur cachemire de Mongolie allient chaleur et légèreté. Une pièce essentielle, à porter seule ou en superposition.",
         matches: (product) => isForWomen(product) && isKind(product, "pull"),
       },
       {
         handle: "pulls-col-roule-femme",
-        label: "Col roulé",
-        title: "Pulls col roulé en cachemire pour femme",
-        description:
-          "Pulls col roulé en cachemire pour femme : la chaleur du pur cachemire de Mongolie au plus près du cou. Collection Royal Cashmere, Uccle, Bruxelles.",
-        intro:
-          "Le col roulé en cachemire protège du froid sans épaissir la silhouette. Un classique de l'hiver, en pur cachemire de Mongolie.",
         matches: (product) =>
           isForWomen(product) &&
           isKind(product, "pull") &&
@@ -153,42 +158,18 @@ export const catalogSections: CatalogSection[] = [
       },
       {
         handle: "gilets-femme",
-        label: "Gilets",
-        title: "Gilets et cardigans en cachemire pour femme",
-        description:
-          "Gilets et cardigans en cachemire pour femme, à boutons ou ouverts. Pur cachemire de Mongolie, boutique Royal Cashmere à Uccle, Bruxelles.",
-        intro:
-          "Boutonnés ou ouverts, nos gilets en cachemire se superposent facilement et accompagnent les journées de mi-saison comme les soirées d'hiver.",
         matches: (product) => isForWomen(product) && isKind(product, "gilet"),
       },
       {
         handle: "robes-cachemire",
-        label: "Robes",
-        title: "Robes en cachemire",
-        description:
-          "Robes en cachemire pour femme : maille douce et fluide en pur cachemire de Mongolie. Collection Royal Cashmere, boutique à Uccle, Bruxelles.",
-        intro:
-          "La douceur d'un pull, l'allure d'une robe. Nos robes en maille de cachemire se portent du bureau au dîner, en toute saison froide.",
         matches: (product) => isForWomen(product) && isKind(product, "robe"),
       },
       {
         handle: "jupes-cachemire",
-        label: "Jupes",
-        title: "Jupes en cachemire",
-        description:
-          "Jupes en cachemire pour femme, longues ou mi-longues. Pur cachemire de Mongolie, boutique Royal Cashmere à Uccle, Bruxelles.",
-        intro:
-          "Une jupe en maille de cachemire, souple et chaude, qui s'associe naturellement à nos pulls pour une silhouette tout en douceur.",
         matches: (product) => isForWomen(product) && isKind(product, "jupe"),
       },
       {
         handle: "pantalons-femme",
-        label: "Pantalons",
-        title: "Pantalons en cachemire pour femme",
-        description:
-          "Pantalons en cachemire pour femme, droits ou larges. Pur cachemire de Mongolie, boutique Royal Cashmere à Uccle, Bruxelles.",
-        intro:
-          "Confortables comme un vêtement d'intérieur, assez élégants pour sortir : nos pantalons en cachemire s'assortissent à nos pulls pour un ensemble complet.",
         matches: (product) =>
           isForWomen(product) && isKind(product, "pantalon"),
       },
@@ -196,97 +177,41 @@ export const catalogSections: CatalogSection[] = [
   }),
   section({
     handle: "homme",
-    label: "Homme",
-    title: "Vêtements en cachemire pour homme",
-    description:
-      "Pulls et gilets en pur cachemire de Mongolie pour homme. Découvrez la collection Royal Cashmere en ligne et en boutique à Uccle, Bruxelles.",
-    intro:
-      "Des pulls et des gilets en pur cachemire de Mongolie, aux coupes sobres et intemporelles. Plusieurs pièces sont mixtes : consultez le guide des tailles sur chaque fiche.",
     image: "/images/categories/pulls.jpg",
-    imageAlt: "Pull en cachemire pour homme Royal Cashmere",
     children: [
       {
         handle: "pulls-homme",
-        label: "Pulls",
-        title: "Pulls en cachemire pour homme",
-        description:
-          "Pulls en cachemire pour homme : col roulé, col V, col rond. Pur cachemire de Mongolie, boutique Royal Cashmere à Uccle, Bruxelles.",
-        intro:
-          "Col roulé, col V ou col rond : des pulls en pur cachemire de Mongolie, chauds et légers, à porter au quotidien comme sous une veste.",
         matches: (product) => isForMen(product) && isKind(product, "pull"),
       },
       {
         handle: "pulls-col-roule-homme",
-        label: "Col roulé",
-        title: "Pulls col roulé en cachemire pour homme",
-        description:
-          "Pulls col roulé en cachemire pour homme, en pur cachemire de Mongolie. Collection Royal Cashmere, boutique à Uccle, Bruxelles.",
-        intro:
-          "Le col roulé en cachemire, seul ou sous un manteau : une pièce de caractère, en pur cachemire de Mongolie.",
         matches: (product) =>
           isForMen(product) && isKind(product, "pull") && isTurtleneck(product),
       },
       {
         handle: "gilets-homme",
-        label: "Gilets",
-        title: "Gilets et cardigans en cachemire pour homme",
-        description:
-          "Gilets et cardigans en cachemire pour homme. Pur cachemire de Mongolie, boutique Royal Cashmere à Uccle, Bruxelles.",
-        intro:
-          "Un gilet en cachemire remplace aisément une veste les jours de mi-saison. Coupes sobres, pur cachemire de Mongolie.",
         matches: (product) => isForMen(product) && isKind(product, "gilet"),
       },
       {
         handle: "pantalons-homme",
-        label: "Pantalons",
-        title: "Pantalons en cachemire pour homme",
-        description:
-          "Pantalons en cachemire pour homme. Pur cachemire de Mongolie, boutique Royal Cashmere à Uccle, Bruxelles.",
-        intro:
-          "Le confort du cachemire dans un pantalon à la coupe nette, à porter chez soi comme en ville.",
         matches: (product) => isForMen(product) && isKind(product, "pantalon"),
       },
     ],
   }),
   section({
     handle: ACCESSORIES_SECTION_HANDLE,
-    label: "Accessoires",
-    title: "Accessoires en cachemire",
-    description:
-      "Écharpes, bonnets et gants en pur cachemire de Mongolie, pour homme et femme. Accessoires Royal Cashmere, boutique à Uccle, Bruxelles.",
-    intro:
-      "Écharpes, bonnets et gants en pur cachemire de Mongolie, pour homme et femme. Les accessoires idéaux pour se protéger du froid, ou pour offrir.",
     image: "/images/categories/echarpes.jpg",
-    imageAlt: "Écharpe en cachemire Royal Cashmere",
     children: [
       {
         handle: "echarpes-cachemire",
-        label: "Écharpes",
-        title: "Écharpes en cachemire",
-        description:
-          "Écharpes et étoles en cachemire pour homme et femme, unies ou à motifs. Pur cachemire de Mongolie, boutique Royal Cashmere à Uccle, Bruxelles.",
-        intro:
-          "Écharpes et étoles en pur cachemire de Mongolie, pour homme et femme. Légères, chaudes et douces au contact de la peau.",
         matches: (product) => isKind(product, "echarpe"),
       },
       {
         handle: "bonnets-cachemire",
-        label: "Bonnets",
-        title: "Bonnets en cachemire",
-        description:
-          "Bonnets en cachemire pour homme et femme. Pur cachemire de Mongolie, boutique Royal Cashmere à Uccle, Bruxelles.",
-        intro:
-          "Des bonnets en pur cachemire de Mongolie, pour homme et femme : toute la chaleur du cachemire, sans gratter.",
         matches: (product) => isKind(product, "bonnet"),
       },
       {
         handle: "gants-cachemire",
-        label: "Gants",
-        title: "Gants en cachemire",
-        description:
-          "Gants et mitaines en cachemire pour homme et femme. Pur cachemire de Mongolie, boutique Royal Cashmere à Uccle, Bruxelles.",
-        intro:
-          "Gants et mitaines en pur cachemire de Mongolie, pour homme et femme, à assortir à votre écharpe ou à votre bonnet.",
         matches: (product) => isKind(product, "gants"),
       },
     ],
@@ -299,8 +224,33 @@ export type CatalogMatch = {
   collection?: CatalogCollection;
 };
 
-export function findCatalogCollection(handle: string): CatalogMatch | null {
-  for (const catalogSection of catalogSections) {
+function describeCollection(
+  node: CatalogNode,
+  copy: CatalogCopy,
+): CatalogCollection {
+  return {
+    ...node,
+    label: copy.catalog.labels[node.handle],
+    ...copy.collection.pages[node.handle],
+  };
+}
+
+function describeSection(
+  node: CatalogSectionNode,
+  copy: CatalogCopy,
+): CatalogSection {
+  return {
+    ...describeCollection(node, copy),
+    image: node.image,
+    imageAlt: copy.collection.imageAlts[node.handle],
+    children: node.children.map((child) => describeCollection(child, copy)),
+  };
+}
+
+function findCatalogNode(
+  handle: string,
+): { section: CatalogSectionNode; collection?: CatalogNode } | null {
+  for (const catalogSection of catalogTree) {
     if (catalogSection.handle === handle) return { section: catalogSection };
 
     const collection = catalogSection.children.find(
@@ -312,8 +262,23 @@ export function findCatalogCollection(handle: string): CatalogMatch | null {
   return null;
 }
 
+export function findCatalogCollection(
+  handle: string,
+  copy: CatalogCopy,
+): CatalogMatch | null {
+  const match = findCatalogNode(handle);
+  if (!match) return null;
+
+  return {
+    section: describeSection(match.section, copy),
+    collection: match.collection
+      ? describeCollection(match.collection, copy)
+      : undefined,
+  };
+}
+
 export function isCatalogHandle(handle: string) {
-  return findCatalogCollection(handle) !== null;
+  return findCatalogNode(handle) !== null;
 }
 
 // The collection a product's breadcrumb leads back to: its first match in
@@ -321,12 +286,18 @@ export function isCatalogHandle(handle: string) {
 // rather than Col roulé.
 export function getPrimaryCatalogCollection(
   product: CatalogProduct,
+  copy: CatalogCopy,
 ): Required<CatalogMatch> | null {
-  for (const catalogSection of catalogSections) {
+  for (const catalogSection of catalogTree) {
     const collection = catalogSection.children.find((child) =>
       child.matches(product),
     );
-    if (collection) return { section: catalogSection, collection };
+    if (collection) {
+      return {
+        section: describeSection(catalogSection, copy),
+        collection: describeCollection(collection, copy),
+      };
+    }
   }
 
   return null;
@@ -354,17 +325,49 @@ export type ShopNav = {
 
 export function buildCatalogNav(
   products: CatalogProduct[],
+  copy: CatalogCopy,
 ): CatalogNavSection[] {
-  const hasProducts = (collection: CatalogCollection) =>
+  const hasProducts = (collection: CatalogNode) =>
     products.some((product) => collection.matches(product));
 
-  return catalogSections.filter(hasProducts).map((catalogSection) => ({
+  return catalogTree.filter(hasProducts).map((catalogSection) => ({
     handle: catalogSection.handle,
-    label: catalogSection.label,
+    label: copy.catalog.labels[catalogSection.handle],
     image: catalogSection.image,
-    imageAlt: catalogSection.imageAlt,
+    imageAlt: copy.collection.imageAlts[catalogSection.handle],
     children: catalogSection.children
       .filter(hasProducts)
-      .map(({ handle, label }) => ({ handle, label })),
+      .map(({ handle }) => ({ handle, label: copy.catalog.labels[handle] })),
   }));
+}
+
+/**
+ * A menu label in the reader's language. The /api/collections JSON is the
+ * same for every language (French), so the client relabels the catalog's
+ * handles; Shopify collections (Soldes…) keep their own title.
+ */
+export function catalogLabel(
+  labels: Dictionary["catalog"]["labels"],
+  handle: string,
+  fallback: string,
+) {
+  return handle in labels ? labels[handle as CatalogHandle] : fallback;
+}
+
+export function localizeShopNav(
+  nav: ShopNav,
+  labels: Dictionary["catalog"]["labels"],
+): ShopNav {
+  const relabel = <T extends CatalogNavLink>(link: T): T => ({
+    ...link,
+    label: catalogLabel(labels, link.handle, link.label),
+  });
+
+  return {
+    sections: nav.sections.map((navSection) => ({
+      ...relabel(navSection),
+      children: navSection.children.map(relabel),
+    })),
+    collections: nav.collections,
+  };
 }

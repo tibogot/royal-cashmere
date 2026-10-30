@@ -1,28 +1,18 @@
 import type { CustomerOrder, CustomerProfile } from "@/lib/shopify/customer-account/customer";
 import { getCustomerDisplayName } from "@/lib/shopify/customer-account/display-name";
+import type { Locale } from "@/lib/i18n/config";
+import { interpolate, type Dictionary } from "@/lib/i18n/dictionaries";
+import { formatLongDate, formatMoney } from "@/lib/i18n/format";
 import { routes } from "@/lib/routes";
 import { ctaLinkClassName } from "@/lib/ui";
-import Link from "next/link";
+import Link from "@/components/LocaleLink";
 
 type AccountPageViewProps = {
   customer: CustomerProfile | null;
   orders: CustomerOrder[];
+  locale: Locale;
+  copy: Dictionary["account"];
 };
-
-function formatDate(value: string) {
-  return new Intl.DateTimeFormat("fr-BE", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  }).format(new Date(value));
-}
-
-function formatMoney(amount: string, currencyCode: string) {
-  return new Intl.NumberFormat("fr-BE", {
-    style: "currency",
-    currency: currencyCode,
-  }).format(Number(amount));
-}
 
 function formatStatus(value: string) {
   return value
@@ -34,6 +24,8 @@ function formatStatus(value: string) {
 export default function AccountPageView({
   customer,
   orders,
+  locale,
+  copy,
 }: AccountPageViewProps) {
   const displayName = getCustomerDisplayName(customer);
   const email = customer?.emailAddress?.emailAddress;
@@ -42,18 +34,22 @@ export default function AccountPageView({
     <div className="space-y-10 text-left">
       <div className="space-y-4">
         <p className="font-serif text-2xl uppercase leading-snug tracking-wide md:text-3xl">
-          Mon compte
+          {copy.title}
         </p>
         <p className="max-w-md font-serif text-sm leading-relaxed text-black/70 md:text-base">
-          Bienvenue{displayName ? `, ${displayName}` : ""}. Retrouvez ici vos
-          informations et l&apos;historique de vos commandes.
+          {displayName
+            ? interpolate(copy.welcomeNamed, { name: displayName })
+            : copy.welcome}{" "}
+          {copy.intro}
         </p>
       </div>
 
       <div className="border-t border-black/10 pt-8">
-        <p className="text-xs uppercase tracking-wide text-black/50">Profil</p>
+        <p className="text-xs uppercase tracking-wide text-black/50">
+          {copy.profile}
+        </p>
         <p className="mt-3 font-serif text-lg uppercase md:text-xl">
-          {displayName || "Client Royal Cashmere"}
+          {displayName || copy.fallbackName}
         </p>
         {email ? (
           <p className="mt-2 font-serif text-sm text-black/70 md:text-base">
@@ -64,19 +60,19 @@ export default function AccountPageView({
 
       <div className="border-t border-black/10 pt-8">
         <p className="text-xs uppercase tracking-wide text-black/50">
-          Mes commandes
+          {copy.orders}
         </p>
 
         {orders.length === 0 ? (
           <div className="mt-6 space-y-4">
             <p className="font-serif text-sm leading-relaxed text-black/70 md:text-base">
-              Vous n&apos;avez pas encore passé de commande.
+              {copy.noOrders}
             </p>
             <Link
               href={routes.shop}
               className={`${ctaLinkClassName} inline-block font-sans`}
             >
-              Découvrir la boutique
+              {copy.discoverShop}
             </Link>
           </div>
         ) : (
@@ -88,19 +84,20 @@ export default function AccountPageView({
               >
                 <div>
                   <p className="text-xs uppercase tracking-wide text-black/50">
-                    Commande
+                    {copy.order}
                   </p>
                   <p className="mt-1 font-serif text-sm uppercase md:text-base">
                     {order.name}
                   </p>
                   <p className="mt-1 font-serif text-sm text-black/60">
-                    {formatDate(order.processedAt)}
+                    {formatLongDate(locale, order.processedAt)}
                   </p>
                 </div>
 
                 <div className="text-left md:text-right">
                   <p className="font-serif text-sm md:text-base">
                     {formatMoney(
+                      locale,
                       order.totalPrice.amount,
                       order.totalPrice.currencyCode,
                     )}
@@ -118,7 +115,7 @@ export default function AccountPageView({
 
       <div className="flex flex-col gap-4 border-t border-black/10 pt-8">
         <Link href={routes.shop} className={`${ctaLinkClassName} font-sans`}>
-          Continuer vos achats
+          {copy.continueShopping}
         </Link>
 
         {/* Plain <a>: /api/auth/logout 302-redirects to Shopify's external
@@ -127,7 +124,7 @@ export default function AccountPageView({
           href={routes.authLogout}
           className={`${ctaLinkClassName} font-sans text-black/60`}
         >
-          Se déconnecter
+          {copy.signOut}
         </a>
       </div>
     </div>

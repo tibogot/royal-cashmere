@@ -1,4 +1,17 @@
 import type { Metadata } from "next";
+import {
+  DEFAULT_LOCALE,
+  INTL_LOCALE,
+  LIVE_LOCALES,
+  OG_LOCALE,
+  isLiveLocale,
+  withLocale,
+  type Locale,
+} from "./i18n/config";
+import { interpolate } from "./i18n/dictionaries";
+import enShell from "./i18n/dictionaries/en/shell.json";
+import frShell from "./i18n/dictionaries/fr/shell.json";
+import nlShell from "./i18n/dictionaries/nl/shell.json";
 import { siteConfig } from "./site";
 
 type ShareImage = {
@@ -9,9 +22,13 @@ type ShareImage = {
 };
 
 type PageMetadataOptions = {
+  locale: Locale;
   title?: string;
   description?: string;
+  /** The route without its language, as in `routes`. */
   path?: string;
+  /** Per-language paths, when they differ — see `languageAlternates`. */
+  localizedPaths?: Partial<Record<Locale, string>>;
   // Falls back to the site-wide share image.
   image?: ShareImage;
   article?: {
@@ -21,15 +38,34 @@ type PageMetadataOptions = {
   };
 };
 
-export const defaultPageTitle = `${siteConfig.name} | Cachemire d'exception à Uccle, Bruxelles`;
+type SiteCopy = (typeof frShell)["site"];
+
+// Read synchronously, unlike getDictionary: metadata helpers aren't async.
+// French fills any key a translation lacks.
+const siteCopyByLocale: Record<Locale, SiteCopy> = {
+  fr: frShell.site,
+  nl: { ...frShell.site, ...nlShell.site },
+  en: { ...frShell.site, ...enShell.site },
+};
+
+/** The site-wide description, default title and share image alt. */
+export function siteCopy(locale: Locale): SiteCopy {
+  return siteCopyByLocale[locale];
+}
+
+export function defaultPageTitle(locale: Locale) {
+  return interpolate(siteCopy(locale).defaultTitle, { name: siteConfig.name });
+}
 
 // Shown when a page is shared on Facebook, WhatsApp, etc.
-export const defaultShareImage = {
-  url: "/images/shared/partage-reseaux.jpg",
-  width: 1200,
-  height: 630,
-  alt: "Cavalière en manteau de cachemire dans la steppe mongole",
-} as const satisfies ShareImage;
+export function defaultShareImage(locale: Locale) {
+  return {
+    url: "/images/shared/partage-reseaux.jpg",
+    width: 1200,
+    height: 630,
+    alt: siteCopy(locale).shareImageAlt,
+  } satisfies ShareImage;
+}
 
 const META_DESCRIPTION_MAX = 160;
 
@@ -50,31 +86,86 @@ export function toMetaDescription(
   return `${(lastSpace > 0 ? cut.slice(0, lastSpace) : cut).replace(/[\s,;:.–—-]+$/, "")}…`;
 }
 
+/**
+ * Canonical and hreflang for one route in one language.
+ *
+ * A language that is not live yet still renders French copy, so its pages are
+ * duplicates of the French ones: they canonicalise to French and are left out
+ * of hreflang, which only lists translations that really exist.
+ *
+ * `localizedPaths` is for content whose path differs per language — a journal
+ * article has its own slug in each translation, and may not exist in all of
+ * them. A language missing from it has no version of the page.
+ */
+export function languageAlternates(
+  path: string,
+  locale: Locale,
+  localizedPaths?: Partial<Record<Locale, string>>,
+): NonNullable<Metadata["alternates"]> {
+  const pathIn = (target: Locale) =>
+    localizedPaths ? localizedPaths[target] : path;
+  const own = withLocale(pathIn(locale) ?? path, locale);
+  const frenchPath = pathIn(DEFAULT_LOCALE);
+  const canonical =
+    isLiveLocale(locale) || !frenchPath
+      ? own
+      : withLocale(frenchPath, DEFAULT_LOCALE);
+
+  const translations = LIVE_LOCALES.flatMap((live) => {
+    const translated = pathIn(live);
+    return translated ? [[live, withLocale(translated, live)] as const] : [];
+  });
+
+  if (translations.length < 2) return { canonical };
+
+  return {
+    canonical,
+    languages: {
+      ...Object.fromEntries(
+        translations.map(([live, url]) => [INTL_LOCALE[live], url]),
+      ),
+      ...(frenchPath
+        ? { "x-default": withLocale(frenchPath, DEFAULT_LOCALE) }
+        : {}),
+    },
+  };
+}
+
+/** Untranslated languages stay out of the index until they are live. */
+export function localeRobots(locale: Locale): Metadata["robots"] {
+  return isLiveLocale(locale)
+    ? { index: true, follow: true }
+    : { index: false, follow: true };
+}
+
 export function createPageMetadata({
+  locale,
   title,
-  description = siteConfig.description,
-  path = "",
-  image = defaultShareImage,
+  description = siteCopy(locale).description,
+  path = "/",
+  localizedPaths,
+  image = defaultShareImage(locale),
   article,
-}: PageMetadataOptions = {}): Metadata {
-  const canonicalPath = path.startsWith("/") ? path : `/${path}`;
+}: PageMetadataOptions): Metadata {
+  const barePath = path.startsWith("/") ? path : `/${path}`;
   const pageTitle = title ?? siteConfig.name;
   const resolvedTitle = title
     ? pageTitle
-    : canonicalPath === "/"
-      ? { absolute: defaultPageTitle }
+    : barePath === "/"
+      ? { absolute: defaultPageTitle(locale) }
       : undefined;
-  const shareTitle = title ? `${title} | ${siteConfig.name}` : defaultPageTitle;
-  const url = `${siteConfig.url}${canonicalPath === "/" ? "" : canonicalPath}`;
+  const shareTitle = title
+    ? `${title} | ${siteConfig.name}`
+    : defaultPageTitle(locale);
+  const url = `${siteConfig.url}${withLocale(barePath, locale)}`;
 
   return {
     ...(resolvedTitle ? { title: resolvedTitle } : {}),
     description,
-    alternates: {
-      canonical: canonicalPath === "/" ? "/" : canonicalPath,
-    },
+    alternates: languageAlternates(barePath, locale, localizedPaths),
+    robots: localeRobots(locale),
     openGraph: {
-      locale: "fr_BE",
+      locale: OG_LOCALE[locale],
       url,
       siteName: siteConfig.name,
       title: shareTitle,
@@ -93,29 +184,32 @@ export function createPageMetadata({
   };
 }
 
-export const rootMetadata: Metadata = {
-  metadataBase: new URL(siteConfig.url),
-  title: {
-    default: defaultPageTitle,
-    template: `%s | ${siteConfig.name}`,
-  },
-  description: siteConfig.description,
-  openGraph: {
-    type: "website",
-    locale: "fr_BE",
-    siteName: siteConfig.name,
-    title: defaultPageTitle,
-    description: siteConfig.description,
-    images: [defaultShareImage],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: defaultPageTitle,
-    description: siteConfig.description,
-    images: [defaultShareImage],
-  },
-  robots: {
-    index: true,
-    follow: true,
-  },
-};
+export function rootMetadata(locale: Locale): Metadata {
+  const title = defaultPageTitle(locale);
+  const { description } = siteCopy(locale);
+  const image = defaultShareImage(locale);
+
+  return {
+    metadataBase: new URL(siteConfig.url),
+    title: {
+      default: title,
+      template: `%s | ${siteConfig.name}`,
+    },
+    description,
+    openGraph: {
+      type: "website",
+      locale: OG_LOCALE[locale],
+      siteName: siteConfig.name,
+      title,
+      description,
+      images: [image],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [image],
+    },
+    robots: localeRobots(locale),
+  };
+}

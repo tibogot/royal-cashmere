@@ -25,12 +25,14 @@ function editableImageField({name, title, guidance, minWidth, orientation}: Edit
     description: `${guidance} Laisser vide pour garder la photo par défaut. Placez le point de focus (hotspot) sur le sujet : c'est la partie qui reste visible quand l'image est recadrée.`,
     options: {hotspot: true},
     fields: [
+      // One value per language. Left empty, the site uses its own default
+      // description of the photo in that language.
       defineField({
         name: 'alt',
         title: 'Alternative text',
-        type: 'string',
+        type: 'internationalizedArrayString',
         description:
-          'Décrivez la photo en une phrase (ex. « Pull col V en cachemire beige »). Utile pour l’accessibilité et le référencement.',
+          'Décrivez la photo en une phrase, dans chaque langue (ex. « Pull col V en cachemire beige »). Utile pour l’accessibilité et le référencement.',
       }),
     ],
     validation: (rule) => [

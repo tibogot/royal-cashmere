@@ -1,0 +1,109 @@
+{
+  "product": {
+    "breadcrumbShop": "Boutique",
+    "optionColor": "Couleur",
+    "optionSize": "Taille",
+    "colorCountOne": "{count} couleur",
+    "colorCountOther": "{count} couleurs",
+    "adding": "Ajout en cours…",
+    "addToCart": "Ajouter au panier",
+    "soldOut": "Rupture de stock",
+    "viewCart": "Voir le panier",
+    "description": "Description",
+    "composition": "Composition & origine",
+    "fit": "Coupe & taille",
+    "care": "Entretien",
+    "deliveryAndReturns": "Livraison & retours",
+    "deliveryText": "Livraison en Europe. Les délais et frais de livraison sont indiqués lors du passage de commande. Retrait gratuit possible dans notre boutique d'Uccle.",
+    "returnsText": "Vous disposez de 14 jours pour retourner un article dans son état d'origine, non porté et avec ses étiquettes.",
+    "termsLink": "Conditions générales de vente",
+    "similarTitle": "Articles similaires",
+    "recentlyViewedTitle": "Vu récemment",
+    "notFoundTitle": "Produit introuvable",
+    "notFoundText": "Ce produit n'existe pas ou n'est plus disponible.",
+    "backToShop": "Retour à la boutique"
+  },
+  "cart": {
+    "title": "Panier",
+    "close": "Fermer le panier",
+    "loading": "Chargement…",
+    "decrease": "Diminuer la quantité",
+    "increase": "Augmenter la quantité",
+    "remove": "Retirer",
+    "empty": "Votre panier est vide.",
+    "continueShopping": "Continuer vos achats",
+    "total": "Total",
+    "checkout": "Passer commande",
+    "quickAdding": "Ajout…",
+    "quickAdd": "Ajouter",
+    "quickSoldOut": "Rupture",
+    "errors": {
+      "notConfigured": "Boutique non configurée.",
+      "notFound": "Panier introuvable.",
+      "demoProduct": "Ce produit de démonstration ne peut pas être ajouté au panier.",
+      "create": "Impossible de créer le panier. Vérifiez que votre token Storefront dispose des droits « write_checkouts ».",
+      "add": "Impossible d'ajouter au panier.",
+      "update": "Impossible de mettre à jour le panier.",
+      "remove": "Impossible de retirer l'article du panier."
+    }
+  },
+  "wishlist": {
+    "title": "Wishlist",
+    "add": "Ajouter aux favoris",
+    "remove": "Retirer des favoris",
+    "empty": "Votre wishlist est vide.",
+    "discoverShop": "Découvrir la boutique"
+  },
+  "journal": {
+    "title": "Journal",
+    "empty": "Aucun article pour le moment. Revenez bientôt.",
+    "backToJournal": "Retour au journal",
+    "notFoundTitle": "Article introuvable"
+  },
+  "shopHeadings": {
+    "account": "Mon compte — Royal Cashmere",
+    "signIn": "Se connecter — Royal Cashmere"
+  },
+  "account": {
+    "title": "Mon compte",
+    "welcome": "Bienvenue.",
+    "welcomeNamed": "Bienvenue, {name}.",
+    "intro": "Retrouvez ici vos informations et l'historique de vos commandes.",
+    "profile": "Profil",
+    "fallbackName": "Client Royal Cashmere",
+    "orders": "Mes commandes",
+    "noOrders": "Vous n'avez pas encore passé de commande.",
+    "discoverShop": "Découvrir la boutique",
+    "order": "Commande",
+    "continueShopping": "Continuer vos achats",
+    "signOut": "Se déconnecter",
+    "imageAlt": "Cachemire Royal Cashmere"
+  },
+  "signIn": {
+    "title": "Se connecter",
+    "notConfiguredBefore": "La connexion client n'est pas encore configurée. Ajoutez vos identifiants Customer Account API dans votre fichier",
+    "notConfiguredAfter": "et configurez les URLs de redirection dans Shopify Admin (Headless → Customer Account API).",
+    "intro": "Connectez-vous pour consulter vos commandes et gérer votre compte Royal Cashmere.",
+    "spaceTitle": "Votre espace client",
+    "benefitOrders": "Suivi de vos commandes",
+    "benefitHistory": "Historique d'achats",
+    "benefitDetails": "Informations de compte",
+    "error": "La connexion a échoué. Veuillez réessayer.",
+    "submit": "Se connecter",
+    "redirectNote": "Vous serez redirigé vers la page de connexion sécurisée Shopify.",
+    "continueShopping": "Continuer vos achats",
+    "imageAlt": "Cachemire Royal Cashmere"
+  },
+  "shopMeta": {
+    "accountTitle": "Mon compte",
+    "accountDescription": "Consultez vos commandes et gérez votre compte client Royal Cashmere.",
+    "cartTitle": "Panier",
+    "cartDescription": "Votre panier Royal Cashmere. Finalisez votre commande de pièces en cachemire d'exception.",
+    "signInTitle": "Connexion",
+    "signInDescription": "Connectez-vous à votre compte Royal Cashmere pour suivre vos commandes.",
+    "wishlistTitle": "Wishlist",
+    "wishlistDescription": "Votre sélection Royal Cashmere. Retrouvez vos pièces en cachemire favorites.",
+    "journalTitle": "Journal",
+    "journalDescription": "Le journal Royal Cashmere : conseils d'entretien, savoir-faire cachemire et histoire de la fibre mongole."
+  }
+}

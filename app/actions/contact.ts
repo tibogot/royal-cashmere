@@ -6,6 +6,8 @@ import {
   parseContactFormData,
   validateContactForm,
 } from "@/lib/contact";
+import { toLocale } from "@/lib/i18n/config";
+import { getDictionary } from "@/lib/i18n/dictionaries";
 import { siteConfig } from "@/lib/site";
 
 async function sendContactEmail(fields: {
@@ -65,11 +67,14 @@ export async function submitContactForm(
   _prevState: ContactFormState,
   formData: FormData,
 ): Promise<ContactFormState> {
+  // The form sends the page's language along, so errors read in it.
+  const locale = toLocale(String(formData.get("locale") ?? ""));
+  const errors = (await getDictionary(locale)).contact.formErrors;
+
   if (!isContactEmailConfigured()) {
     return {
       ok: false,
-      error:
-        "Le formulaire de contact n'est pas encore configuré. Contactez-nous par téléphone en attendant.",
+      error: errors.notConfigured,
       success: false,
     };
   }
@@ -80,7 +85,7 @@ export async function submitContactForm(
   if (validationError) {
     return {
       ok: false,
-      error: validationError,
+      error: errors[validationError],
       success: false,
     };
   }
@@ -96,8 +101,7 @@ export async function submitContactForm(
   } catch {
     return {
       ok: false,
-      error:
-        "L'envoi du message a échoué. Veuillez réessayer ou nous appeler directement.",
+      error: errors.sendFailed,
       success: false,
     };
   }

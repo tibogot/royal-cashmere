@@ -1,10 +1,14 @@
 import type { ShopNav } from "@/lib/catalog";
+import type { Locale } from "@/lib/i18n/config";
+import { documentLocale } from "@/lib/i18n/document-locale";
 
 const EMPTY_NAV: ShopNav = { sections: [], collections: [] };
 
 let nav: ShopNav = EMPTY_NAV;
 let hasFetched = false;
 let inFlight: Promise<void> | null = null;
+// The language `nav` was fetched in: switching language refetches it.
+let navLocale: Locale | null = null;
 const listeners = new Set<() => void>();
 
 function emit() {
@@ -14,9 +18,11 @@ function emit() {
 async function fetchCollections(): Promise<void> {
   if (inFlight) return inFlight;
 
+  const locale = documentLocale();
+
   inFlight = (async () => {
     try {
-      const response = await fetch("/api/collections");
+      const response = await fetch(`/api/collections?locale=${locale}`);
       if (!response.ok) return;
 
       const data = (await response.json()) as Partial<ShopNav>;
@@ -24,6 +30,7 @@ async function fetchCollections(): Promise<void> {
         sections: data.sections ?? [],
         collections: data.collections ?? [],
       };
+      navLocale = locale;
     } catch {
       // Keep the last known collections on network errors.
     } finally {
@@ -37,7 +44,7 @@ async function fetchCollections(): Promise<void> {
 }
 
 function ensureFetched() {
-  if (!hasFetched && !inFlight) {
+  if ((!hasFetched || navLocale !== documentLocale()) && !inFlight) {
     void fetchCollections();
   }
 }

@@ -1,5 +1,7 @@
 "use client";
 
+import { useDictionary } from "@/components/LocaleProvider";
+
 type BurgerButtonProps = {
   open: boolean;
   onClick: () => void;
@@ -11,16 +13,19 @@ export default function BurgerButton({
   onClick,
   className = "",
 }: BurgerButtonProps) {
+  const { nav } = useDictionary();
+  const label = open ? nav.closeMenu : nav.openMenu;
+
   return (
     <button
       type="button"
       onClick={onClick}
       aria-expanded={open}
-      aria-label={open ? "Fermer le menu" : "Ouvrir le menu"}
+      aria-label={label}
       className={`relative flex h-8 w-8 items-center justify-center ${className}`}
       data-nav-link
     >
-      <span className="sr-only">{open ? "Fermer le menu" : "Ouvrir le menu"}</span>
+      <span className="sr-only">{label}</span>
       <span
         className={`absolute block h-px w-5 bg-current transition-[transform,opacity] duration-300 ease-out ${
           open ? "translate-y-0 rotate-45" : "-translate-y-1.5"

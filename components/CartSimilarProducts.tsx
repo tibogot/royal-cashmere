@@ -1,6 +1,7 @@
 "use client";
 
 import FeaturedProductsCarousel from "@/components/FeaturedProductsCarousel";
+import { useDictionary } from "@/components/LocaleProvider";
 import {
   getServerSimilarProducts,
   getServerSimilarProductsHasFetched,
@@ -32,6 +33,7 @@ function SimilarProductsSkeleton() {
 export default function CartSimilarProducts({
   productHandles,
 }: CartSimilarProductsProps) {
+  const dict = useDictionary();
   const handlesKey =
     productHandles.length > 0 ? productHandles.join(",") : "__empty__";
 
@@ -55,7 +57,9 @@ export default function CartSimilarProducts({
 
   return (
     <section className="mt-8 border-t border-black/10 pt-6">
-      <h3 className="mb-4 font-serif text-lg uppercase">Articles similaires</h3>
+      <h3 className="mb-4 font-serif text-lg uppercase">
+        {dict.product.similarTitle}
+      </h3>
       {hasFetched ? (
         <FeaturedProductsCarousel
           products={products}

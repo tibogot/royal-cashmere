@@ -1,16 +1,22 @@
 "use client";
 
-import { showcaseCategories } from "@/lib/categories";
+import { getShowcaseCategories } from "@/lib/categories";
 import { ctaLinkClassName } from "@/lib/ui";
 import FadeInImage from "@/components/FadeInImage";
-import Link from "next/link";
+import Link from "@/components/LocaleLink";
+import { useDictionary } from "@/components/LocaleProvider";
 import { useState } from "react";
 
-const defaultIndex = showcaseCategories.findIndex(
-  (category) => category.label === "Pantalons",
-);
+// By handle, not label: the label changes with the language.
+const DEFAULT_CATEGORY_ID = "pantalons-femme";
 
 export default function CategoryShowcase() {
+  const dict = useDictionary();
+  const copy = dict.showcase;
+  const showcaseCategories = getShowcaseCategories(dict.catalog);
+  const defaultIndex = showcaseCategories.findIndex(
+    (category) => category.id === DEFAULT_CATEGORY_ID,
+  );
   const [activeIndex, setActiveIndex] = useState(
     defaultIndex >= 0 ? defaultIndex : 0,
   );
@@ -70,7 +76,7 @@ export default function CategoryShowcase() {
             href={current.href}
             className={`${ctaLinkClassName} mt-8 md:mt-10`}
           >
-            Découvrir
+            {copy.discover}
           </Link>
         </div>
 

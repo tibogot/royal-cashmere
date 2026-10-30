@@ -2,6 +2,8 @@
 
 import AddToCartButton from "@/components/AddToCartButton";
 import ColorOptionSwatches from "@/components/ColorOptionSwatches";
+import { useDictionary } from "@/components/LocaleProvider";
+import ProductInfoAccordion from "@/components/ProductInfoAccordion";
 import { getProductDescriptionHtml } from "@/lib/shopify/format-description";
 import type { ShopifyProductDetail } from "@/lib/shopify/queries";
 import {
@@ -19,9 +21,12 @@ type ProductPurchasePanelProps = {
   onSelectionChange: (optionName: string, value: string) => void;
 };
 
-function getOptionLabel(name: string) {
-  if (isColorOption(name)) return "Couleur";
-  if (isSizeOption(name)) return "Taille";
+function getOptionLabel(
+  name: string,
+  labels: { color: string; size: string },
+) {
+  if (isColorOption(name)) return labels.color;
+  if (isSizeOption(name)) return labels.size;
   return name;
 }
 
@@ -30,6 +35,12 @@ export default function ProductPurchasePanel({
   selections,
   onSelectionChange,
 }: ProductPurchasePanelProps) {
+  const dict = useDictionary();
+  const optionLabels = {
+    color: dict.product.optionColor,
+    size: dict.product.optionSize,
+  };
+
   const sortedOptions = useMemo(
     () => sortProductOptions(product.options),
     [product.options],
@@ -72,7 +83,7 @@ export default function ProductPurchasePanel({
             return (
               <div key={option.name}>
                 <p className="text-xs uppercase tracking-wide text-black/60">
-                  {getOptionLabel(option.name)}
+                  {getOptionLabel(option.name, optionLabels)}
                   {isColorOption(option.name) && selections[option.name] ? (
                     <span className="normal-case text-black/80">
                       {" "}
@@ -128,12 +139,10 @@ export default function ProductPurchasePanel({
         availableForSale={selectedVariant?.availableForSale ?? false}
       />
 
-      {descriptionHtml ? (
-        <div
-          className="product-description max-w-lg font-sans mt-12 text-sm font-light leading-relaxed text-black/75 md:mt-16 md:text-base"
-          dangerouslySetInnerHTML={{ __html: descriptionHtml }}
-        />
-      ) : null}
+      <ProductInfoAccordion
+        descriptionHtml={descriptionHtml}
+        details={product.details}
+      />
     </div>
   );
 }

@@ -1,0 +1,109 @@
+{
+  "product": {
+    "breadcrumbShop": "Shop",
+    "optionColor": "Kleur",
+    "optionSize": "Maat",
+    "colorCountOne": "{count} kleur",
+    "colorCountOther": "{count} kleuren",
+    "adding": "Wordt toegevoegd…",
+    "addToCart": "In winkelmandje",
+    "soldOut": "Uitverkocht",
+    "viewCart": "Bekijk winkelmandje",
+    "description": "Beschrijving",
+    "composition": "Samenstelling & herkomst",
+    "fit": "Pasvorm & maat",
+    "care": "Onderhoud",
+    "deliveryAndReturns": "Levering & retour",
+    "deliveryText": "Levering in heel Europa. De levertermijnen en verzendkosten worden vermeld bij het plaatsen van uw bestelling. Gratis afhalen is mogelijk in onze boetiek in Ukkel.",
+    "returnsText": "U hebt 14 dagen de tijd om een artikel terug te sturen in de oorspronkelijke staat, ongedragen en met de labels er nog aan.",
+    "termsLink": "Algemene verkoopvoorwaarden",
+    "similarTitle": "Vergelijkbare artikelen",
+    "recentlyViewedTitle": "Onlangs bekeken",
+    "notFoundTitle": "Product niet gevonden",
+    "notFoundText": "Dit product bestaat niet of is niet langer beschikbaar.",
+    "backToShop": "Terug naar de shop"
+  },
+  "cart": {
+    "title": "Winkelmandje",
+    "close": "Winkelmandje sluiten",
+    "loading": "Laden…",
+    "decrease": "Aantal verminderen",
+    "increase": "Aantal verhogen",
+    "remove": "Verwijderen",
+    "empty": "Uw winkelmandje is leeg.",
+    "continueShopping": "Verder winkelen",
+    "total": "Totaal",
+    "checkout": "Afrekenen",
+    "quickAdding": "Toevoegen…",
+    "quickAdd": "Toevoegen",
+    "quickSoldOut": "Uitverkocht",
+    "errors": {
+      "notConfigured": "De shop is niet geconfigureerd.",
+      "notFound": "Winkelmandje niet gevonden.",
+      "demoProduct": "Dit demonstratieproduct kan niet aan het winkelmandje worden toegevoegd.",
+      "create": "Het winkelmandje kon niet worden aangemaakt. Controleer of uw Storefront-token over de rechten ‘write_checkouts’ beschikt.",
+      "add": "Het artikel kon niet aan het winkelmandje worden toegevoegd.",
+      "update": "Het winkelmandje kon niet worden bijgewerkt.",
+      "remove": "Het artikel kon niet uit het winkelmandje worden verwijderd."
+    }
+  },
+  "wishlist": {
+    "title": "Verlanglijst",
+    "add": "Toevoegen aan verlanglijst",
+    "remove": "Verwijderen uit verlanglijst",
+    "empty": "Uw verlanglijst is leeg.",
+    "discoverShop": "Ontdek de shop"
+  },
+  "journal": {
+    "title": "Journal",
+    "empty": "Nog geen artikels. Kom binnenkort zeker terug.",
+    "backToJournal": "Terug naar het journal",
+    "notFoundTitle": "Artikel niet gevonden"
+  },
+  "shopHeadings": {
+    "account": "Mijn account — Royal Cashmere",
+    "signIn": "Aanmelden — Royal Cashmere"
+  },
+  "account": {
+    "title": "Mijn account",
+    "welcome": "Welkom.",
+    "welcomeNamed": "Welkom, {name}.",
+    "intro": "Hier vindt u uw gegevens en een overzicht van uw bestellingen.",
+    "profile": "Profiel",
+    "fallbackName": "Klant van Royal Cashmere",
+    "orders": "Mijn bestellingen",
+    "noOrders": "U hebt nog geen bestelling geplaatst.",
+    "discoverShop": "Ontdek de shop",
+    "order": "Bestelling",
+    "continueShopping": "Verder winkelen",
+    "signOut": "Afmelden",
+    "imageAlt": "Kasjmier van Royal Cashmere"
+  },
+  "signIn": {
+    "title": "Aanmelden",
+    "notConfiguredBefore": "Aanmelden als klant is nog niet geconfigureerd. Voeg uw Customer Account API-gegevens toe aan uw bestand",
+    "notConfiguredAfter": "en stel de redirect-URL's in via Shopify Admin (Headless → Customer Account API).",
+    "intro": "Meld u aan om uw bestellingen te bekijken en uw Royal Cashmere-account te beheren.",
+    "spaceTitle": "Uw klantenzone",
+    "benefitOrders": "Opvolging van uw bestellingen",
+    "benefitHistory": "Aankoopgeschiedenis",
+    "benefitDetails": "Accountgegevens",
+    "error": "Aanmelden is mislukt. Probeer het opnieuw.",
+    "submit": "Aanmelden",
+    "redirectNote": "U wordt doorgestuurd naar de beveiligde aanmeldpagina van Shopify.",
+    "continueShopping": "Verder winkelen",
+    "imageAlt": "Kasjmier van Royal Cashmere"
+  },
+  "shopMeta": {
+    "accountTitle": "Mijn account",
+    "accountDescription": "Bekijk uw bestellingen en beheer uw klantaccount bij Royal Cashmere.",
+    "cartTitle": "Winkelmandje",
+    "cartDescription": "Uw winkelmandje bij Royal Cashmere. Rond uw bestelling van uitzonderlijke kasjmieren stukken af.",
+    "signInTitle": "Aanmelden",
+    "signInDescription": "Meld u aan bij uw Royal Cashmere-account om uw bestellingen op te volgen.",
+    "wishlistTitle": "Verlanglijst",
+    "wishlistDescription": "Uw selectie bij Royal Cashmere. Vind uw favoriete kasjmieren stukken hier terug.",
+    "journalTitle": "Journal",
+    "journalDescription": "Het journal van Royal Cashmere: onderhoudstips, vakmanschap in kasjmier en het verhaal van de Mongoolse vezel."
+  }
+}

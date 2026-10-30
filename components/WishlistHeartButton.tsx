@@ -1,6 +1,7 @@
 "use client";
 
 import HeartIcon from "@/components/HeartIcon";
+import { useDictionary } from "@/components/LocaleProvider";
 import {
   isInWishlist,
   subscribeToWishlist,
@@ -19,6 +20,7 @@ export default function WishlistHeartButton({
   className = "absolute top-2 right-2 z-10",
   tone = "dark",
 }: WishlistHeartButtonProps) {
+  const dict = useDictionary();
   const active = useSyncExternalStore(
     subscribeToWishlist,
     () => isInWishlist(handle),
@@ -46,7 +48,7 @@ export default function WishlistHeartButton({
     <button
       type="button"
       onClick={handleClick}
-      aria-label={active ? "Retirer des favoris" : "Ajouter aux favoris"}
+      aria-label={active ? dict.wishlist.remove : dict.wishlist.add}
       aria-pressed={active}
       className={`flex size-7 items-center justify-center transition-opacity hover:opacity-60 ${toneClassName} ${className}`}
     >

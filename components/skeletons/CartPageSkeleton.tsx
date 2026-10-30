@@ -1,9 +1,17 @@
+"use client";
+
+import { useDictionary } from "@/components/LocaleProvider";
+
+// A client component because loading.tsx gets no params to read the
+// language from; the dictionary comes from the layout's LocaleProvider.
 export default function CartPageSkeleton() {
+  const dict = useDictionary();
+
   return (
     <main className="w-full">
       <section className="bg-white px-4 pt-24 pb-20 text-black md:px-8 md:pt-28 md:pb-32">
         <h1 className="text-center font-serif text-5xl uppercase leading-[1.12] md:text-7xl">
-          Panier
+          {dict.cart.title}
         </h1>
 
         <div className="mx-auto mt-12 max-w-4xl">

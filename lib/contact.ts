@@ -36,21 +36,29 @@ export function parseContactFormData(formData: FormData): ContactFormFields {
   };
 }
 
-export function validateContactForm(fields: ContactFormFields): string | null {
+/**
+ * Which field failed, as a key of the `contact.formErrors` copy; the action
+ * turns it into a message in the visitor's language.
+ */
+export type ContactFormError = "generic" | "name" | "email" | "message";
+
+export function validateContactForm(
+  fields: ContactFormFields,
+): ContactFormError | null {
   if (fields.company) {
-    return "Une erreur est survenue. Veuillez réessayer.";
+    return "generic";
   }
 
   if (fields.name.length < 2) {
-    return "Veuillez indiquer votre nom.";
+    return "name";
   }
 
   if (!EMAIL_PATTERN.test(fields.email)) {
-    return "Veuillez indiquer une adresse e-mail valide.";
+    return "email";
   }
 
   if (fields.message.length < 10) {
-    return "Votre message doit contenir au moins 10 caractères.";
+    return "message";
   }
 
   return null;
