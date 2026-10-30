@@ -49,7 +49,7 @@ export default function LanguageSwitcher({
           aria-current={target === locale ? "true" : undefined}
           onClick={() => rememberLocale(target)}
           data-nav-link={navLink ? true : undefined}
-          className={`uppercase ${target === locale ? "" : "opacity-50"} ${linkClassName}`}
+          className={`uppercase ${target === locale ? "" : "opacity-65"} ${linkClassName}`}
         >
           <span aria-hidden="true">{target}</span>
           <span className="sr-only">{LOCALE_NAME[target]}</span>

@@ -25,10 +25,11 @@ import ScrollShrinkImage from "@/components/ScrollShrinkImage";
 import SplitTextReveal from "@/components/SplitTextReveal";
 import { getHomePageContent } from "@/lib/sanity/queries";
 import { editableImageProps } from "@/lib/sanity/image";
-import Image from "next/image";
+import { getImageProps } from "next/image";
 import Link from "@/components/LocaleLink";
 import { preload } from "react-dom";
 import heroImage from "@/public/images/home/cavaliere-steppe-mongolie.jpg";
+import heroPortraitImage from "@/public/images/home/cavaliere-steppe-mongolie-portrait.jpg";
 import saleImage from "@/public/images/home/soldes.webp";
 import bestsellersImage from "@/public/images/home/bestsellers.webp";
 import boutiqueVisitImage from "@/public/images/home/visite-boutique.webp";
@@ -39,6 +40,34 @@ import bannerImage from "@/public/images/home/banniere-histoire.webp";
 // placeholder (shown instantly) and an immutable cache URL; eager + low
 // priority starts the downloads right after the hero instead of waiting for
 // the visitor to scroll near them, so a fast scroll doesn't land on blanks.
+// Hero art direction. object-cover on a portrait screen fills the height and
+// crops the sides, so the 16:9 photo would download at 178vh wide (3840px on
+// a phone) only to show its middle third. Portrait screens get a 3:4 centre
+// crop instead (same framing, rendered 75vh wide); everything else the 16:9.
+const HERO_PORTRAIT_MEDIA = "(max-aspect-ratio: 3/4)";
+const HERO_LANDSCAPE_MEDIA = "not all and (max-aspect-ratio: 3/4)";
+const heroCommon = {
+  alt: "",
+  fill: true,
+  quality: 70,
+  loading: "eager",
+  fetchPriority: "high",
+} as const;
+const {
+  props: { srcSet: heroPortraitSrcSet, sizes: heroPortraitSizes },
+} = getImageProps({ ...heroCommon, src: heroPortraitImage, sizes: "75vh" });
+const {
+  props: {
+    srcSet: heroLandscapeSrcSet,
+    sizes: heroLandscapeSizes,
+    ...heroImgProps
+  },
+} = getImageProps({
+  ...heroCommon,
+  src: heroImage,
+  sizes: "(max-aspect-ratio: 16/9) 178vh, 100vw",
+});
+
 const editorialImageProps = {
   placeholder: "blur",
   loading: "eager",
@@ -121,18 +150,38 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
           hiddenUntilReveal
           revealedEvent={HERO_REVEALED_EVENT}
         >
-          <Image
-            src={heroImage}
-            alt=""
-            fill
-            preload
-            className="object-cover"
-            // object-cover on a portrait screen fills the height, so the
-            // rendered width is 100vh × 16/9, not 100vw. With "100vw" a phone
-            // downloads a ~1080px-wide file and stretches it 2–3× (blurry).
-            sizes="(max-aspect-ratio: 16/9) 178vh, 100vw"
-            quality={75}
+          {/* getImageProps doesn't preload, so preload each variant for its
+              own media query (React hoists these into <head>). */}
+          <link
+            rel="preload"
+            as="image"
+            media={HERO_PORTRAIT_MEDIA}
+            imageSrcSet={heroPortraitSrcSet}
+            imageSizes={heroPortraitSizes}
+            fetchPriority="high"
           />
+          <link
+            rel="preload"
+            as="image"
+            media={HERO_LANDSCAPE_MEDIA}
+            imageSrcSet={heroLandscapeSrcSet}
+            imageSizes={heroLandscapeSizes}
+            fetchPriority="high"
+          />
+          <picture>
+            <source
+              media={HERO_PORTRAIT_MEDIA}
+              srcSet={heroPortraitSrcSet}
+              sizes={heroPortraitSizes}
+            />
+            <img
+              {...heroImgProps}
+              srcSet={heroLandscapeSrcSet}
+              sizes={heroLandscapeSizes}
+              alt=""
+              className="object-cover"
+            />
+          </picture>
         </ScrollShrinkImage>
         {/* <HeroBottomLogo priority raised /> */}
         <div className="absolute inset-x-0 bottom-0 z-10 flex justify-center p-4 md:p-8">
