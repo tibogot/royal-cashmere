@@ -12,7 +12,7 @@ export const siteConfig = {
     region: "Bruxelles",
     country: "Belgique",
     phone: "+32 2 850 59 44",
-    email: "contact@royal-cashmere.eu",
+    email: "contact@royalcashmere.be",
   },
   legal: {
     companyName: "Royal Cashmere",
