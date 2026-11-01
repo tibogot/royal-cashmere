@@ -108,7 +108,8 @@
   "collection": {
     "shop": {
       "title": "Shop",
-      "description": "Ontdek de volledige collectie van Royal Cashmere: truien, gilets, jurken, broeken en accessoires in zuiver Mongools kasjmier, voor dames en heren. Boetiek voor uitzonderlijk kasjmier in Ukkel, Brussel."
+      "metaTitle": "Kleding in Mongools kasjmier",
+      "description": "Truien, gilets, jurken, broeken en accessoires in zuiver Mongools kasjmier, voor dames en heren. Online en in onze boetiek in Ukkel, Brussel."
     },
     "fallbackTitle": "Collectie",
     "fallbackDescription": "Ontdek de collectie {title} van Royal Cashmere: stukken in uitzonderlijk kasjmier.",
@@ -120,7 +121,7 @@
     "pages": {
       "femme": {
         "title": "Kasjmieren kleding voor dames",
-        "description": "Truien, gilets, jurken, rokken en broeken voor dames in zuiver Mongools kasjmier. Ontdek de collectie van Royal Cashmere online en in onze boetiek in Ukkel, Brussel.",
+        "description": "Truien, gilets, jurken, rokken en broeken voor dames in zuiver Mongools kasjmier. Online en in onze boetiek in Ukkel, Brussel.",
         "intro": "Truien, gilets, jurken, rokken en broeken in zuiver Mongools kasjmier, gemaakt om seizoen na seizoen mee te gaan. Elk stuk is gekozen om zijn zachtheid en de kwaliteit van de vezel."
       },
       "pulls-femme": {

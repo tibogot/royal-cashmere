@@ -88,6 +88,12 @@ async function fetchProductsPage(locale: Locale, after?: string | null) {
   };
 }
 
+// Shopify SEO titles often end in "- Royal Cashmere"; the page title template
+// already adds the brand.
+function stripBrandSuffix(title: string | null | undefined) {
+  return title?.replace(/\s*[-|–—]\s*Royal Cashmere\s*$/i, "").trim();
+}
+
 function mapProductDetailNode(
   node: ShopifyProductDetailNode,
   locale: Locale,
@@ -101,6 +107,8 @@ function mapProductDetailNode(
         variant.price.amount,
         variant.price.currencyCode,
       ),
+      amount: variant.price.amount,
+      currencyCode: variant.price.currencyCode,
       imageUrl: variant.image?.url,
       imageAlt: variant.image?.altText ?? undefined,
       selectedOptions: variant.selectedOptions,
@@ -124,6 +132,7 @@ function mapProductDetailNode(
     tags: node.tags,
     description: node.description,
     descriptionHtml: node.descriptionHtml,
+    seoTitle: stripBrandSuffix(node.seo?.title) || undefined,
     seoDescription: node.seo?.description?.trim() || undefined,
     details: {
       composition: node.composition?.value.trim() || undefined,

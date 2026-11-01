@@ -130,6 +130,9 @@ export type ProductVariant = {
   id: string;
   availableForSale: boolean;
   price: string;
+  // Unformatted price for structured data ("519.0", "EUR").
+  amount?: string;
+  currencyCode?: string;
   imageUrl?: string;
   imageAlt?: string;
   selectedOptions: { name: string; value: string }[];
@@ -146,7 +149,8 @@ export type ProductDetailFields = {
 export type ShopifyProductDetail = ShopifyProduct & {
   description: string;
   descriptionHtml: string;
-  // The search-result description set in Shopify, when there is one.
+  // The search-result title and description set in Shopify, when there are.
+  seoTitle?: string;
   seoDescription?: string;
   details?: ProductDetailFields;
   options: ProductOption[];
@@ -159,7 +163,7 @@ type ShopifyProductDetailNode = Omit<ShopifyProductNode, "options"> & {
   options: ShopifyProductOptionNode[];
   description: string;
   descriptionHtml: string;
-  seo: { description: string | null } | null;
+  seo: { title: string | null; description: string | null } | null;
   composition: ShopifyMetafieldNode;
   fit: ShopifyMetafieldNode;
   care: ShopifyMetafieldNode;
@@ -199,6 +203,7 @@ export const PRODUCT_BY_HANDLE_QUERY = `
       description
       descriptionHtml
       seo {
+        title
         description
       }
       composition: metafield(namespace: "custom", key: "composition") {

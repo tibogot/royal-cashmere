@@ -34,7 +34,7 @@ export async function generateMetadata({ params }: CollectionPageProps) {
   if (handle === ALL_PRODUCTS_HANDLE) {
     return createPageMetadata({
       locale,
-      title: dictionary.collection.shop.title,
+      title: dictionary.collection.shop.metaTitle,
       description: dictionary.collection.shop.description,
       path: routes.shop,
     });

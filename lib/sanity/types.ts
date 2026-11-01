@@ -50,6 +50,9 @@ export type JournalArticleListItem = {
 };
 
 export type JournalArticle = JournalArticleListItem & {
+  // Search-result overrides set in Studio's SEO tab.
+  seoTitle?: string;
+  seoDescription?: string;
   body?: PortableTextBlock[];
   /** Every language version, this one included; null until it has any. */
   translations?: ArticleTranslation[] | null;

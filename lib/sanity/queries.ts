@@ -45,6 +45,8 @@ export const articlesQuery = `*[_type == "article" && language == $language] | o
 // is not in the language of the URL.
 export const articleBySlugQuery = `*[_type == "article" && slug.current == $slug][0] {
   ${articleListFields},
+  seoTitle,
+  seoDescription,
   body,
   ${translationsField}
 }`;

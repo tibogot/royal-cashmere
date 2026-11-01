@@ -72,8 +72,8 @@ export async function generateMetadata({
   return createPageMetadata({
     // The article's own language: a mismatched URL redirects anyway.
     locale: article.language,
-    title: article.title,
-    description: toMetaDescription(article.excerpt),
+    title: article.seoTitle || article.title,
+    description: toMetaDescription(article.seoDescription || article.excerpt),
     path: routes.journalArticle(slug),
     localizedPaths: localizedArticlePaths(article),
     image: article.mainImage

@@ -108,7 +108,8 @@
   "collection": {
     "shop": {
       "title": "Shop",
-      "description": "Discover the full Royal Cashmere collection: jumpers, cardigans, dresses, trousers and accessories in pure Mongolian cashmere, for women and men. An exceptional cashmere boutique in Uccle, Brussels."
+      "metaTitle": "Mongolian cashmere clothing",
+      "description": "Jumpers, cardigans, dresses, trousers and accessories in pure Mongolian cashmere, for women and men. Online and at our boutique in Uccle, Brussels."
     },
     "fallbackTitle": "Collection",
     "fallbackDescription": "Discover the Royal Cashmere {title} collection: exceptional cashmere pieces.",
@@ -120,7 +121,7 @@
     "pages": {
       "femme": {
         "title": "Women's cashmere clothing",
-        "description": "Women's jumpers, cardigans, dresses, skirts and trousers in pure Mongolian cashmere. Discover the Royal Cashmere collection online and at our boutique in Uccle, Brussels.",
+        "description": "Women's jumpers, cardigans, dresses, skirts and trousers in pure Mongolian cashmere. Online and at our boutique in Uccle, Brussels.",
         "intro": "Jumpers, cardigans, dresses, skirts and trousers in pure Mongolian cashmere, made to last from one season to the next. Every piece is chosen for its softness and the quality of its fibre."
       },
       "pulls-femme": {

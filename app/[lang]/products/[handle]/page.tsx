@@ -1,4 +1,5 @@
 import ProductDetailView from "@/components/ProductDetailView";
+import ProductJsonLd from "@/components/ProductJsonLd";
 import RecentlyViewedProducts from "@/components/RecentlyViewedProducts";
 import SimilarProducts from "@/components/SimilarProducts";
 import { toLocale } from "@/lib/i18n/config";
@@ -28,7 +29,7 @@ export async function generateMetadata({
 
   return createPageMetadata({
     locale,
-    title: product.title,
+    title: product.seoTitle ?? product.title,
     description: toMetaDescription(
       product.seoDescription ?? product.description,
     ),
@@ -54,6 +55,7 @@ export default async function ProductPage({
 
   return (
     <main className="w-full overflow-x-hidden pt-24 md:pt-0">
+      <ProductJsonLd product={product} locale={locale} />
       <ProductDetailView
         product={product}
         initialColor={couleur}
