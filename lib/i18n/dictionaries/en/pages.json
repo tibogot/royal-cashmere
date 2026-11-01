@@ -48,7 +48,7 @@
     "phoneLabel": "Telephone",
     "emailLabel": "Email",
     "hoursLabel": "Opening hours",
-    "hours": "Monday to Friday, 10 am to 6 pm",
+    "hours": "Thursday to Saturday, 10 am to 6:30 pm",
     "imageAlt": "Royal Cashmere cashmere coat",
     "formErrors": {
       "notConfigured": "Our contact form is not available yet. In the meantime, please give us a call.",
@@ -99,7 +99,7 @@
         "answer": "Returns are accepted under the terms of our returns policy. Items must be returned in their original condition, unworn and with their labels attached. Do get in touch if you need any help."
       }
     ],
-    "footerText": "Royal Cashmere boutique — Chaussée de Waterloo 1251B, Uccle. Open Monday to Friday, 10 am to 6 pm."
+    "footerText": "Royal Cashmere boutique — Chaussée de Waterloo 1251B, Uccle. Open Thursday to Saturday, 10 am to 6:30 pm."
   },
   "showcase": {
     "discover": "Discover",

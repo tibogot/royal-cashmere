@@ -48,7 +48,7 @@
     "phoneLabel": "Téléphone",
     "emailLabel": "E-mail",
     "hoursLabel": "Horaires d'ouverture",
-    "hours": "Du lundi au vendredi de 10 h à 18 h",
+    "hours": "Du jeudi au samedi de 10 h à 18 h 30",
     "imageAlt": "Manteau en cachemire Royal Cashmere",
     "formErrors": {
       "notConfigured": "Le formulaire de contact n'est pas encore configuré. Contactez-nous par téléphone en attendant.",
@@ -99,7 +99,7 @@
         "answer": "Les retours sont acceptés dans les conditions prévues par notre politique de retour. Les articles doivent être retournés dans leur état d'origine, non portés et avec leurs étiquettes. Contactez-nous pour toute assistance."
       }
     ],
-    "footerText": "Boutique Royal Cashmere — Chaussée de Waterloo 1251B, Uccle. Ouverte du lundi au vendredi, de 10 h à 18 h."
+    "footerText": "Boutique Royal Cashmere — Chaussée de Waterloo 1251B, Uccle. Ouverte du jeudi au samedi, de 10 h à 18 h 30."
   },
   "showcase": {
     "discover": "Découvrir",

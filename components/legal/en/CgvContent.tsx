@@ -78,7 +78,7 @@ export default function CgvContent() {
           ].filter(Boolean)}
         />
         <LegalParagraph>
-          Shop opening hours: Monday to Friday, 10 a.m. to 6 p.m.
+          Shop opening hours: Thursday to Saturday, 10 a.m. to 6:30 p.m.
         </LegalParagraph>
       </LegalSection>
 

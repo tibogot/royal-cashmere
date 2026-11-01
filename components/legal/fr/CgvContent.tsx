@@ -76,7 +76,7 @@ export default function CgvContent() {
           ].filter(Boolean)}
         />
         <LegalParagraph>
-          Horaires de la boutique : du lundi au vendredi, de 10 h à 18 h.
+          Horaires de la boutique : du jeudi au samedi, de 10 h à 18 h 30.
         </LegalParagraph>
       </LegalSection>
 

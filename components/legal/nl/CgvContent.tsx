@@ -84,8 +84,8 @@ export default function CgvContent() {
           ].filter(Boolean)}
         />
         <LegalParagraph>
-          Openingsuren van de winkel: van maandag tot en met vrijdag, van 10 tot
-          18 uur.
+          Openingsuren van de winkel: van donderdag tot en met zaterdag, van 10 tot
+          18.30 uur.
         </LegalParagraph>
       </LegalSection>
 

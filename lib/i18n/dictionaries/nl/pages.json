@@ -48,7 +48,7 @@
     "phoneLabel": "Telefoon",
     "emailLabel": "E-mail",
     "hoursLabel": "Openingsuren",
-    "hours": "Van maandag tot vrijdag van 10 tot 18 uur",
+    "hours": "Van donderdag tot zaterdag van 10 tot 18.30 uur",
     "imageAlt": "Kasjmieren mantel van Royal Cashmere",
     "formErrors": {
       "notConfigured": "Het contactformulier is nog niet beschikbaar. Neem in tussentijd telefonisch contact met ons op.",
@@ -99,7 +99,7 @@
         "answer": "Retours worden aanvaard onder de voorwaarden van ons retourbeleid. Artikelen moeten in hun oorspronkelijke staat worden teruggestuurd, ongedragen en met hun labels. Neem gerust contact met ons op als u hulp nodig hebt."
       }
     ],
-    "footerText": "Boetiek Royal Cashmere — Waterloosesteenweg 1251B, Ukkel. Open van maandag tot vrijdag, van 10 tot 18 uur."
+    "footerText": "Boetiek Royal Cashmere — Waterloosesteenweg 1251B, Ukkel. Open van donderdag tot zaterdag, van 10 tot 18.30 uur."
   },
   "showcase": {
     "discover": "Ontdekken",

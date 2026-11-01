@@ -22,6 +22,21 @@ export default function OrganizationJsonLd({ locale }: { locale: Locale }) {
         // schema.org expects the ISO 3166-1 code, not the country name.
         addressCountry: "BE",
       },
+      // Coordinates and hours mirror the Google Business Profile; keep both
+      // in sync with it.
+      geo: {
+        "@type": "GeoCoordinates",
+        latitude: 50.7937811,
+        longitude: 4.3736324,
+      },
+      openingHoursSpecification: [
+        {
+          "@type": "OpeningHoursSpecification",
+          dayOfWeek: ["Thursday", "Friday", "Saturday"],
+          opens: "10:00",
+          closes: "18:30",
+        },
+      ],
       sameAs: [siteConfig.social.facebook],
     },
     // Lets Google show "Royal Cashmere" as the site name in results instead
