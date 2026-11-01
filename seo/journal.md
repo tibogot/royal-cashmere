@@ -4,6 +4,7 @@ Un changement par ligne, le plus récent en haut. Sert à relier une évolution 
 
 | Date | Changement | Pages |
 | --- | --- | --- |
+| 2026-11-01 | Vitesse : animation d'intro de l'accueil passée en CSS, images de l'accueil chargées au défilement, photos Shopify à la bonne taille. LCP mobile (4G lente) de l'accueil : 7,9 s → 5,1 s | accueil, produits |
 | 2026-11-01 | Article « Idées cadeaux en cachemire pour Noël » publié en FR, NL et EN | /journal |
 | 2026-11-01 | Les 3 articles traduits en NL et EN, reliés entre eux (hreflang) ; textes alternatifs des photos FR corrigés | /journal |
 | 2026-11-01 | SEO titles ajoutés aux 3 articles FR dans Sanity | /journal |
