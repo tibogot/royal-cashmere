@@ -1,5 +1,6 @@
 "use client";
 
+import { isShopifyCdnUrl, shopifyImageLoader } from "@/lib/shopify/image";
 import Image, { type ImageProps } from "next/image";
 import { useState } from "react";
 
@@ -16,6 +17,9 @@ import { useState } from "react";
  *
  * Opacity is toggled with utility classes (not inline styles) so callers can
  * still layer hover states like `group-hover:opacity-95` on top.
+ *
+ * Shopify CDN images get a responsive srcset from Shopify itself, so a phone
+ * no longer downloads the desktop width.
  */
 export default function FadeInImage({
   className = "",
@@ -38,6 +42,9 @@ export default function FadeInImage({
     if (node?.complete) setState("instant");
   };
 
+  const isShopifyImage =
+    typeof props.src === "string" && isShopifyCdnUrl(props.src);
+
   const isVisible = hasPlaceholder || state !== "pending";
   const shouldAnimate = !hasPlaceholder && state === "fading";
 
@@ -45,6 +52,7 @@ export default function FadeInImage({
     <Image
       ref={handleRef}
       {...props}
+      {...(isShopifyImage ? { loader: shopifyImageLoader, unoptimized: false } : {})}
       onLoad={(event) => {
         // Only start a fade if the image wasn't already resolved as cached.
         setState((prev) => (prev === "instant" ? prev : "fading"));

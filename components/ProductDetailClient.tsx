@@ -16,6 +16,8 @@ import {
 } from "@/lib/shopify/variants";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 
+const DETAIL_IMAGE_SIZES = "(max-width: 768px) 100vw, 50vw";
+
 type ProductDetailClientProps = {
   product: ShopifyProductDetail;
   initialColor?: string;
@@ -49,10 +51,7 @@ export default function ProductDetailClient({
   );
 
   useEffect(() => {
-    prefetchShopifyImages(
-      getUniqueProductImageUrls(product),
-      SHOPIFY_IMAGE_WIDTH.detail,
-    );
+    prefetchShopifyImages(getUniqueProductImageUrls(product), DETAIL_IMAGE_SIZES);
   }, [product]);
 
   const handleSelectionChange = (optionName: string, value: string) => {
@@ -75,7 +74,7 @@ export default function ProductDetailClient({
           padding="lg"
           width={SHOPIFY_IMAGE_WIDTH.detail}
           className="h-full w-full"
-          sizes="(max-width: 768px) 100vw, 50vw"
+          sizes={DETAIL_IMAGE_SIZES}
         />
       </ProductImageWishlist>
 

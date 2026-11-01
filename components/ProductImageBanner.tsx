@@ -34,8 +34,6 @@ export default function ProductImageBanner({
         <ScrollShrinkImage reveal>
           <FadeInImage
             {...image}
-            loading="eager"
-            fetchPriority="low"
             fill
             className="object-cover"
             // Full-height on portrait screens: the rendered width is

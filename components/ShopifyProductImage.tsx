@@ -41,7 +41,9 @@ export default function ShopifyProductImage({
         src={resolvedSrc}
         alt={alt}
         fill
-        preload={preload}
+        // The LCP image on product pages: fetch it first instead of
+        // starting at low priority.
+        {...(preload ? ({ loading: "eager", fetchPriority: "high" } as const) : {})}
         unoptimized={useShopifyCdn}
         className={`box-border object-contain ${paddingClassName[padding]} ${imageClassName}`}
         sizes={sizes}

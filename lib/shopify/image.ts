@@ -1,3 +1,4 @@
+import { getImageProps, type ImageLoader } from "next/image";
 import type { ShopifyProductDetail } from "./queries";
 
 export const SHOPIFY_IMAGE_WIDTH = {
@@ -36,9 +37,42 @@ export function getUniqueProductImageUrls(product: ShopifyProductDetail) {
   return [...urls];
 }
 
-export function prefetchShopifyImages(urls: string[], width: number) {
-  for (const url of urls) {
-    const img = new window.Image();
-    img.src = shopifyImageUrl(url, width);
-  }
+// Shopify's CDN resizes on its own, so each srcset width is asked of it
+// directly instead of being proxied through /_next/image.
+export const shopifyImageLoader: ImageLoader = ({ src, width }) =>
+  shopifyImageUrl(src, width);
+
+// Warms the cache for images shown later (other colours of a product). Waits
+// for the page to finish loading so it never competes with the visible image,
+// and uses the same srcset and sizes so the browser picks the same file.
+export function prefetchShopifyImages(urls: string[], sizes: string) {
+  const prefetch = () => {
+    for (const url of urls) {
+      const {
+        props: { srcSet },
+      } = getImageProps({
+        src: url,
+        alt: "",
+        fill: true,
+        sizes,
+        loader: shopifyImageLoader,
+      });
+      const img = new window.Image();
+      img.sizes = sizes;
+      if (srcSet) img.srcset = srcSet;
+      img.src = shopifyImageUrl(url, SHOPIFY_IMAGE_WIDTH.detail);
+    }
+  };
+
+  const whenIdle = () => {
+    // Safari has no requestIdleCallback.
+    if (typeof window.requestIdleCallback === "function") {
+      window.requestIdleCallback(prefetch);
+    } else {
+      setTimeout(prefetch, 200);
+    }
+  };
+
+  if (document.readyState === "complete") whenIdle();
+  else window.addEventListener("load", whenIdle, { once: true });
 }

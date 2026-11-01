@@ -7,7 +7,12 @@ import {
   NEW_IN_COLLECTION_HANDLE,
   SALE_COLLECTION_HANDLE,
 } from "@/lib/collection-handles";
-import { HERO_REVEALED_EVENT } from "@/lib/hero-intro";
+import {
+  HERO_REVEALED_EVENT,
+  HERO_REVEALED_FLAG,
+  startHeroReveal,
+} from "@/lib/hero-intro";
+import HomeHeroReveal from "@/components/HomeHeroReveal";
 import { routes } from "@/lib/routes";
 import { ctaLinkClassName } from "@/lib/ui";
 // import CategoryShowcase from "@/components/CategoryShowcase";
@@ -44,9 +49,10 @@ import womenImage from "@/public/images/shared/pull-et-pantalon.jpg";
 import menImage from "@/public/images/categories/pulls.jpg";
 
 // Below-the-fold editorial photos. Static imports give each a blur
-// placeholder (shown instantly) and an immutable cache URL; eager + low
-// priority starts the downloads right after the hero instead of waiting for
-// the visitor to scroll near them, so a fast scroll doesn't land on blanks.
+// placeholder (shown instantly) and an immutable cache URL. They stay lazy:
+// started eagerly, they shared the connection with the hero and pushed its
+// mobile LCP to ~8 s on slow 4G. The browser still starts lazy images well
+// ahead of the viewport, and the blur covers any that land late.
 // Hero art direction. object-cover on a portrait screen fills the height and
 // crops the sides, so the 16:9 photo would download at 178vh wide (3840px on
 // a phone) only to show its middle third. Portrait screens get a 3:4 centre
@@ -62,7 +68,13 @@ const heroCommon = {
 } as const;
 const {
   props: { srcSet: heroPortraitSrcSet, sizes: heroPortraitSizes },
-} = getImageProps({ ...heroCommon, src: heroPortraitImage, sizes: "75vh" });
+} = getImageProps({
+  ...heroCommon,
+  src: heroPortraitImage,
+  // Only the middle ~400px of the 75vh-wide crop is on screen, so capping
+  // there serves a phone ~1080px instead of 1920px.
+  sizes: "min(75vh, 400px)",
+});
 const {
   props: {
     srcSet: heroLandscapeSrcSet,
@@ -77,8 +89,6 @@ const {
 
 const editorialImageProps = {
   placeholder: "blur",
-  loading: "eager",
-  fetchPriority: "low",
 } as const;
 
 // Order of the first homepage carousel, by product handle. Shopify returns
@@ -200,11 +210,7 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
       >
         <h1 className="sr-only">{copy.heroHeading}</h1>
         {/* <HomeHeroBackground /> */}
-        <ScrollShrinkImage
-          reveal
-          hiddenUntilReveal
-          revealedEvent={HERO_REVEALED_EVENT}
-        >
+        <HomeHeroReveal>
           {/* getImageProps doesn't preload, so preload each variant for its
               own media query (React hoists these into <head>). */}
           <link
@@ -237,7 +243,16 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
               className="object-cover"
             />
           </picture>
-        </ScrollShrinkImage>
+        </HomeHeroReveal>
+        {/* Starts the reveal as soon as the photo is decoded, before the JS
+            bundle has loaded: the photo is the LCP element. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(${startHeroReveal.toString()})(${JSON.stringify(
+              HERO_REVEALED_EVENT,
+            )},${JSON.stringify(HERO_REVEALED_FLAG)})`,
+          }}
+        />
         {/* <HeroBottomLogo priority raised /> */}
         <div className="absolute inset-x-0 bottom-0 z-10 flex justify-center p-4 md:p-8">
           <Link

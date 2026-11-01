@@ -157,3 +157,41 @@ button:not(:disabled),
     transform-origin: 100% 50%;
   }
 }
+
+/* Home hero intro (HomeHeroReveal). CSS instead of GSAP so it starts as soon
+   as the photo arrives rather than once the JS bundle has loaded: the photo
+   is the page's LCP element, which Chrome only counts once it is visible.
+   Same motion as ScrollShrinkImage's reveal: the window slides up while the
+   image counter-slides and settles from 1.12 to 1, power3.out over 1.4s. */
+@media (prefers-reduced-motion: no-preference) {
+  .hero-reveal {
+    transform: translateY(100%);
+  }
+  .hero-reveal-image {
+    transform: translateY(-100%) scale(1.12);
+  }
+  .hero-reveal[data-revealed] {
+    animation: hero-reveal-window 1.4s cubic-bezier(0.215, 0.61, 0.355, 1) both;
+  }
+  .hero-reveal[data-revealed] .hero-reveal-image {
+    animation: hero-reveal-image 1.4s cubic-bezier(0.215, 0.61, 0.355, 1) both;
+  }
+}
+
+@keyframes hero-reveal-window {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: none;
+  }
+}
+
+@keyframes hero-reveal-image {
+  from {
+    transform: translateY(-100%) scale(1.12);
+  }
+  to {
+    transform: none;
+  }
+}

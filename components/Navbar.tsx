@@ -18,7 +18,7 @@ import {
   NEW_IN_COLLECTION_HANDLE,
   SALE_COLLECTION_HANDLE,
 } from "@/lib/collection-handles";
-import { HERO_REVEALED_EVENT } from "@/lib/hero-intro";
+import { HERO_REVEALED_EVENT, HERO_REVEALED_FLAG } from "@/lib/hero-intro";
 import { routes } from "@/lib/routes";
 import {
   getCollectionsSnapshot,
@@ -411,6 +411,10 @@ export default function Navbar() {
         );
       };
 
+      // The CSS reveal can finish before this mounts.
+      if ((window as unknown as Record<string, boolean>)[HERO_REVEALED_FLAG]) {
+        slideIn();
+      }
       window.addEventListener(HERO_REVEALED_EVENT, slideIn);
       // Never leave the site without a nav if the hero event doesn't come.
       const fallback = window.setTimeout(slideIn, INTRO_FALLBACK_MS);
