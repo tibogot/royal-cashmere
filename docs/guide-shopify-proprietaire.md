@@ -117,7 +117,7 @@ Pour créer un produit de zéro : **Produits → Ajouter un produit**, puis :
 | --- | --- | --- |
 | Femme | aucun tag | Femme |
 | Homme | `homme` | Homme |
-| Homme et femme | `mixte` | Femme et Homme |
+| Homme et femme | `unisexe` | Femme et Homme |
 | Un pull à col roulé | `col-roule` (en plus) | Aussi dans « Pulls col roulé » |
 | Écharpe, châle, bonnet, gants | aucun tag | Accessoires |
 
