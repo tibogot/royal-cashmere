@@ -97,7 +97,7 @@ Le client reçoit alors automatiquement un email « Votre commande est en route 
 
 Le site range chaque produit tout seul, à partir de deux informations : son **type** et ses **tags**. Si elles sont justes, le produit apparaît au bon endroit sans autre réglage.
 
-**Le plus simple : dupliquer un produit qui existe déjà.** Ouvrez un produit proche (par exemple un autre pull), cliquez sur **Plus d'actions → Dupliquer**, puis changez le nom, le prix, les photos et les couleurs. Le type et les tags sont déjà bons.
+**Le plus simple : dupliquer un produit qui existe déjà.** Ouvrez un produit proche (par exemple un autre pull), cliquez sur **Plus d'actions → Dupliquer**, puis changez le nom, le prix, les photos et les couleurs. Le type et les tags sont déjà bons. **Pensez aussi à changer l'identifiant d'URL** (étape 9 ci-dessous) : Shopify le recopie en ajoutant « -copy » à la fin, ce qui donne une adresse comme `/products/pull-ouvert-copy` pour un pantalon.
 
 Pour créer un produit de zéro : **Produits → Ajouter un produit**, puis :
 
@@ -105,11 +105,17 @@ Pour créer un produit de zéro : **Produits → Ajouter un produit**, puis :
 2. **Description** : quelques lignes sur la matière et la coupe.
 3. **Photos** : au moins une photo par couleur, sur fond clair.
 4. **Prix**.
-5. **Type de produit** (à droite, dans « Organisation du produit ») : exactement un de ces mots : Pull, Gilet, Robe, Jupe, Pantalon, Écharpe, Bonnet, Gants. Sans type, le produit n'apparaît dans aucune catégorie.
+5. **Type de produit** (à droite, dans « Organisation du produit ») : exactement un de ces mots : Pull, Poncho, Gilet, Robe, Jupe, Pantalon, Écharpe, Bonnet, Gants. Sans type, le produit n'apparaît dans aucune catégorie (un poncho est rangé avec les pulls).
 6. **Tags** (même endroit) : voir le tableau ci-dessous.
 7. **Variantes** : cliquez sur **Ajouter des options comme la taille ou la couleur**. Nommez les options exactement **Couleur** et **Taille**, puis ajoutez les valeurs (Noir, Beige… / S, M, L).
 8. **Photo de chaque couleur** : dans la liste des variantes, cliquez sur la petite image de chaque couleur et choisissez sa photo. C'est elle qui s'affiche quand le client clique sur la couleur.
-9. **Statut** : mettez **Actif** pour que le produit soit visible, puis **Enregistrer**.
+9. **Référencement Google** (tout en bas de la fiche, cadre « Référencement sur les moteurs de recherche » → **Modifier**). C'est ce que Google affiche dans ses résultats :
+    - **Titre de la page** : le nom du produit avec le mot « cachemire » et le public, par exemple « Pull col V en cachemire pour femme ». Moins de 50 caractères. Inutile d'ajouter « Royal Cashmere », le site l'ajoute tout seul.
+    - **Méta-description** : une ou deux phrases qui donnent envie de cliquer : matière, coupe, couleurs disponibles. Moins de 155 caractères.
+    - **Identifiant d'URL** : court, en minuscules, avec des tirets, par exemple `pull-col-v`. Choisissez-le bien dès le départ : le changer plus tard casse les liens déjà indexés par Google, sauf si votre webmaster ajoute une redirection.
+10. **Statut** : mettez **Actif** pour que le produit soit visible, puis **Enregistrer**.
+
+Les traductions en néerlandais et en anglais (nom, description, référencement) se font dans l'app **Translate & Adapt** de Shopify. Si vous ne les faites pas, le texte français s'affiche dans les trois langues : prévenez votre webmaster, il peut s'en charger.
 
 ### Quels tags mettre ?
 
