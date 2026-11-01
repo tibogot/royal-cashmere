@@ -63,6 +63,22 @@ export const homePage = defineType({
   // Listed in the order they appear on the page.
   fields: [
     editableImageField({
+      name: 'womenCardImage',
+      title: 'Femme card — image',
+      guidance:
+        'Photo en portrait (verticale), idéalement 2000 px de large ou plus, d’une pièce portée par une femme. Le titre « Femme » s’affiche en blanc au centre : préférez une photo assez sombre ou unie au milieu.',
+      minWidth: 1200,
+      orientation: 'portrait',
+    }),
+    editableImageField({
+      name: 'menCardImage',
+      title: 'Homme card — image',
+      guidance:
+        'Photo en portrait (verticale), idéalement 2000 px de large ou plus, d’une pièce portée par un homme. Le titre « Homme » s’affiche en blanc au centre : préférez une photo assez sombre ou unie au milieu.',
+      minWidth: 1200,
+      orientation: 'portrait',
+    }),
+    editableImageField({
       name: 'saleCardImage',
       title: 'Soldes card — image',
       guidance:

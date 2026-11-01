@@ -61,6 +61,8 @@ function hotspotImageFields() {
 }
 
 export const homePageQuery = `*[_type == "homePage" && _id == "homePage"][0] {
+  womenCardImage { ${hotspotImageFields()} },
+  menCardImage { ${hotspotImageFields()} },
   saleCardImage { ${hotspotImageFields()} },
   bestsellersCardImage { ${hotspotImageFields()} },
   storyBannerImage { ${hotspotImageFields()} },

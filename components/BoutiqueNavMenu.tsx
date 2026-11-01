@@ -59,9 +59,12 @@ export default function BoutiqueNavMenu({ nav }: BoutiqueNavMenuProps) {
   const { sections, collections } = nav;
   const dict = useDictionary();
   const firstSection = sections[0];
-  // Gifts take the second card while the collection is live (the holidays),
-  // then Nouveautés, then the second section.
+  const menSection = sections.find(({ handle }) => handle === "homme");
+  // Homme takes the second card once it has products; until then Gifts while
+  // the collection is live (the holidays), then Nouveautés, then the second
+  // section.
   const secondCardLink =
+    menSection ??
     collections.find(({ handle }) => handle === GIFTS_COLLECTION_HANDLE) ??
     collections.find(({ handle }) => handle === NEW_IN_COLLECTION_HANDLE) ??
     sections[1];
@@ -80,8 +83,14 @@ export default function BoutiqueNavMenu({ nav }: BoutiqueNavMenuProps) {
           {
             href: routes.collectionByHandle(secondCardLink.handle),
             title: secondCardLink.label,
-            imageSrc: "/images/shared/manteau.jpg",
-            imageAlt: dict.nav.featuredImageAlts.coat,
+            imageSrc:
+              secondCardLink === menSection
+                ? menSection.image
+                : "/images/shared/manteau.jpg",
+            imageAlt:
+              secondCardLink === menSection
+                ? menSection.imageAlt
+                : dict.nav.featuredImageAlts.coat,
           },
         ]
       : []),

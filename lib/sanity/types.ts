@@ -22,6 +22,8 @@ export type SanityHotspotImage = SanityImage & {
 };
 
 export type HomePageContent = {
+  womenCardImage?: SanityHotspotImage;
+  menCardImage?: SanityHotspotImage;
   saleCardImage?: SanityHotspotImage;
   bestsellersCardImage?: SanityHotspotImage;
   storyBannerImage?: SanityHotspotImage;

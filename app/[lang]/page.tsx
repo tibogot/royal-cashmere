@@ -24,7 +24,11 @@ import FadeInImage from "@/components/FadeInImage";
 import ScrollShrinkImage from "@/components/ScrollShrinkImage";
 import SplitTextReveal from "@/components/SplitTextReveal";
 import { getHomePageContent } from "@/lib/sanity/queries";
-import { editableImageProps } from "@/lib/sanity/image";
+import {
+  editableImageProps,
+  type EditableImageProps,
+} from "@/lib/sanity/image";
+import { getCatalogNav } from "@/lib/shopify/collections";
 import { getImageProps } from "next/image";
 import Link from "@/components/LocaleLink";
 import { preload } from "react-dom";
@@ -35,6 +39,9 @@ import bestsellersImage from "@/public/images/home/bestsellers.webp";
 import boutiqueVisitImage from "@/public/images/home/visite-boutique.webp";
 import newInImage from "@/public/images/home/nouveautes.webp";
 import bannerImage from "@/public/images/home/banniere-histoire.webp";
+// Placeholders until the Femme / Homme photos are set in Studio.
+import womenImage from "@/public/images/shared/pull-et-pantalon.jpg";
+import menImage from "@/public/images/categories/pulls.jpg";
 
 // Below-the-fold editorial photos. Static imports give each a blur
 // placeholder (shown instantly) and an immutable cache URL; eager + low
@@ -95,6 +102,49 @@ const CAROUSEL_ORDER = [
   "mitaines-longues",
 ];
 
+// A full-bleed photo card with its title and call to action centred in white.
+function HomeCard({
+  href,
+  image,
+  heading,
+  cta,
+}: {
+  href: string;
+  image: EditableImageProps;
+  heading: string;
+  cta: string;
+}) {
+  return (
+    <Link
+      href={href}
+      className="group relative block aspect-5/4 cursor-pointer overflow-hidden md:aspect-4/5"
+    >
+      <ScrollShrinkImage reveal>
+        <FadeInImage
+          {...editorialImageProps}
+          {...image}
+          fill
+          className="object-cover object-[50%_15%] md:object-center"
+          sizes="(max-width: 767px) 100vw, 50vw"
+        />
+      </ScrollShrinkImage>
+      <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-6 p-4 text-center md:gap-8 md:p-8">
+        <SplitTextReveal
+          as="h3"
+          triggerClosest="a"
+          delay={0.5}
+          className="font-serif text-5xl uppercase leading-[1.1] text-white md:text-7xl"
+        >
+          {heading}
+        </SplitTextReveal>
+        <SplitTextReveal triggerClosest="a" delay={0.8} splitLines={false}>
+          <span className={`${ctaLinkClassName} text-white!`}>{cta}</span>
+        </SplitTextReveal>
+      </div>
+    </Link>
+  );
+}
+
 function sortByCarouselOrder<T extends { handle: string }>(items: T[]): T[] {
   const rank = (handle: string) => {
     const index = CAROUSEL_ORDER.indexOf(handle);
@@ -126,12 +176,17 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
   // instead of issuing a separate Shopify request per <FeaturedProducts />.
   // A Studio outage shouldn't take the homepage down: fall back to the
   // bundled photos instead.
-  const [products, homePage, dict] = await Promise.all([
+  const [products, homePage, dict, catalogSections] = await Promise.all([
     getFeaturedProducts(16, locale),
     getHomePageContent(locale).catch(() => null),
     getDictionary(locale),
+    getCatalogNav(locale),
   ]);
   const copy = dict.home;
+  // The Femme / Homme cards only show once both sections have products: an
+  // empty section's page is a 404.
+  const womenSection = catalogSections.find(({ handle }) => handle === "femme");
+  const menSection = catalogSections.find(({ handle }) => handle === "homme");
   const bannerProduct = products[6] ?? products[0];
   // If you re-enable <HeroProductGlass /> below, fetch its product here:
   // const heroProduct = await getProductByHandle("pull-col-v");
@@ -219,76 +274,57 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
         </Link>
       </section>
 
+      {womenSection && menSection ? (
+        <section className="bg-white pb-6 md:pb-10">
+          <div className="grid grid-cols-1 md:grid-cols-2">
+            <HomeCard
+              href={routes.collectionByHandle(womenSection.handle)}
+              image={editableImageProps(
+                homePage?.womenCardImage,
+                womenImage,
+                womenSection.imageAlt,
+              )}
+              heading={womenSection.label}
+              cta={copy.womenCta}
+            />
+            <HomeCard
+              href={routes.collectionByHandle(menSection.handle)}
+              image={editableImageProps(
+                homePage?.menCardImage,
+                menImage,
+                menSection.imageAlt,
+              )}
+              heading={menSection.label}
+              cta={copy.menCta}
+            />
+          </div>
+        </section>
+      ) : null}
+
       <FeaturedProducts products={sortByCarouselOrder(products)} limit={16} />
 
       <section className="bg-white py-6 md:py-10">
         <div className="grid grid-cols-1 md:grid-cols-2">
-          <Link
+          <HomeCard
             href={routes.collectionByHandle(SALE_COLLECTION_HANDLE)}
-            className="group relative block aspect-5/4 cursor-pointer overflow-hidden md:aspect-4/5"
-          >
-            <ScrollShrinkImage reveal>
-              <FadeInImage
-                {...editorialImageProps}
-                {...editableImageProps(
-                  homePage?.saleCardImage,
-                  saleImage,
-                  copy.saleImageAlt,
-                )}
-                fill
-                className="object-cover object-[50%_15%] md:object-center"
-                sizes="(max-width: 767px) 100vw, 50vw"
-              />
-            </ScrollShrinkImage>
-            <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-6 p-4 text-center md:gap-8 md:p-8">
-              <SplitTextReveal
-                as="h3"
-                triggerClosest="a"
-                delay={0.5}
-                className="font-serif text-5xl uppercase leading-[1.1] text-white md:text-7xl"
-              >
-                {copy.saleHeading}
-              </SplitTextReveal>
-              <SplitTextReveal triggerClosest="a" delay={0.8} splitLines={false}>
-                <span className={`${ctaLinkClassName} text-white!`}>
-                  {copy.saleCta}
-                </span>
-              </SplitTextReveal>
-            </div>
-          </Link>
-          <Link
+            image={editableImageProps(
+              homePage?.saleCardImage,
+              saleImage,
+              copy.saleImageAlt,
+            )}
+            heading={copy.saleHeading}
+            cta={copy.saleCta}
+          />
+          <HomeCard
             href={routes.collectionByHandle(BESTSELLERS_COLLECTION_HANDLE)}
-            className="group relative block aspect-5/4 cursor-pointer overflow-hidden md:aspect-4/5"
-          >
-            <ScrollShrinkImage reveal>
-              <FadeInImage
-                {...editorialImageProps}
-                {...editableImageProps(
-                  homePage?.bestsellersCardImage,
-                  bestsellersImage,
-                  copy.bestsellersImageAlt,
-                )}
-                fill
-                className="object-cover object-[50%_15%] md:object-center"
-                sizes="(max-width: 767px) 100vw, 50vw"
-              />
-            </ScrollShrinkImage>
-            <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-6 p-4 text-center md:gap-8 md:p-8">
-              <SplitTextReveal
-                as="h3"
-                triggerClosest="a"
-                delay={0.5}
-                className="font-serif text-5xl uppercase leading-[1.1] text-white md:text-7xl"
-              >
-                {copy.bestsellersHeading}
-              </SplitTextReveal>
-              <SplitTextReveal triggerClosest="a" delay={0.8} splitLines={false}>
-                <span className={`${ctaLinkClassName} text-white!`}>
-                  {copy.bestsellersCta}
-                </span>
-              </SplitTextReveal>
-            </div>
-          </Link>
+            image={editableImageProps(
+              homePage?.bestsellersCardImage,
+              bestsellersImage,
+              copy.bestsellersImageAlt,
+            )}
+            heading={copy.bestsellersHeading}
+            cta={copy.bestsellersCta}
+          />
         </div>
       </section>
 
