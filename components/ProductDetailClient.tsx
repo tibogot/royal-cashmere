@@ -14,34 +14,56 @@ import {
   getProductImageForSelections,
   getSelectionsForChange,
 } from "@/lib/shopify/variants";
-import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { useSearchParams } from "next/navigation";
+import {
+  Suspense,
+  useEffect,
+  useMemo,
+  useState,
+  type ReactNode,
+} from "react";
 
 const DETAIL_IMAGE_SIZES = "(max-width: 768px) 100vw, 50vw";
 
 type ProductDetailClientProps = {
   product: ShopifyProductDetail;
-  initialColor?: string;
   // Rendered above the purchase panel (the server-built breadcrumbs).
   breadcrumbs?: ReactNode;
 };
 
+/**
+ * Reports `?couleur=` from the URL. Read in the browser, not by the server
+ * page: a server read of searchParams renders every product view on demand
+ * (billed Vercel CPU), while this keeps product pages prerendered and cached.
+ * Inside <Suspense> so only this empty component skips the prerender.
+ */
+function RequestedColor({
+  onChange,
+}: {
+  onChange: (color: string | undefined) => void;
+}) {
+  const color = useSearchParams().get("couleur") ?? undefined;
+  useEffect(() => onChange(color), [color, onChange]);
+  return null;
+}
+
 export default function ProductDetailClient({
   product,
-  initialColor,
   breadcrumbs,
 }: ProductDetailClientProps) {
+  const [requestedColor, setRequestedColor] = useState<string>();
   const [selections, setSelections] = useState(() =>
-    getInitialSelections(product.options, product.variants, initialColor),
+    getInitialSelections(product.options, product.variants, requestedColor),
   );
 
   // Reset the selected variant when the product or requested colour changes,
   // during render rather than in a sync effect.
-  const selectionKey = `${product.id}|${initialColor ?? ""}`;
+  const selectionKey = `${product.id}|${requestedColor ?? ""}`;
   const [prevSelectionKey, setPrevSelectionKey] = useState(selectionKey);
   if (selectionKey !== prevSelectionKey) {
     setPrevSelectionKey(selectionKey);
     setSelections(
-      getInitialSelections(product.options, product.variants, initialColor),
+      getInitialSelections(product.options, product.variants, requestedColor),
     );
   }
 
@@ -62,6 +84,9 @@ export default function ProductDetailClient({
 
   return (
     <section className="flex min-h-svh flex-col overflow-x-hidden bg-white text-black md:flex-row">
+      <Suspense fallback={null}>
+        <RequestedColor onChange={setRequestedColor} />
+      </Suspense>
       <ProductImageWishlist
         product={product}
         className="relative h-[55svh] w-full shrink-0 md:min-h-svh md:w-1/2 md:self-stretch"

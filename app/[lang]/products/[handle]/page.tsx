@@ -12,8 +12,16 @@ import { notFound } from "next/navigation";
 
 type ProductPageProps = {
   params: Promise<{ lang: string; handle: string }>;
-  searchParams: Promise<{ couleur?: string }>;
 };
+
+/**
+ * No product is built at deploy time: each one renders on its first visit and
+ * is then served from the cache (refreshed hourly, like the Shopify fetches).
+ * Without this, the route is rendered on every request.
+ */
+export function generateStaticParams() {
+  return [];
+}
 
 export async function generateMetadata({
   params,
@@ -37,13 +45,9 @@ export async function generateMetadata({
   });
 }
 
-export default async function ProductPage({
-  params,
-  searchParams,
-}: ProductPageProps) {
+export default async function ProductPage({ params }: ProductPageProps) {
   const { lang, handle } = await params;
   const locale = toLocale(lang);
-  const { couleur } = await searchParams;
   const [product, dict] = await Promise.all([
     getProductByHandle(handle, locale),
     getDictionary(locale),
@@ -58,7 +62,6 @@ export default async function ProductPage({
       <ProductJsonLd product={product} locale={locale} />
       <ProductDetailView
         product={product}
-        initialColor={couleur}
         copy={dict}
       />
       <SimilarProducts

@@ -7,13 +7,11 @@ import type { ShopifyProductDetail } from "@/lib/shopify/queries";
 
 type ProductDetailViewProps = {
   product: ShopifyProductDetail;
-  initialColor?: string;
   copy: CatalogCopy & Pick<Dictionary, "product">;
 };
 
 export default function ProductDetailView({
   product,
-  initialColor,
   copy,
 }: ProductDetailViewProps) {
   // Products outside the category tree lead back to the whole shop.
@@ -34,7 +32,6 @@ export default function ProductDetailView({
   return (
     <ProductDetailClient
       product={product}
-      initialColor={initialColor}
       breadcrumbs={
         <Breadcrumbs
           items={[
